@@ -1,0 +1,238 @@
+
+/* ===== BUTTON grandesss ===== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+
+.btn i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff69b4 0%, #e91e63 50%, #c2185b 100%);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-primary i{
+    color: white;
+}
+
+
+
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(255, 105, 180, 0.5);
+}
+
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(99, 99, 99, 0.3);
+
+}
+
+.btn-cancelar {
+    background-color: #d61313;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-cancelar:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgb(244, 11, 11);
+}
+
+.btn-yellow {
+    background-color: #a59e20;
+    color: white;
+}
+.btn-yellow:hover {
+    background-color: #b5b829;
+}
+
+.btn-rous {
+    background-color: #fd4ca6;
+    color: white;
+}
+.btn-rous:hover {
+    background-color: #c32570;
+}
+
+.btn-blue {
+    background-color: #3498db;
+}
+
+.btn-blue:hover {
+    background-color: #2980b9;
+}
+
+.btn-green {
+    background-color: #2ecc71;
+}
+
+.btn-green:hover {
+    background-color: #27ae60;
+}
+
+.btn-red {
+    background-color: #e74c3c;
+}
+
+.btn-red:hover {
+    background-color: #c0392b;
+}
+
+.btn-warning {
+    background-color: #f39c12;
+}
+
+.btn-warning:hover {
+    background-color: #d35400;
+}
+
+
+.inline-form {
+    display: inline;
+}
+
+/* ===== RESPONSIVE CLASSES ===== */
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .custom-table {
+        font-size: 14px;
+    }
+
+    .table-heading,
+    .table-cell {
+        padding: 8px 10px;
+    }
+}
+
+
+/* ===== BOTONES DE pequeños ===== */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    color: white;
+    position: relative;
+}
+
+.btn-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-icon i {
+    font-size: 18px;
+}
+
+
+.inline-form {
+    display: inline;
+}
+.btn-icon:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+    margin-bottom: 5px;
+}
+
+
+.btn-icon:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+    z-index: 10;
+}
+/* Modificar el contenedor de acciones para los iconos */
+
+
+
+/* Responsive para botones de iconos */
+@media (max-width: 768px) {
+
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .btn-icon i {
+        font-size: 16px;
+    }
+}

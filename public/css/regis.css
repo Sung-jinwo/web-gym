@@ -1,0 +1,330 @@
+
+
+/* This is the key part for horizontal layout */
+.filter-row {
+    display: flex;
+    gap: 20px;
+    align-items: stretch; /* Esto hace que todos los elementos tengan la misma altura */
+    margin-bottom: 20px;
+}
+
+.filter-item {
+    flex: 1; /* Cada item ocupa el mismo espacio */
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.filter-button-container {
+    flex: 0 0 auto; /* No crece ni se encoge */
+    min-width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Alinea el botón al final (abajo) */
+    align-items: stretch; /* El botón ocupa todo el ancho disponible */
+    padding-top: 0; /* Remover padding superior si existe */
+}
+
+
+
+.filter-label {
+    display: block;
+    margin-bottom: 8px;
+    /*font-weight: 500;*/
+    color: black;
+    font-weight: bold;
+}
+
+.filter-dropdown {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.filter-dropdown::placeholder{
+    color: #adb5bd;
+    font-style: italic;
+}
+
+
+
+
+
+/*SOLO LECTURA Y ENVIA DATOS*/
+.filter-dropdown[readonly] {
+    background-color: rgba(230, 223, 223, 0.61);
+    cursor: not-allowed;
+}
+/*NO ENVIA DATOS AL FORMULARIO*/
+.filter-dropdown[disabled] {
+    background-color: rgba(230, 223, 223, 0.61);
+    cursor: not-allowed;
+}
+
+.filter-dropdown:focus{
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.58);
+    outline: none;
+}
+
+.textarea {
+    border: 2px solid #e9ecef;
+    border-radius: 20px;
+    padding: 12px 16px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #fafbfc;
+    resize: vertical;
+    width: 100%;
+    font-family: inherit;
+}
+
+
+
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .filter-item {
+        width: 100%;
+        flex: none;
+    }
+}
+
+/* Contonedor para el formularios */
+
+
+
+/* Revisar contenido*/
+/*.form-container {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 20px;*/
+/*    max-width: 100%;*/
+/*    margin-top: 20px;*/
+/*}*/
+
+.form-actions {
+    margin-top: 10px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group .form-input {
+    flex: 1;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group .btn-icon {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    height: 40px;
+}
+
+
+/*.error-message {*/
+/*    color: #dc3545;*/
+/*    font-size: 0.875rem;*/
+/*    margin-top: 5px;*/
+/*    display: block;*/
+/*}*/
+
+
+/* Interaction Con  Checkboxes */
+.interaction-container {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.interaction-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ced4da;
+    border-radius: 4px;
+    background-color: white;
+    cursor: default;
+    transition: all 0.2s;
+}
+
+.interaction-checkbox.checked.green {
+    background-color: #0fb534;
+    border-color: #0fb534;
+}
+
+.interaction-checkbox.checked.red {
+    background-color: #dc3545; /
+    border-color: #dc3545;
+}
+
+.interaction-checkbox.checked.blue {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+
+.interaction-checkbox.checked::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+@media (max-width: 768px) {
+    .interaction-container {
+        gap: 3px;
+    }
+
+    .interaction-checkbox {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+
+
+
+/*check y radio buttom*/
+.toggle-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+
+.toggle-option input[type="radio"], .Enviados input[type="radio"], .cerrar input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label, .Enviados .toggle-label, .cerrar .toggle-label {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* Cuando el radio está marcado (para mostrar el color en el label también) */
+.toggle-option input[type="radio"]:checked + .toggle-label:before,
+.Enviados input[type="radio"]:checked + .toggle-label:before,
+.cerrar input[type="radio"]:checked + .toggle-label:before {
+    background-color: white;  /* Color de fondo cuando está marcado */
+    border-color: transparent;  /* Sin borde */
+}
+
+/* Colores cuando se seleccionan los radio buttons */
+.Enviados input[type="radio"]:checked + .toggle-label {
+    background-color: #0fb534;
+    color: white;
+    border-color: #0fb534;
+}
+
+.cerrar input[type="radio"]:checked + .toggle-label {
+    background-color: #b50f0f;
+    color: white;
+    border-color: #b50f0f;
+}
+
+.toggle-option input[type="radio"]:checked + .toggle-label {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+/* Efecto de foco */
+.toggle-option input[type="radio"]:focus + .toggle-label:before,
+.Enviados input[type="radio"]:focus + .toggle-label:before,
+.cerrar input[type="radio"]:focus + .toggle-label:before {
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+
+
+
+
+
+
+/* Toggle Switch for Yes/No */
+.toggle-switch-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.toggle-input:checked + .toggle-slider {
+    background-color: #198754;
+}
+
+.toggle-input:focus + .toggle-slider {
+    box-shadow: 0 0 1px #198754;
+}
+
+.toggle-input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.toggle-label-text {
+    font-size: 14px;
+    font-weight: 500;
+}

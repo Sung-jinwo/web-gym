@@ -1,0 +1,190 @@
+/* Estilos generales */
+.membresias-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.membresias-container h1 {
+    color: black;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Estilos para la fila de acciones */
+
+
+/* Estilos para la tabla */
+.membresias-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.membresias-table th,
+.membresias-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.membresias-table th {
+    background-color: #f9f9f9;
+    color: black;
+    font-weight: bold;
+}
+
+.membresias-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Estilos para los enlaces de la tabla */
+.table-link {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.table-link:hover {
+    color: #ff69b4;
+}
+
+/* Estilos para las celdas de acciones */
+
+
+/* Estilos para el mensaje de tabla vacía */
+.empty-message {
+    text-align: center;
+    color: black;
+    padding: 20px;
+}
+
+/* Estilos para la paginación */
+.pagination-container {
+    text-align: center;
+    padding: 20px 0;
+}
+
+
+
+/* ==========================show membresia============== */
+
+/* Estilos generales */
+.membresia-detail-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Estilos para la tarjeta de detalles */
+.membresia-detail-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Estilos para el encabezado */
+.membresia-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.membresia-detail-title {
+    color: black;
+    font-size: 24px;
+    margin: 0;
+}
+
+.membresia-detail-timestamp {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Estilos para el contenido */
+.membresia-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.membresia-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+}
+
+.membresia-detail-label {
+    color: black;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.membresia-detail-value {
+    color: black;
+}
+
+.membresia-detail-cost {
+    color: #28a745; /* Color verde para el costo */
+    font-weight: bold;
+}
+
+/* Estilos para los botones de acción */
+.membresia-detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.membresia-detail-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.membresia-detail-btn-edit {
+    background-color: #ff69b4;
+    color: white;
+}
+
+.membresia-detail-btn-edit:hover {
+    background-color: #e65a9e;
+}
+
+.membresia-detail-btn-back {
+    background-color: #007bff;
+    color: white;
+}
+
+.membresia-detail-btn-back:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+/* ============================edtitar membresia */
+

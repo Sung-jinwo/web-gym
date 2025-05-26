@@ -1,0 +1,110 @@
+/* Estilos generales */
+.categoria-form-unique-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.categoria-form-unique-container h1 {
+    color: black;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Estilos para el formulario */
+.categoria-form-unique-form .row {
+    margin-bottom: 20px;
+}
+
+.categoria-form-unique-form .form-label {
+    color: black;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.categoria-form-unique-form .form-control,
+.categoria-form-unique-form .form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    color: black;
+    background-color: white;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.categoria-form-unique-form .form-control:focus,
+.categoria-form-unique-form .form-select:focus {
+    border-color: #ff69b4;
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+}
+
+/* Estilos para los botones */
+.categoria-form-unique-form .btn-primary {
+    background-color: #ff69b4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.categoria-form-unique-form .btn-primary:hover {
+    background-color: #e65a9e;
+}
+
+.categoria-form-unique-form .btn-success {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.categoria-form-unique-form .btn-success:hover {
+    background-color: #218838;
+}
+
+/* Estilos para los íconos */
+.categoria-form-unique-form .fa-icon {
+    margin-right: 5px;
+    color: #ff69b4;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .categoria-form-unique-container {
+        padding: 15px;
+    }
+
+    .categoria-form-unique-form .row {
+        flex-direction: column;
+    }
+
+    .categoria-form-unique-form .col-md-4 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+
+.pagos-unique-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre el ícono y el texto */
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    text-decoration: none;
+}

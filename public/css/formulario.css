@@ -1,0 +1,328 @@
+.image-upload-section {
+    text-align: center;
+}
+
+.image-preview-enhanced {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 7.2%;
+    gap: 20px;
+}
+
+.image-preview-wrapper {
+    width: 150px;
+    height: 150px;
+    border: 3px dashed #dee2e6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.image-preview-wrapper:hover {
+    border-color: #ff69b4;
+    background: #f0f4ff;
+}
+
+.no-image-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #adb5bd;
+}
+
+.no-image-state i {
+    font-size: 48px;
+}
+
+.image-upload-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgb(151, 148, 149) 0%, #ff69b4 100%);
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 14px;
+}
+
+.upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgb(154, 55, 103);
+}
+
+.file-input-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.file-info {
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.form-section {
+    background: white;
+    display: flex;
+    border-radius: 12px;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    overflow: hidden;
+    height: 100%;
+    /*min-height: 300px;*/
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+
+.form-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+
+
+.section-content {
+    flex: 1; /* El contenido se expande para llenar el espacio disponible */
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    justify-content: flex-start;
+}
+.section-header {
+    background: linear-gradient(135deg, #000000 0%, #888383 100%);
+    color: white;
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.section-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+}
+
+
+.Sub_titulos {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.Sub_titulos i {
+    color: #fd4ca6;
+    width: 16px;
+    text-align: center;
+}
+
+
+
+.section-description {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+
+
+
+
+.form-actions-enhanced {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+    /*background: white;*/
+    /*border-radius: 12px;*/
+    /*box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);*/
+}
+
+
+
+
+/* Payment Form Specific Styles */
+.info-highlight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border: 1px solid #2196f3;
+    border-radius: 8px;
+    color: #1565c0;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.info-highlight i {
+    color: #2196f3;
+    font-size: 18px;
+}
+
+
+
+/* Payment Subsection */
+.payment-subsection {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border: 2px solid #ff9800;
+    border-radius: 12px;
+    position: relative;
+}
+
+.payment-subsection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff9800 0%, #f57c00 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+.subsection-header {
+    margin-bottom: 16px;
+}
+
+.subsection-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #e65100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.subsection-title i {
+    color: #ff9800;
+}
+
+/* Enhanced Select Options with Emojis */
+.enhanced-select option {
+    padding: 12px;
+    font-size: 14px;
+    background: white;
+    color: #495057;
+    line-height: 1.5;
+}
+
+/* Responsive adjustments for payment form */
+@media (max-width: 768px) {
+    .payment-subsection {
+        padding: 16px;
+        margin-top: 16px;
+    }
+
+    .info-highlight {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .subsection-title {
+        font-size: 14px;
+    }
+}
+
+
+/*Hora*/
+.time-display-container {
+    display: flex;
+    align-items: center;
+    min-height: 44px; /* Misma altura que los inputs */
+}
+
+.time-display {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #495057;
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.time-display:hover {
+    background: #e9ecef;
+    border-color: #dee2e6;
+}
+
+
+/* Errores*/
+/* Estilos para errores mejorados */
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.error-message::before {
+    content: "⚠";
+    font-size: 16px;
+}
+
+/*!* Footer del formulario mejorado *!*/
+/*.enhanced-footer {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*    margin-top: 32px;*/
+/*    padding: 24px 0;*/
+/*    border-top: 2px solid #e9ecef;*/
+/*    gap: 16px;*/
+/*}*/

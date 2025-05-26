@@ -1,0 +1,311 @@
+/* Estilos generales */
+.home-container {
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+}
+
+.home-banner {
+    background-size: cover;
+    background-position: center;
+    padding: 150px 20px;
+    text-align: center;
+    color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.home-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+.banner-content h1 {
+    color: #ff69b4; /* Color rosa */
+}
+
+.banner-text {
+    color: #ff69b4; /* Color rosa */
+}
+
+
+
+.banner-content {
+    position: relative;
+    z-index: 2; /* Asegura que el contenido esté sobre el overlay */
+}
+
+.banner-content h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.banner-text {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+
+
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+/* Información del Gimnasio */
+.home-about {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: white;
+    margin: 40px 0;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-about h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 700;
+}
+
+.home-about p {
+    font-size: 18px;
+    color: #555;
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+.about-details {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.detail-item:hover {
+    transform: translateY(-10px);
+}
+
+.detail-item i {
+    font-size: 24px;
+    color: #ff69b4;
+}
+
+.detail-item p {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+}
+
+/* Servicios Destacados */
+.home-services {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    margin: 40px 0;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-services h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 700;
+}
+
+.services-grid {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.service-item {
+    width: 30%;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.service-item:hover {
+    transform: translateY(-10px);
+}
+
+.service-item i {
+    font-size: 40px;
+    color: #ff69b4;
+    margin-bottom: 20px;
+}
+
+.service-item h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.service-item p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Galería de Fotos */
+.home-gallery {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: white;
+    margin: 40px 0;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-gallery h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 700;
+}
+
+.gallery-grid {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.gallery-grid img {
+    width: 30%;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.05);
+}
+
+/* Testimonios */
+.home-testimonials {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    margin: 40px 0;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-testimonials h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 700;
+}
+
+.testimonials-grid {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.testimonial-item {
+    width: 45%;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.testimonial-item:hover {
+    transform: translateY(-10px);
+}
+
+.testimonial-item p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.testimonial-item span {
+    font-size: 14px;
+    color: #ff69b4;
+    font-weight: 600;
+}
+
+/* Llamado a la Acción */
+.home-cta {
+    padding: 60px 20px;
+    text-align: center;
+    background: linear-gradient(45deg, #ff69b4, #e65a9e);
+    color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.home-cta h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.home-cta p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.home-cta .btn-primary {
+    background: white;
+    color: #ff69b4;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+.home-cta .btn-primary:hover {
+    background: #ff69b4;
+    color: white;
+}

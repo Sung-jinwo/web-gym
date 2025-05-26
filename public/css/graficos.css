@@ -1,0 +1,41 @@
+.chart-container {
+
+    height: 320px;
+    width: 100%;
+    padding: 10px;
+    background-color: #ece4e4;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-full-width {
+    flex: 1 1 100%;
+
+}
+.data-card-title {
+    align-items: center;       /* Alinea verticalmente ícono y texto */
+    justify-content: center;   /* Centra horizontalmente todo el contenido */
+    gap: 10px;                  /* Espacio entre ícono y texto */
+    margin-bottom: 20px;
+    text-align: center;        /* Opcional si el texto es multilinea */
+}
+
+/* Estilo del ícono */
+.data-card-title i {
+    color: #fd4ca6;
+    font-size: 1.2em;          /* Opcional: ajusta tamaño del ícono */
+}
+
+/* Responsive adjustments for charts */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 30px;
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-container {
+        height: 250px;
+    }
+}
