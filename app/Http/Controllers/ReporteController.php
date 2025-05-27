@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\sede;
+use App\Models\Sede;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Exports\IngresosDiariosPdfExport;

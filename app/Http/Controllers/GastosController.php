@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateGastosRequest;
 use App\Models\Gastos;
-use App\Models\sede;
+use App\Models\Sede;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

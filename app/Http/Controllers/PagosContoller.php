@@ -6,7 +6,7 @@ use App\Models\Histomem;
 use App\Models\Histopag;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\sede;
+use App\Models\Sede;
 use App\Models\Alumno;
 use App\Models\Metodo;
 use App\Models\Pagos;

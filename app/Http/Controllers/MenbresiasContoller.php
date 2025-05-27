@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Membresias;
 use App\Models\Histomem;
-use App\Models\sede;
+use App\Models\Sede;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ctegoria_m;

@@ -6,7 +6,7 @@ use App\Http\Requests\CreateMensajeRequest;
 use App\Http\Requests\CreateServicioRequest;
 use App\Models\Alumno;
 use App\Models\Mensaje;
-use App\Models\sede;
+use App\Models\Sede;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

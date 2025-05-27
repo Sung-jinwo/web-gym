@@ -7,7 +7,7 @@ use App\Models\Alumno;
 use App\Models\Membresias;
 use App\Models\Pagos;
 use App\Models\Padres;
-use App\Models\sede;
+use App\Models\Sede;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
