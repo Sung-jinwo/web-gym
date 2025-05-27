@@ -25,7 +25,7 @@ class AlumnoContoller extends Controller
 
     public function index(Request $request)
 {
-    $sedes = sede::all();
+    $sedes = Sede::all();
 
     $user = Auth::user();
 
@@ -210,7 +210,7 @@ class AlumnoContoller extends Controller
         $necesitaAgregarPadre = $alumno->alum_eda > 18 && $alumno->padres->isEmpty();
         return view('alumno.alumedit',[
             'alumno' => $alumno,
-            'sedes' => sede::all(),
+            'sedes' => Sede::all(),
             'necesitaAgregarPadre' => $necesitaAgregarPadre,
         ]);
     }

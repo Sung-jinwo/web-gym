@@ -53,7 +53,7 @@ class User extends Authenticatable
 
     public function sede()
     {
-        return $this->belongsTo(sede::class, 'fksede', 'id_sede');
+        return $this->belongsTo(Sede::class, 'fksede', 'id_sede');
     }
 
     public static function withRolesAdminAndEmpleado()

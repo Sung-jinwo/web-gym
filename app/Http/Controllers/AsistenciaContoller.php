@@ -20,7 +20,7 @@ class AsistenciaContoller extends Controller
     public function index(Request $request)
     {
 
-        $sedes = sede::all();
+        $sedes = Sede::all();
 
         $user = Auth::user();
         $idSede = $request->input('sede_id');
@@ -74,7 +74,7 @@ class AsistenciaContoller extends Controller
         return view('asistencia.asiscreate',[
             'asistencia'=> new Asistensias(),
             'alumno' => Alumno::all(),
-            'sedes' => sede::all(),
+            'sedes' => Sede::all(),
             'user' => User::all(),
             'codigoAlumno' => $codigoAlumno,
         ]);
@@ -189,7 +189,7 @@ class AsistenciaContoller extends Controller
             'asistencia' => $asistencia,
             'pagos' => Pagos::all(),
             'alumno' => Alumno::all(),
-            'sedes' => sede::all(),
+            'sedes' => Sede::all(),
             'user' => User::all()
         ]);
     }

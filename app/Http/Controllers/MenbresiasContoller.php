@@ -72,7 +72,7 @@ class MenbresiasContoller extends Controller
         return view('categoria.categcreate',[
             'membresias'=> new Membresias(),
             'categoria_m'=> Ctegoria_m::all(),
-            'sedes'=> sede::all()
+            'sedes'=> Sede::all()
         ]);
     }
 
@@ -120,7 +120,7 @@ class MenbresiasContoller extends Controller
         return view('categoria.categedit',[
             'membresias' => $membresias,
             'categoria_m'=> Ctegoria_m::all(),
-            'sedes'=> sede::all()
+            'sedes'=> Sede::all()
         ]);
     }
 

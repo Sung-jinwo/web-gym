@@ -17,7 +17,7 @@ class RegistroContoller extends Controller
 
     public function index(Request $request)
     {
-        $sedes = sede::all();
+        $sedes = Sede::all();
         $user = Auth::user();
 
         $filtroEstado = $request->get('alum_estado', 'A');
@@ -130,7 +130,7 @@ class RegistroContoller extends Controller
     {
         return view('alumno_registrar.registeredit',[
             'registros' => $registros,
-            'sedes' => sede::all(),
+            'sedes' => Sede::all(),
         ]);
     }
 

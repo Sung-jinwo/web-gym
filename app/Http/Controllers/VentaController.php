@@ -25,7 +25,7 @@ class VentaController extends Controller
         return view('ventas.vencreate', [
             'producto' => $producto,
             'usuarios' => $users,
-            'sedes' => sede::all(),
+            'sedes' => Sede::all(),
             'alumno' => Alumno::all(),
             'metodos' => Metodo::all()
         ]);

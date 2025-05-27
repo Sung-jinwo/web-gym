@@ -14,7 +14,7 @@ class GastosController extends Controller
 {
     public function index(Request $request)
     {
-        $sedes = sede::all();
+        $sedes = Sede::all();
         $user = Auth::user();
 
         $categoria = $request->get('categoria');

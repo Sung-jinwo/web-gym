@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\sede;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Exports\IngresosDiariosPdfExport;
@@ -17,7 +18,7 @@ class ReporteController extends Controller
 {
     public function mostrarFormulario()
     {
-        $sedes = \App\Models\Sede::all();
+        $sedes = Sede::all();
         return view('reporte.reporte', compact('sedes'));
     }
 

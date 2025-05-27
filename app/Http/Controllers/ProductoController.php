@@ -22,7 +22,7 @@ class ProductoController extends Controller
     public function index(Request $request)
     {
 
-        $sedes = sede::all();
+        $sedes = Sede::all();
 
         $user = Auth::user();
 
@@ -60,7 +60,7 @@ class ProductoController extends Controller
             'producto'=> new Producto(),
             'categoria'=> Categoria::all(),
             'users'=> $users,
-            'sedes'=>sede::all()
+            'sedes'=> Sede::all()
         ]);
     }
 
@@ -114,7 +114,7 @@ class ProductoController extends Controller
             'producto' => $producto,
             'categoria'=>Categoria::all(),
             'users'=>$users,
-            'sedes'=>sede::all()
+            'sedes'=> Sede::all()
 
         ]);
     }

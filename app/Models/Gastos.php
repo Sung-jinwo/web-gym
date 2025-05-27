@@ -15,7 +15,7 @@ class Gastos extends Model
 
     public function sede()
     {
-        return $this->belongsTo(sede::class, 'fksede', 'id_sede');
+        return $this->belongsTo(Sede::class, 'fksede', 'id_sede');
     }
 
     public function user()

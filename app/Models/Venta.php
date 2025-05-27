@@ -25,7 +25,7 @@ class Venta extends Model
 
     public function sede()
     {
-        return $this->belongsTo(sede::class, 'fksede', 'id_sede');
+        return $this->belongsTo(Sede::class, 'fksede', 'id_sede');
     }
 
     public function metodo()
@@ -37,7 +37,7 @@ class Venta extends Model
     {
         return $this->hasMany(DetalleVenta::class, 'fkventa');
     }
-    
-    
+
+
 
 }

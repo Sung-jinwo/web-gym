@@ -22,7 +22,7 @@ class PagosContoller extends Controller
 {
         public function pagosCompletos(Request $request)
         {
-            $sedes = sede::all();
+            $sedes = Sede::all();
             $membresias = Membresias::all();
 
             $user = Auth::user();
@@ -76,7 +76,7 @@ class PagosContoller extends Controller
         public function pagosIncompletos(Request $request)
         {
 
-            $sedes = sede::all();
+            $sedes = Sede::all();
             $membresias = Membresias::all();
 
             $user = Auth::user();
@@ -175,7 +175,7 @@ class PagosContoller extends Controller
             ->get();
         return view('pagos.pagcreate', [
             'pago' => new Pagos(),
-            'sede' => sede::all(),
+            'sede' => Sede::all(),
             'users' => $users,
             'alumno' => Alumno::all(),
             'membresia' => $membresiasActivas,
@@ -303,7 +303,7 @@ class PagosContoller extends Controller
             'pago' => $pago,
             'membresia' => $membresiasActivas,
             'users' => $users,
-            'sede' => sede::all(),
+            'sede' => Sede::all(),
             'metodo' => Metodo::all(),
             'montoActual' => $pago->pagodetalle()->sum('monto'),
             'codigoAlumno' => $codigoAlumno,
