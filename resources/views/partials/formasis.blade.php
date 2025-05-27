@@ -25,7 +25,7 @@
                                maxlength="4"
                                required>
                         @if($errors->has('fkalum'))
-                            <span class="asist-error">{{ $errors->first('fkalum') }}</span>
+                            <span class="error-message">{{ $errors->first('fkalum') }}</span>
                         @endif
 
                     </div>
@@ -83,7 +83,7 @@
                         @endforeach
                     </select>
                     @if($errors->has('fkuser'))
-                        <span class="asist-error">{{ $errors->first('fkuser') }}</span>
+                        <span class="error-message">{{ $errors->first('fkuser') }}</span>
                     @endif
                 @else
                     <label class="filter-label">
@@ -120,7 +120,7 @@
                         @endforeach
                     </select>
                     @if($errors->has('fksede'))
-                        <span class="asist-error">{{ $errors->first('fksede') }}</span>
+                        <span class="error-message">{{ $errors->first('fksede') }}</span>
                     @endif
                 @else
                     <input type="hidden" name="fksede" value="{{ auth()->user()->fksede }}">

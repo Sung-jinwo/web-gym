@@ -17,7 +17,7 @@
                     <input type="hidden" name="fkuser" value="{{ old('fkuser', auth()->user()->id) }}">
                     <input type="text" class="filter-dropdown" readonly value="{{ auth()->user()->name }}">
                     @if($errors->has('fkuser'))
-                        <span class="categoria-edit-unique-error">
+                        <span class="error-message">
                             <i class="fa-solid fa-exclamation-circle"></i> {{ $errors->first('fkuser') }}
                         </span>
                     @endif
@@ -29,7 +29,7 @@
                     </label>
                     <input type="text" id="nombre_m" name="nombre_m" placeholder="Ingrese nombre de categoria" value="{{ old('nombre_m', $categoria_m->nombre_m)}}" class="filter-dropdown">
                     @if($errors->has('nombre_m'))
-                        <span class="categoria-edit-unique-error">
+                        <span class="error-message">
                         <i class="fa-solid fa-exclamation-circle"></i> {{ $errors->first('nombre_m') }}
                     </span>
                     @endif

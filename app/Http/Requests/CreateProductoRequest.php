@@ -28,7 +28,7 @@ class CreateProductoRequest extends FormRequest
             'fkcategoria'=>'required',
             'prod_descripcion' => 'nullable',
             'prod_cantidad'=>'required|integer',
-            'prod_precio'=>'required|integer',
+            'prod_precio'=>'required|numeric',
             'fksede'=>'required',
             'fkusers'=>'required',
             'prod_img' =>'nullable|mimes:jpg,png',
@@ -43,7 +43,7 @@ class CreateProductoRequest extends FormRequest
             'prod_precio.required'=>'Se nesecita Registrar el Precio',
             'sede.required'=>'Se nesecita Registrar la Sede',
             'fkusers.required'=>'Se nesecita Registrar el Usuario',
-            'prod_img.required'=>'La imagen debe ser en formato jpg o png.',
+            'prod_img.mimes' => 'La imagen debe ser en formato jpg o png.',
         ];
     }
 }

@@ -18,7 +18,7 @@
                 <div class="contenido-img">
                     <div class="producto-image-preview" id="imagePreview">
                         @if($producto->prod_img)
-                            <img src="{{ asset('storage/' . $producto->prod_img) }}" alt="Vista previa de {{ $producto->prod_nombre }}" class="producto-image">
+                            <img src="{{ asset($producto->prod_img) }}" alt="Vista previa de {{ $producto->prod_nombre }}" class="producto-image">
                         @else
                             <div class="producto-no-image">
                                 <span>No hay imagen disponible</span>
@@ -41,8 +41,8 @@
                             {{ basename($producto->prod_img) }}
                             @endif
                         </span>
-                        @if($errors->has('alum_img'))
-                            <span class="error-message">{{ $errors->first('alum_img') }}</span>
+                        @if($errors->has('prod_img'))
+                            <span class="error-message">{{ $errors->first('prod_img ') }}</span>
                         @endif
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                             </label>
                             <input type="text" id="prod_nombre" name="prod_nombre"  placeholder="Ingrese nombre de Producto" value="{{ old('prod_nombre', $producto->prod_nombre)}}" class="filter-dropdown">
                             @if($errors->has('prod_nombre'))
-                                <span class="producto-form-unique-error">{{ $errors->first('prod_nombre') }}</span>
+                                <span class="error-message">{{ $errors->first('prod_nombre') }}</span>
                             @endif
                         </div>
                         <div class="filter-item">
@@ -85,7 +85,7 @@
                                 @endforeach
                             </select>
                             @if($errors->has('fkcategoria'))
-                                <span class="producto-form-unique-error">{{ $errors->first('fkcategoria') }}</span>
+                                <span class="error-message">{{ $errors->first('fkcategoria') }}</span>
                             @endif
                         </div>
                     </div>
@@ -133,7 +133,7 @@
                         </label>
                         <input type="text" id="prod_cantidad" name="prod_cantidad" placeholder="Ingrese Cantidad" value="{{ old('prod_cantidad', $producto->prod_cantidad)}}" class="filter-dropdown">
                         @if($errors->has('prod_cantidad'))
-                            <span class="producto-form-unique-error">{{ $errors->first('prod_cantidad') }}</span>
+                            <span class="error-message">{{ $errors->first('prod_cantidad') }}</span>
                         @endif
                     </div>
                     <div class="filter-item">
@@ -144,7 +144,7 @@
                             <input type="text" id="prod_precio" name="prod_precio" placeholder="Ingrese Precio" value="{{ old('prod_precio', $producto->prod_precio)}}" class="filter-dropdown">
                         </div>
                         @if($errors->has('prod_precio'))
-                            <span class="producto-form-unique-error">{{ $errors->first('prod_precio') }}</span>
+                            <span class="error-message">{{ $errors->first('prod_precio') }}</span>
                         @endif
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                             @endforeach
                         </select>
                         @if($errors->has('fksede'))
-                            <span class="producto-form-unique-error">{{ $errors->first('fksede') }}</span>
+                            <span class="error-message">{{ $errors->first('fksede') }}</span>
                         @endif
                     </div>
                 </div>

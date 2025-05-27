@@ -20,7 +20,7 @@
                     <div class="image-preview-enhanced">
                         <div class="image-preview-wrapper" id="imagePreview">
                             @if($alumno->alum_img)
-                                <img src="{{ asset('storage/' . $alumno->alum_img) }}" alt="Vista previa de {{ $alumno->alum_nombre }} {{ $alumno->alum_apellido }}" class="img">
+                                <img src="{{ asset($alumno->alum_img) }}" alt="Vista previa de {{ $alumno->alum_nombre }} {{ $alumno->alum_apellido }}" class="img">
                             @else
                                 <div class="no-image-state">
                                     <i class="fa-solid fa-user-circle"></i>

@@ -69,7 +69,7 @@
                 @foreach ($producto as $item)
                     <div class="producto-unique-tarjeta">
                         <div class="producto-unique-imagen-contenedor">
-                            <img src="{{ asset('storage/' . $item->prod_img) }}"
+                            <img src="{{ asset($item->prod_img) }}"
                                  alt="Vista previa de {{ $item->prod_nombre }}" class="producto-unique-imagen">
                         </div>
                         <div class="producto-unique-info">

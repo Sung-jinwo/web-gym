@@ -19,6 +19,8 @@ use Intervention\Image\Encoders\JpegEncoder;
 // use Intervention\Image\Encoders\PngEncoder;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+
 
 class AlumnoContoller extends Controller
 {
@@ -161,9 +163,22 @@ class AlumnoContoller extends Controller
         }
         $alumno = new Alumno($validatedData);
 //        $alumno->fech_registro = now();
+        // Procesar la imagen
         if ($request->hasFile('alum_img')) {
-            $imagePath = $request->file('alum_img')->store('images', 'public');
-            $alumno->alum_img = $imagePath;
+            $image = $request->file('alum_img');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $destinationPath = public_path('img/alumnos');
+
+            // Crear la carpeta si no existe
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            // Mover la imagen
+            $image->move($destinationPath, $imageName);
+
+            // Guardar ruta relativa
+            $alumno->alum_img = 'img/alumnos/' . $imageName;
         }
 
 
@@ -227,22 +242,27 @@ class AlumnoContoller extends Controller
         }
 //        $alumno->fech_registro = now();
 
+        // Procesamiento de imagen
         if ($request->hasFile('alum_img')) {
-            if ($alumno->alum_img && Storage::exists($alumno->alum_img)) {
-                Storage::delete($alumno->alum_img);
+            $image = $request->file('alum_img');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $destinationPath = public_path('img/alumnos');
+
+            // Crear la carpeta si no existe
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
             }
-            $imagePath = $request->file('alum_img')->store('images', 'public');
-            $alumno->alum_img = $imagePath;
 
-            $manager = new ImageManager(new Driver());
-            $image = $manager->read(Storage::get($alumno->alum_img));
-            $image->resize(600, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            // Eliminar imagen anterior si existe
+            if ($alumno->alum_img && File::exists(public_path($alumno->alum_img))) {
+                File::delete(public_path($alumno->alum_img));
+            }
 
-            $encodedImage = $image->encode(new JpegEncoder());
-            Storage::put($alumno->alum_img, $encodedImage);
-            $validatedData['alum_img'] = $imagePath;
+            // Mover nueva imagen
+            $image->move($destinationPath, $imageName);
+
+            // Guardar ruta en validatedData para actualizar el modelo
+            $validatedData['alum_img'] = 'img/alumnos/' . $imageName;
         }
 
         $alumno->update(array_filter($validatedData));

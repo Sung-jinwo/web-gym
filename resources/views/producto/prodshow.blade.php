@@ -21,7 +21,7 @@
         <!-- Sección de imagen -->
         <div class="producto-detalle-unique-image-section">
             <div class="producto-detalle-unique-image-container">
-                <img src="{{ asset('storage/' . $producto->prod_img) }}"
+                <img src="{{ asset($producto->prod_img) }}"
                      alt="Vista previa de {{ $producto->prod_nombre }}"
                      class="producto-detalle-unique-image">
             </div>

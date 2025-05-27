@@ -105,7 +105,7 @@
                         <td class="table-cell">
                             @if($item->alum_img)
                             <div class="image-container">
-                                <img src="/storage/{{ $item->alum_img }}" alt="{{$item->alum_apellido }} {{ $item->alum_nombre}}" class="student-image">
+                                <img src="{{ $item->alum_img }}" alt="{{$item->alum_apellido }} {{ $item->alum_nombre}}" class="student-image">
                             </div>
                             @endif
                         </td>

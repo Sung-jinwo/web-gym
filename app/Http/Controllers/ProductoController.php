@@ -14,6 +14,7 @@ use App\Http\Requests\CreateProductoRequest;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\JpegEncoder;
+use Illuminate\Support\Facades\File;
 class ProductoController extends Controller
 {
         /**
@@ -73,10 +74,24 @@ class ProductoController extends Controller
 
         $producto = new Producto ($request->validated());
 
+        // Manejar la imagen manualmente
         if ($request->hasFile('prod_img')) {
-            $imagePath = $request->file('prod_img')->store('images', 'public');
-            $producto->prod_img = $imagePath;
+            $image = $request->file('prod_img');
+            $imageName = time() . '_' . $image->getClientOriginalName(); // nombre único
+            $destinationPath = public_path('img/productos'); // Ruta absoluta a public/img/images
+
+            // Asegurarse que la carpeta exista
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true); // crea la carpeta si no existe
+            }
+
+            // Mover la imagen a la carpeta deseada
+            $image->move($destinationPath, $imageName);
+
+            // Guardar la ruta relativa en la base de datos
+            $producto->prod_img = 'img/productos/' . $imageName;
         }
+
         $producto->save();
 
         Histoprod::create([
@@ -131,22 +146,27 @@ class ProductoController extends Controller
         // dd($request->all());
 
         if ($request->hasFile('prod_img')) {
-            if ($producto->prod_img && Storage::exists($producto->prod_img)) {
-                Storage::delete($producto->prod_img);
+            $image = $request->file('prod_img');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $destinationPath = public_path('img/productos');
+
+            // Crear la carpeta si no existe
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
             }
-            $imagePath = $request->file('prod_img')->store('images', 'public');
-            $producto->prod_img = $imagePath;
 
-            $manager = new ImageManager(new Driver());
-            $image = $manager->read(Storage::get($producto->prod_img));
-            $image->resize(600, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            // Eliminar la imagen anterior si existe
+            if ($producto->prod_img && File::exists(public_path($producto->prod_img))) {
+                File::delete(public_path($producto->prod_img));
+            }
 
-            $encodedImage = $image->encode(new JpegEncoder());
-            Storage::put($producto->prod_img, $encodedImage);
-            $validatedData['prod_img'] = $imagePath;
+            // Mover la nueva imagen
+            $image->move($destinationPath, $imageName);
+
+            // Guardar nueva ruta en datos validados
+            $validatedData['prod_img'] = 'img/productos/' . $imageName;
         }
+
 
 
         $producto->update(array_filter($validatedData));

@@ -9,7 +9,7 @@
     <div class="info-card">
         <div class="info-card__image">
             @if ($alumno->alum_img)
-                <img src="{{ asset('storage/' . $alumno->alum_img) }}" alt="Vista previa de {{ $alumno->alum_nombre }} {{ $alumno->alum_apellido }}">
+                <img src="{{ asset($alumno->alum_img) }}" alt="Vista previa de {{ $alumno->alum_nombre }} {{ $alumno->alum_apellido }}">
             @else
                 <div class="no-image">
                     <i class="fa-solid fa-user"></i>
