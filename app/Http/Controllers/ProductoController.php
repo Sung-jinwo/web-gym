@@ -7,7 +7,7 @@ use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\Histoprod;
 use App\Models\User;
-use App\Models\sede;
+use App\Models\Sede;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CreateProductoRequest;

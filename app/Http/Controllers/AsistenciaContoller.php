@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Asistensias;
 use App\Models\Pagos;
-use App\Models\sede;
+use App\Models\Sede;
 use App\Models\User;
 use App\Models\Alumno;
 use App\Http\Requests\CreateAsistenciaRequest;
