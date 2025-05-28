@@ -167,7 +167,9 @@ class AlumnoContoller extends Controller
         if ($request->hasFile('alum_img')) {
             $image = $request->file('alum_img');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $destinationPath = public_path('img/alumnos');
+//            $destinationPath = public_path('img/alumnos');
+            $destinationPath = base_path('../public_html/img/alumnos');// Para Produccion Cargar
+
 
             // Crear la carpeta si no existe
             if (!file_exists($destinationPath)) {
@@ -246,7 +248,9 @@ class AlumnoContoller extends Controller
         if ($request->hasFile('alum_img')) {
             $image = $request->file('alum_img');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $destinationPath = public_path('img/alumnos');
+//            $destinationPath = public_path('img/alumnos');
+            $destinationPath = base_path('../public_html/img/alumnos');// Para Produccion Cargar
+
 
             // Crear la carpeta si no existe
             if (!file_exists($destinationPath)) {
@@ -254,9 +258,19 @@ class AlumnoContoller extends Controller
             }
 
             // Eliminar imagen anterior si existe
-            if ($alumno->alum_img && File::exists(public_path($alumno->alum_img))) {
-                File::delete(public_path($alumno->alum_img));
+//            if ($alumno->alum_img && File::exists(public_path($alumno->alum_img))) {
+//                File::delete(public_path($alumno->alum_img));
+//            }
+
+            if ($alumno->alum_img) {
+                $oldImagePath = base_path('../public_html/' . $alumno->alum_img);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
+//
+//          //Eliminar Imagen Existente Produccion
+
 
             // Mover nueva imagen
             $image->move($destinationPath, $imageName);

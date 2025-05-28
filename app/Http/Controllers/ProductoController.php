@@ -78,8 +78,8 @@ class ProductoController extends Controller
         if ($request->hasFile('prod_img')) {
             $image = $request->file('prod_img');
             $imageName = time() . '_' . $image->getClientOriginalName(); // nombre único
-            $destinationPath = public_path('img/productos'); // Ruta absoluta a public/img/images
-
+//            $destinationPath = public_path('img/productos'); // Ruta absoluta a public/img/images
+           $destinationPath = base_path('../public_html/img/productos'); //Para la Web
             // Asegurarse que la carpeta exista
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true); // crea la carpeta si no existe
@@ -148,7 +148,9 @@ class ProductoController extends Controller
         if ($request->hasFile('prod_img')) {
             $image = $request->file('prod_img');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $destinationPath = public_path('img/productos');
+//            $destinationPath = public_path('img/productos');
+            $destinationPath = base_path('../public_html/img/productos'); //Para Produccion
+
 
             // Crear la carpeta si no existe
             if (!file_exists($destinationPath)) {
@@ -156,9 +158,17 @@ class ProductoController extends Controller
             }
 
             // Eliminar la imagen anterior si existe
-            if ($producto->prod_img && File::exists(public_path($producto->prod_img))) {
-                File::delete(public_path($producto->prod_img));
-            }
+//            if ($producto->prod_img && File::exists(public_path($producto->prod_img))) {
+//                File::delete(public_path($producto->prod_img));
+//            }
+
+            if ($producto->prod_img) {
+                $oldImagePath = base_path('../public_html/' . $producto->prod_img);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            } //Condicion para PARA PRODUCCION ELIMINAR
+
 
             // Mover la nueva imagen
             $image->move($destinationPath, $imageName);
