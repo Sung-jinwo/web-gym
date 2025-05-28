@@ -58,3 +58,5 @@
 </div>
 
 <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+<link rel="icon" href="{{ asset('icon/icongym.png') }}">
+
