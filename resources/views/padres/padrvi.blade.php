@@ -1,9 +1,9 @@
 @extends('layout')
 
 @section('title','Padre')
-    
+
 @section('content')
-@include('partials.estado') 
+@include('partials.estado')
 
 <div class="padres-container">
     <div class="padres-header">
@@ -77,9 +77,9 @@
             <div class="padres-empty">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <p>No hay padres registrados</p>
-                <a href="{{ route('padres.create') }}" class="padres-btn padres-btn-primary">
-                    <i class="fa-solid fa-user-plus"></i> Registrar Padre
-                </a>
+{{--                <a href="{{ route('padres.create') }}" class="padres-btn padres-btn-primary">--}}
+{{--                    <i class="fa-solid fa-user-plus"></i> Registrar Padre--}}
+{{--                </a>--}}
             </div>
         @endif
     </div>
