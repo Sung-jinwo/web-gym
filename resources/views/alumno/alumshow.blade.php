@@ -100,6 +100,7 @@
                         </button>
                     @endif
                 </form>
+                @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
                 <form action="{{ route('alumno.destroy', $alumno) }}" method="POST" class="inline-form">
                     @csrf @method('DELETE')
                     @if ($alumno->alum_estado == 'E')
@@ -108,6 +109,7 @@
                         </button>
                     @endif
                 </form>
+                @endif
             </div>
         </div>
     </div>

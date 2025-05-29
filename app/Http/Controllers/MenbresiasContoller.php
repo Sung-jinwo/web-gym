@@ -47,10 +47,9 @@ class MenbresiasContoller extends Controller
         }
 
         if ($membresiaTexto) {
-            $query->where(function ($q) use ($membresiaTexto) {
-                $q->where('mem_nomb', $membresiaTexto);
-            });
+            $query->where('mem_nomb', 'LIKE', '%' . $membresiaTexto . '%');
         }
+
 
         $membresias = $query->latest()
                             ->paginate(7)->appends([

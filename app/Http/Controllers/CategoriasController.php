@@ -22,11 +22,7 @@ class CategoriasController extends Controller
         return view('vencate.categovi',compact('categoria'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         return view('vencate.categocreate',[
@@ -39,8 +35,8 @@ class CategoriasController extends Controller
     public function store(CreateCategoriasRequest $request)
     {
         $categoria = new Categoria ($request->validated());
-        $categoria->save();     
-        
+        $categoria->save();
+
         return redirect()
                 ->route('producto.index')
                 ->with('estado','Se Creo una nueva Categoria');
@@ -57,12 +53,6 @@ class CategoriasController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Categoria $categoria)
     {
         return view('vencate.categoedit',[
@@ -74,8 +64,8 @@ class CategoriasController extends Controller
 
     public function update(Categoria $categoria,CreateCategoriasRequest $request)
     {
-        $validatedData = $request->validated(); 
-        
+        $validatedData = $request->validated();
+
         $categoria->update(array_filter($validatedData));
 
         return redirect()
