@@ -72,6 +72,7 @@
                     <th>Categoría</th>
                     <th>Nombre</th>
                     <th>Meses(dias)</th>
+                    <th>Costo</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -92,6 +93,9 @@
                         <td>
                             Dias: {{$item->mem_durac}}
                         </td>
+                        <td>
+                            S./{{$item->mem_cost}}
+                        </td>
                         <td class="actions-cell">
                             <a href="{{ route('membresias.show', $item) }}" title="Ver Detalle" class="btn btn-blue">
                                 <i class="icono-detalle"></i>
@@ -104,11 +108,11 @@
                                 @csrf
                                 @method('PUT')
                                 @if ($item->estado == 'A')
-                                    <button type="submit" class="btn btn-red" title="Inhabilitar alumno" onclick="return confirm('¿Estás seguro de desactivar este alumno?')">
+                                    <button type="submit" class="btn btn-red" title="Inhabilitar membresia" onclick="return confirm('¿Estás seguro de desactivar este alumno?')">
                                         <i class="icono-eliminar"></i>
                                     </button>
                                 @elseif($item->estado == 'E')
-                                    <button type="submit" class="btn btn-green" title="Reactivar alumno" onclick="return confirm('¿Estás seguro de Activar este alumno?')">
+                                    <button type="submit" class="btn btn-green" title="Reactivar membresia" onclick="return confirm('¿Estás seguro de Activar este alumno?')">
                                         <i class="icono-activar"></i>
                                     </button>
                                 @endif
