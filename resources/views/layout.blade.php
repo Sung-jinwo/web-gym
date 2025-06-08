@@ -27,6 +27,13 @@
 
 </head>
 <body>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Overlay para móvil -->
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+
     <nav class="sidebar">
         <button class="menu-toggle" onclick="toggleMenu()">
             <i class="fa-solid fa-bars"></i>
