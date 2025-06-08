@@ -63,7 +63,13 @@
                 </div>
                 <div class="info-card__grid-item">
                     <span class="info-card__label"><i class="fa-solid fa-envelope"></i> Correo:</span>
-                    <span class="info-card__value">{{ $alumno->alum_correro }}</span>
+                    <span class="info-card__value">
+                        @if($alumno->alum_correro )
+                        {{ $alumno->alum_correro }}
+                        @else
+                            No tiene Correo
+                        @endif
+                    </span>
                 </div>
                 <div class="info-card__grid-item">
                     <span class="info-card__label"><i class="fa-solid fa-phone"></i> Teléfono:</span>

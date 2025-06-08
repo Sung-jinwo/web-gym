@@ -65,7 +65,7 @@
 
 {{--</div>--}}
 
-    <div class="table-responsive">
+    <div class="table-container">
         <table class="membresias-table">
             <thead>
                 <tr>
