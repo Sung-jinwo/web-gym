@@ -83,10 +83,10 @@
                             <span class="student-link">{{ $alumno->created_at }}</span>
                         </td>
                         <td class="table-cell">
-                            <a href="{{ route('registro.show', $alumno) }}" class="student-link">{{ $alumno->alumno->alum_nombre }}</a>
+                            <a href="{{ route('registro.show', $alumno->fkalum) }}" class="student-link">{{ $alumno->alumno->alum_nombre }}</a>
                         </td>
                         <td class="table-cell">
-                            <a href="{{ route('registro.show', $alumno) }}" class="student-link">{{ $alumno->alumno->alum_apellido }}</a>
+                            <a href="{{ route('registro.show', $alumno->fkalum) }}" class="student-link">{{ $alumno->alumno->alum_apellido }}</a>
                         </td>
                         <td class="table-cell">
                             <div class="interaction-container">
@@ -106,7 +106,7 @@
                                         <i class="icono-usuario"></i>
                                     </span>
                                 @endif
-                                <a href="{{ route('registro.show', $alumno) }}" class="btn-icon btn-blue" title="Ver detalles">
+                                <a href="{{ route('registro.show', $alumno->fkalum) }}" class="btn-icon btn-blue" title="Ver detalles">
                                     <i class="icono-ver"></i>
                                 </a>
                                 <a href="{{ route('registro.edit', $alumno->fkalum) }}" class="btn-icon btn-green" title="Editar Prospescto">

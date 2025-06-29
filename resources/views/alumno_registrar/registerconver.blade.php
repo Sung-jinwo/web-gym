@@ -171,7 +171,7 @@
                             </label>
                             <div class="toggle-options">
                                 <div class="toggle-option">
-                                    <input type="radio" id="mensa_llamar_0" name="mensa_llamar" value="0"
+                                    <input type="radio" id="mensa_llamar_0" name="mensa_llamar" value="{{0}}"
                                            {{ old('mensa_llamar', $registros->mensa_llamar) == '0' ? 'checked': '' }} class="custom-radio">
                                     <label for="mensa_llamar_0" class="toggle-label">Ninguna</label>
                                 </div>

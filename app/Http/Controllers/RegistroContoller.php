@@ -98,7 +98,7 @@ class RegistroContoller extends Controller
         // apara guardar la fecha actual en la variable mensa_edit
         $mensaje->mensa_edit = Carbon::now()->toDateString();
         $mensaje->save();
-        dd($alumno);
+        // dd($alumno);
 
         return redirect()
             ->route('registro.index')
@@ -192,7 +192,9 @@ class RegistroContoller extends Controller
             $validatedData['postergar'] = 'No';
         }
 
-        $registros->update(array_filter($validatedData));
+        
+
+        $registros->update($validatedData);
         return redirect()
             ->route('registro.index', $registros)
             ->with('estado', 'El Mensaje fue Enviado correctamente');

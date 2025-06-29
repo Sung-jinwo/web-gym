@@ -46,7 +46,7 @@ class CreatePagosRequests extends FormRequest
             'pago' => 'required|numeric|min:0',
             'fkmetodo' => 'required|exists:metodos_pago,id_metod',
             'fksede' => 'required|exists:sedes,id_sede',
-            'fkalum' => 'nullable|exists:alumno,id_alumno|required_unless:fkmem,'.getRutina()->id_mem,
+            'fkalum' => 'nullable|exists:alumno,id_alumno|required_unless:fkmem,'.(getRutina() ? getRutina()->id_mem : ''),
             'monto_pagado' => 'nullable',
             'estado_pago' => 'required|in:completo,incompleto',
             'fecha_limite_pago' => 'nullable|required_if:estado_pago,incompleto|date',
@@ -54,12 +54,11 @@ class CreatePagosRequests extends FormRequest
         ];
 
         if ($this->has('fkmem')) {
-            $membresia = Membresias::with('categoria_m')->find($this->input('fkmem'));
-
-            if ($membresia && $membresia->categoria_m) {
-                if ($membresia->categoria_m->nombre_m !== 'Rutina') {
-                    $rules['fkalum'] = 'required|exists:alumno,id_alumno';
-                }
+            $membresia = Membresias::find($this->input('fkmem'));
+            if ($membresia && $membresia->categoria_m->nombre_m !== 'Rutina') {
+                $rules['fkalum'] = 'required|exists:alumno,id_alumno';
+            } else {
+                $rules['fkalum'] = 'nullable|exists:alumno,id_alumno';
             }
         }
 

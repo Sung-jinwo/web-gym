@@ -29,7 +29,7 @@ class CreateMensajeRequest extends FormRequest
             'mensa_periodo' => 'nullable|string|max:10',     // El periodo es obligatorio, de tipo cadena y máximo 10 caracteres
             'respuesta_alumno' => 'nullable|string|max:100', // Respuesta del alumno es opcional, máximo 100 caracteres
             'numero_mensaje' => 'required|integer|min:1|max:10', // El número de mensaje debe ser un valor entre 1 y 10
-            'mensa_llamar' => 'required|boolean',             // Campo de llamada, opcional y booleano
+            'mensa_llamar' => 'required|in:0,1,2',               // Campo de llamada, opcional y booleano
             'mensa_cerrar' => 'nullable|in:S,N,P',
             'postergar' => 'nullable|in:Si,No',
             'mensa_edit' => 'nullable|date_format:Y-m',
@@ -51,7 +51,7 @@ class CreateMensajeRequest extends FormRequest
             'numero_mensaje.integer' => 'El número de mensaje debe ser un número entero.',
             'numero_mensaje.min' => 'El número de mensaje debe ser al menos 1.',
             'numero_mensaje.max' => 'El número de mensaje no puede ser mayor a 10.',
-            'mensa_llamar.boolean' => 'El campo llamar debe ser verdadero o falso.',
+            'mensa_llamar.required' => 'El campo llamar debe ser Marcado.',
             'mensa_cerrar.in' => 'El campo cerrar debe ser Si, No, Proceso.',
         ];
     }
