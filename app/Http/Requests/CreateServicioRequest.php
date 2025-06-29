@@ -32,6 +32,8 @@ class CreateServicioRequest extends FormRequest
             'alum_direccion' => 'nullable',
             'alum_correro' => 'nullable|email',
             'alum_telefo' => 'required',
+            'alum_numDoc' => 'nullable',
+            'alum_documento' => 'nullable',
             'fksexo' => 'required|exists:sexo,id_sexo',
             'fksede' => 'required|exists:sedes,id_sede',
             'fecha_nac' => 'required|date',

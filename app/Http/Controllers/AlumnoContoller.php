@@ -153,6 +153,7 @@ class AlumnoContoller extends Controller
      */
     public function store(CreateServicioRequest $request)
     {
+        // dd($request->all());
         $validatedData = $request->validated();
 
         $alum_codigo = $validatedData['alum_codigo'];

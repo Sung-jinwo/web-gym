@@ -43,7 +43,7 @@ class ProductoController extends Controller
         }
 
         // Paginar los resultados
-        $producto = $query->latest()->paginate(7)->appends([
+        $producto = $query->latest()->paginate(8)->appends([
             'estado' => $filtroEstado,
             'id_sede' => $idSede,
             ]);

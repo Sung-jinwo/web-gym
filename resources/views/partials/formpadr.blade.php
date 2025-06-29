@@ -17,7 +17,7 @@
                 <label for="padre_nombre" class="filter-label">
                     <i class="fa-solid fa-user"></i> Nombre
                 </label>
-                <input type="text" name="padre_nombre" id="padre_nombre" class="padres-unique-input"
+                <input type="text" name="padre_nombre" id="padre_nombre" class="filter-dropdown enhanced-input"
                        placeholder="Ingrese el nombre del apoderado"
                        value="{{ old('padre_nombre', $padre->padre_nombre ?? '') }}" required>
                 @if ($errors->has('padre_nombre'))
@@ -29,7 +29,7 @@
                 <label for="padre_apellido" class="filter-label">
                     <i class="fa-solid fa-user-tag"></i> Apellido
                 </label>
-                <input type="text" name="padre_apellido" id="padre_apellido" class="padres-unique-input"
+                <input type="text" name="padre_apellido" id="padre_apellido" class="filter-dropdown enhanced-input"
                        placeholder="Ingrese el apellido del apoderado"
                        value="{{ old('padre_apellido', $padre->padre_apellido ?? '') }}" required>
                 @if ($errors->has('padre_apellido'))
@@ -41,7 +41,7 @@
                 <label for="padre_telefono" class="filter-label">
                     <i class="fa-solid fa-phone"></i> Teléfono
                 </label>
-                <input type="text" name="padre_telefono" id="padre_telefono" class="padres-unique-input"
+                <input type="text" name="padre_telefono" id="padre_telefono" class="filter-dropdown enhanced-input"
                        placeholder="Ej. 987654321" maxlength="9"
                        value="{{ old('padre_telefono', $padre->padre_telefono ?? '') }}" required>
                 @if ($errors->has('padre_telefono'))
@@ -55,7 +55,7 @@
                 <label for="padre_correo" class="filter-label">
                     <i class="fa-solid fa-envelope"></i> Correo Electrónico
                 </label>
-                <input type="email" name="padre_correo" id="padre_correo" class="padres-unique-input"
+                <input type="email" name="padre_correo" id="padre_correo" class="filter-dropdown enhanced-input"
                        placeholder="correo@ejemplo.com"
                        value="{{ old('padre_correo', $padre->padre_correo ?? '') }}">
                 @if ($errors->has('padre_correo'))
@@ -67,7 +67,7 @@
                 <label for="fksexo" class="filter-label">
                     <i class="fa-solid fa-venus-mars"></i> Sexo
                 </label>
-                <select name="fksexo" id="fksexo" class="padres-unique-input" required>
+                <select name="fksexo" id="fksexo" class="filter-dropdown enhanced-select" required>
                     <option value="">Seleccionar Sexo</option>
                     <option value="1" {{ old('fksexo', $padre->fksexo ?? '') == 1 ? 'selected' : '' }}>Masculino</option>
                     <option value="2" {{ old('fksexo', $padre->fksexo ?? '') == 2 ? 'selected' : '' }}>Femenino</option>
