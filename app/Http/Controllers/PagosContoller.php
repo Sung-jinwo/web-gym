@@ -190,7 +190,7 @@ class PagosContoller extends Controller
      */
     public function store(CreatePagosRequests $request)
     {
-//         dd($request->all());
+        // dd($request->all());
         $validatedData = $request->validated();
 
         $membresia = Membresias::with('categoria_m')->find($validatedData['fkmem']);
@@ -234,7 +234,7 @@ class PagosContoller extends Controller
             'monto_pagado' => $validatedData['monto_pagado'],
             'pag_entre'=>$validatedData['pag_entre']
         ]);
-        // Gerar el detallle Pago
+        // Generar el detallle Pago
         PagoDetalle::create([
             'monto'=>  $validatedData['monto_pagado'],
             'estado'=> $estadoPago,
@@ -246,7 +246,7 @@ class PagosContoller extends Controller
         $alumno = $pago->alumno;
 
         // Renovación
-        if ($alumno->membresiaVigente) {
+        if ($alumno && $alumno->membresiaVigente)  {
             Histopag::create([
                 'fkpago' => $pago->id_pag,
                 'fkuser' => $pago->fkuser,

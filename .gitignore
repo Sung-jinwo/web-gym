@@ -4,6 +4,9 @@
 /public/storage
 /storage/*.key
 
+# Ignorar archivos de logs de Laravel
+storage/logs/*.log
+
 /vendor
 .env
 .env.backup
