@@ -30,13 +30,20 @@
             </div>
             <div class="detail-item">
                 <i class="fa-solid fa-location-dot"></i>
-                <p>Sede Principal: Calle Juan Jose Crespo y Castillo #1418</p>
+                <p>Horario: Sabados 6:00 AM - 7:00 PM</p>
+            </div>
+        </div>
+        {{-- <div class="about-details">
+            <div class="detail-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <p>Contacto: +51 --------</p>
             </div>
             <div class="detail-item">
                 <i class="fa-solid fa-phone"></i>
-                <p>Contacto: +51 907851770</p>
+                <p>Contacto: +51 943297293</p>
             </div>
-        </div>
+        </div> --}}
+        
     </section>
 
     <!-- Servicios Destacados -->
@@ -68,6 +75,35 @@
             <img src="{{ asset('img/Jose_Crespo.jpg') }}" alt="Gimnasio 3">
             <img src="{{ asset('img/Jaime_Blanco.jpg') }}" alt="Gimnasio 2">
             <img src="{{ asset('img/Rio_seco.jpg') }}" alt="Gimnasio 1">
+        </div>
+        <div class="about-details">
+            <div class="detail-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <p>Sede: Jose Crespo</p>
+            </div>
+            <div class="detail-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <p>Sede: Jaime blanco</p>
+            </div>
+            <div class="detail-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <p>Sede: Rio seco</p>
+            </div>
+        </div>
+
+        <div class="about-details">
+            <div class="detail-item">
+                <i class="fa-solid fa-phone"></i>
+                <p>Contacto: +51 907851770</p>
+            </div>
+            <div class="detail-item">
+                <i class="fa-solid fa-phone"></i>
+                <p>Contacto: +51 919631342</p>
+            </div>
+            <div class="detail-item">
+                <i class="fa-solid fa-phone"></i>
+                <p>Contacto: +51 907543162</p>
+            </div>
         </div>
     </section>
 
