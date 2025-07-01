@@ -67,13 +67,15 @@
                             <label for="prod_nombre" class="filter-label">
                                 <i class="fa-solid fa-tag"></i> Nombre del Producto
                             </label>
-                         @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
-                            <input type="text" id="prod_nombre" name="prod_nombre"  placeholder="Ingrese nombre de Producto" value="{{ old('prod_nombre', $producto->prod_nombre)}}" class="filter-dropdown">
-                            @if($errors->has('prod_nombre'))
-                                <span class="error-message">{{ $errors->first('prod_nombre') }}</span>
+                            @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
+                                <input type="text" id="prod_nombre" name="prod_nombre"  placeholder="Ingrese nombre de Producto" value="{{ old('prod_nombre', $producto->prod_nombre)}}" class="filter-dropdown">
+                            @else
+                            <input type="hidden" name="prod_nombre" value="{{ old('prod_nombre', $producto->prod_nombre) }}">
+                            <input type="text" id="prod_nombre" value="{{ old('prod_nombre', $producto->prod_nombre) }}" class="filter-dropdown" disabled>
                             @endif
-                        @else
-                            <input type="text" id="prod_nombre" name="prod_nombre" placeholder="Ingrese nombre de Producto" value="{{ old('prod_nombre', $producto->prod_nombre)}}" class="filter-dropdown" disabled>
+
+                            @if($errors->has('prod_nombre'))
+                            <span class="error-message">{{ $errors->first('prod_nombre') }}</span>
                         @endif
                         </div>
                         <div class="filter-item">
@@ -89,15 +91,17 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                @if($errors->has('fkcategoria'))
-                                    <span class="error-message">{{ $errors->first('fkcategoria') }}</span>
-                                @endif
                             @else
+                                <input type="hidden" name="fkcategoria" value="{{ old('fkcategoria', $producto->fkcategoria) }}">
                                 <select name="fkcategoria" id="fkcategoria" class="filter-dropdown" disabled>
-                                    <option value="{{ $producto->categoria->id_categoria }}">
+                                    <option value="{{ $producto->fkcategoria }}">
                                         {{ $producto->categoria->nombre }}
                                     </option>
                                 </select>
+                            @endif
+                            
+                            @if($errors->has('fkcategoria'))
+                                    <span class="error-message">{{ $errors->first('fkcategoria') }}</span>
                             @endif
                         </div>
                     </div>
@@ -179,7 +183,6 @@
                             <label for="fkusers" class="filter-label">
                                 <i class="fa-solid fa-user"></i> Usuario de Registro
                             </label>
-
                             <select name="fkusers" id="fkusers" class="filter-dropdown">
                                 <option value="">Seleccione un usuario</option>
                                 @foreach($users as $user)
@@ -188,25 +191,25 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @if($errors->has('fkusers'))
-                                <span class="producto-form-unique-error">{{ $errors->first('fkusers') }}</span>
-                            @endif
                         @else
                             <label class="filter-label">
                                 <i class="icono-usuario"></i> Usuario:
                             </label>
-                            <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
+                            <input type="hidden" name="fkusers" value="{{ auth()->user()->id }}">
                             <input type="text" value="{{ auth()->user()->name }}"
                                 class="filter-dropdown"
                                 disabled>
-                         @endif        
+                        @endif
+                        
+                        @if($errors->has('fkusers'))
+                                <span class="producto-form-unique-error">{{ $errors->first('fkusers') }}</span>
+                        @endif        
                     </div>
                     <div class="filter-item">
                         <label for="fksede"  class="filter-label">
                             <i class="fa-solid fa-building"></i> Lugar Para el Producto
                         </label>
-                         @if (auth()->user()->is(\App\Models\User::ROL_ADMIN|| auth()->user()->is(App\Models\User::ROL_ASISTENCIA)))
-
+                         @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
                             <select name="fksede" id="fksede"  class="filter-dropdown">
                                 <option value="">Seleccionar Sede</option>
                                 @foreach ($sedes as $sede)
@@ -215,16 +218,16 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @if($errors->has('fksede'))
-                                <span class="error-message">{{ $errors->first('fksede') }}</span>
-                            @endif
                         @else
-                        <input type="hidden" name="fksede" value="{{ auth()->user()->fksede }}">
-                        <select class="filter-dropdown" disabled>
-                            <option>
-                                {{ auth()->user()->sede->sede_nombre}}
-                            </option>
-                        </select>
+                            <input type="hidden" name="fksede" value="{{ auth()->user()->fksede }}">
+                            <select class="filter-dropdown" disabled>
+                                <option>
+                                    {{ auth()->user()->sede->sede_nombre}}
+                                </option>
+                            </select>
+                        @endif
+                        @if($errors->has('fksede'))
+                                <span class="error-message">{{ $errors->first('fksede') }}</span>
                         @endif
                     </div>
                 </div>
