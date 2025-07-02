@@ -24,7 +24,7 @@
                     <li class="sidebar__submenu-item {{ request()->routeIs('registro.index') ? 'active' : '' }}">
                         <a href="{{ route('registro.index') }}" class="sidebar__submenu-link">
                             <i class="fa-solid fa-users-slash"></i>
-                            <span class="sidebar__text">Prospesto Redes</span>
+                            <span class="sidebar__text">Prospecto Redes</span>
                         </a>
                     </li>
                 </ul>

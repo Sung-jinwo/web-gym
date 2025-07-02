@@ -135,7 +135,7 @@ Route::group(['middleware' => 'auth'], function (){
 
             Route::get('{registros}',[RegistroContoller::class, 'show'])->name('registro.show');
 
-            Route::delete('{registros}',[RegistroContoller::class, 'destroy'])->name('registro.destroy');
+            Route::delete('{alumno}',[RegistroContoller::class, 'destroy'])->name('registro.destroy');
 
 
         });

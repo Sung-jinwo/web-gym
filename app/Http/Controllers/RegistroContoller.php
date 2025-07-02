@@ -203,12 +203,16 @@ class RegistroContoller extends Controller
 
 
     public function destroy(Alumno $alumno)
-    {
-        $alumno->delete();
+        {
+            // Eliminar los mensajes relacionados primero
+            $alumno->mensaje()->delete();
 
-        return redirect()->route('registro.index')
-            ->with('estado', 'El Prospecto fue eliminado Correctamente');
-    }
+            // Luego eliminar al alumno
+            $alumno->delete();
+
+            return redirect()->route('registro.index')
+                ->with('estado', 'El Prospecto fue eliminado correctamente');
+        }
 
 
     public function estado(Alumno $registros)
