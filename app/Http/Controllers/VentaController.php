@@ -37,6 +37,7 @@ class VentaController extends Controller
     {
 
         // dd($request->all());
+        $validatedData = $request->validated();
 
         $producto = Producto::findOrFail($request->fkproducto);
 
@@ -45,15 +46,24 @@ class VentaController extends Controller
             return back()->with('error', 'No hay suficiente stock disponible.');
         }
 
+        $subtotalNuevo = $producto->prod_precio * $request->cantidad;
+        $venta_total = $subtotalNuevo;
+
+        $total= $producto->prod_precio * $request->cantidad;
+        $monto = $validatedData['estado_venta'] === 'Pagado' ? $venta_total : $validatedData['venta_pago'];
+
         // Crear la venta
         $venta = Venta::create([
             'fkusers' => $request->fkusers,
             'fkalum' => $request->fkalum,
             'fksede' => $request->fksede,
             'fkmetodo' => $request->fkmetodo,
+            'estado_venta' => $request->estado_venta,
             'venta_entre' => $request->venta_entre,
-            'venta_fecha' => now(),
-            'venta_total' => $producto->prod_precio * $request->cantidad
+            'venta_fecha' => $request->venta_fecha,
+            'venta_pago'=> $request->venta_pago,
+            'venta_saldo' => $total -$request->venta_pago,
+            'venta_total' => $total
         ]);
 
         // Crear detalle de venta
@@ -61,9 +71,10 @@ class VentaController extends Controller
             'fkventa' => $venta->id_venta,
             'fkproducto' => $producto->id_productos,
             'fkmetodo' => $venta->fkmetodo,
+            'estado_venta' => $request->estado_venta,
             'datelle_cantidad' => $request->cantidad,
             'datelle_precio_unitario' => $producto->prod_precio,
-            'datelle_sub_total' => $producto->prod_precio * $request->cantidad
+            'datelle_sub_total' => $monto,
         ]);
 
         // Actualizar stock del producto
@@ -90,58 +101,85 @@ class VentaController extends Controller
             compact('venta', 'productos', 'metodos', 'sedes', 'usuarios'));
     }
 
-    public function update(Request $request, Venta $venta)
+    public function update(CreateVentaRequest $request, Venta $venta)
     {
-        // dd($request->all());
-        $request->validate([
-
-            'cantidad' => 'required|integer|min:1',
-            'fkmetodo' => 'required|exists:metodos_pago,id_metod',
-            'fkusers' => 'required|exists:users,id',
-            'fkalum' => 'nullable|exists:alumno,id_alumno',
-            'fksede' => 'required|exists:sedes,id_sede',
-            'venta_entre' => 'nullable|string',
-        ]);
-
-        // Obtener el detalle de la venta
-        $detalle = $venta->detalles->first(); // Asumimos que hay un solo detalle por venta
+        $validatedData = $request->validated();
+    
+        $detalle = $venta->detalles()
+            ->where('datelle_cantidad', '>', 0)
+            ->orderBy('id_detalle', 'asc')
+            ->first();
+    
+        if (!$detalle) {
+            return back()->with('error', 'No se encontró un detalle válido.');
+        }
+    
         $producto = $detalle->producto;
-
-        // Calcular la diferencia de cantidad (nueva cantidad - cantidad anterior)
+    
         $cantidadAnterior = $detalle->datelle_cantidad;
         $cantidadNueva = $request->cantidad;
         $diferenciaCantidad = $cantidadNueva - $cantidadAnterior;
-
-        // Verificar si hay suficiente stock disponible
-        if ($diferenciaCantidad > 0 && $producto->prod_cantidad < $diferenciaCantidad) {
-            return back()->with('error', 'No hay suficiente stock disponible para actualizar la venta.');
-        }
-
-        // Actualizar el stock del producto
-        if ($diferenciaCantidad != 0) {
+    
+        $subtotalNuevo = $producto->prod_precio * $cantidadNueva;
+        $venta_total = $subtotalNuevo;
+    
+        // 👉 Calcular total pagado ANTES de modificar el detalle
+        $totalPagadoAntes = $venta->detalles()->sum('datelle_sub_total');
+    
+        $estadoventa = $validatedData['estado_venta'];
+        $monto = $estadoventa === 'Pagado' ? $venta_total : $validatedData['venta_pago'];
+    
+        $estadoReserva = $estadoventa === 'Reservado';
+        $saldoPendiente = $estadoReserva ? $validatedData['venta_saldo'] : 0;
+        if ($diferenciaCantidad !== 0) {
+    
+            if ($diferenciaCantidad > 0 && $producto->prod_cantidad < $diferenciaCantidad) {
+                return back()->with('error', 'No hay suficiente stock disponible para actualizar la venta.');
+            }
+    
+            // Actualizar stock
             $producto->decrement('prod_cantidad', $diferenciaCantidad);
+    
+            // Actualizar detalle
+            $detalle->update([
+                'datelle_cantidad' => $cantidadNueva,
+                'datelle_precio_unitario' => $producto->prod_precio,
+                'datelle_sub_total' => $subtotalNuevo,
+            ]);
         }
-
-        // Actualizar el detalle de la venta
-        $detalle->update([
-            'datelle_cantidad' => $cantidadNueva,
-            'datelle_precio_unitario' => $producto->prod_precio,
-            'datelle_sub_total' => $producto->prod_precio * $cantidadNueva,
-        ]);
-
+    
         // Actualizar la venta
         $venta->update([
             'fkusers' => $request->fkusers,
             'fkalum' => $request->fkalum,
             'fksede' => $request->fksede,
             'fkmetodo' => $request->fkmetodo,
-            'venta_total' => $producto->prod_precio * $cantidadNueva,
+            'estado_venta' => $estadoventa,
+            'venta_fecha' => $request->venta_fecha,
+            'venta_pago' => $monto,
+            'venta_total' => $venta_total,
             'venta_entre' => $request->venta_entre,
+            'venta_saldo' => $saldoPendiente,
         ]);
-
-        // Redireccionar con mensaje de éxito
+    
+        // Saldo restante a registrar como nuevo detalle
+        $saldo = $monto - $totalPagadoAntes;
+    
+        if ($saldo > 0) {
+            DetalleVenta::create([
+                'fkventa' => $venta->id_venta,
+                'fkproducto' => $producto->id_productos,
+                'fkmetodo' => $venta->fkmetodo,
+                'estado_venta' => $estadoventa,
+                'datelle_cantidad' => 0,
+                'datelle_precio_unitario' => 0,
+                'datelle_sub_total' => $saldo,
+            ]);
+        }
+    
         return redirect()->route('detalle.index')->with('estado', 'La venta fue actualizada correctamente.');
     }
+    
 
 
 }

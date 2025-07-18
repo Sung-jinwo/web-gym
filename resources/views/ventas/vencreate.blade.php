@@ -104,27 +104,92 @@
                     </h3>
                     <p class="section-description">Indica el método de pago y verifica el total calculado automáticamente.</p>
                 </div>
-                <div class="section-content">
-                    <div class="filter-row">
-                        <div class="filter-item">
-                            <label class="filter-label">
-                                <i class="fa-solid fa-money-bill-wave"></i> Total a pagar
-                            </label>
-                            <input class="filter-dropdown" type="text" id="total" readonly placeholder="Total calculado automáticamente">
-                        </div>
 
-                        <div class="filter-item">
-                            <label class="filter-label">
-                                <i class="fa-solid fa-credit-card"></i> Tipo de Pago
-                            </label>
-                            <select class="filter-dropdown" name="fkmetodo" required>
-                                <option value="">Seleccione el Pago</option>
-                                @foreach ($metodos as $metodo)
-                                    <option value="{{ $metodo->id_metod }}">{{ $metodo->tipo_pago }}</option>
-                                @endforeach
-                            </select>
+                    <div class="section-content">
+                        <div class="filter-row">
+                            <div class="filter-item">
+                                <label class="filter-label">
+                                    <i class="fa-solid fa-money-bill-wave"></i> Total a pagar
+                                </label>
+                                <input class="filter-dropdown" type="text" id="total" readonly placeholder="Total calculado automáticamente">
+                            </div>
+
+                            <div class="filter-item">
+                                <label class="filter-label">
+                                    <i class="fa-solid fa-credit-card"></i> Tipo de Pago
+                                </label>
+                                <select class="filter-dropdown" name="fkmetodo" required>
+                                    <option value="">Seleccione el Pago</option>
+                                    @foreach ($metodos as $metodo)
+                                        <option value="{{ $metodo->id_metod }}">{{ $metodo->tipo_pago }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
                         </div>
-                    </div>
+                        <div class="filter-row">
+                            <div class="filter-item">
+                                <label class="filter-label">
+                                    <i class="fa-solid fa-check-circle"></i> Estado del Pago
+                                </label>
+                                <select class="filter-dropdown" name="estado_venta" id="estado_venta" required>
+                                    <option value="">Seleccione el Pago</option>
+                                    <option value="Pagado">Pagado</option>
+                                    <option value="Reservado">Reservado</option>
+                                </select>
+                                @if($errors->has('estado_pago'))
+                                    <span class="error-message">{{ $errors->first('estado_pago') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        {{-- Ventas reservadas --}}
+                        <div id="campos-incompleto" class="payment-subsection"
+                        style="display: {{ old('estado_venta', $venta->estado_venta ?? '') === 'Reservado' ? 'block' : 'none' }};">
+                            <div class="subsection-header">
+                                <h4 class="subsection-title">
+                                    <i class="fa-solid fa-exclamation-triangle"></i>
+                                    Ventas de Reserva
+                                </h4>
+                            </div>
+                            <div class="filter-row">
+                                <div class="filter-item">
+                                    <label for="venta_fecha" class="filter-label enhanced-label">
+                                        <i class="fa-solid fa-clock"></i>
+                                        Fecha Límite para Pagar
+                                    </label>
+                                    <input type="date" name="venta_fecha" id="venta_fecha"
+                                        value=""
+                                        class="filter-dropdown enhanced-input">
+                                    @if($errors->has('venta_fecha'))
+                                        <span class="error-message">{{ $errors->first('venta_fecha') }}</span>
+                                    @endif
+                                </div>
+                                <div class="filter-item">
+                                    <label for="venta_pago" class="filter-label enhanced-label">
+                                        <i class="fa-solid fa-money-check"></i>
+                                        Monto Pagado
+                                    </label>
+                                    <input type="number" name="venta_pago" id="venta_pago"
+                                        value=""
+                                        step="0.01" class="filter-dropdown enhanced-input">
+                                    @if($errors->has('venta_pago'))
+                                        <span class="error-message">{{ $errors->first('venta_pago') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            {{-- <div class="filter-item">
+                                <label for="saldo_pendiente" class="filter-label enhanced-label">
+                                    <i class="fa-solid fa-balance-scale"></i>
+                                    Saldo Pendiente
+                                </label>
+                                <input type="number" name="saldo_pendiente" id="saldo_pendiente"
+                                    value=""
+                                    step="0.01" class="filter-dropdown enhanced-input" readonly>
+                                @if($errors->has('saldo_pendiente'))
+                                    <span class="error-message">{{ $errors->first('saldo_pendiente') }}</span>
+                                @endif
+                            </div> --}}
+                        </div>
                 </div>
             </div>
         </div>
@@ -207,6 +272,8 @@
 </form>
 
 <script>
+    const estadoPagoSelect = document.getElementById('estado_venta');
+    const camposIncompleto = document.getElementById('campos-incompleto');
     document.querySelector('input[name="cantidad"]').addEventListener('input', function() {
         let cantidad = this.value;
         let precioUnitario = {{ $producto->prod_precio }};
@@ -216,6 +283,21 @@
     function closeModal() {
         document.getElementById('ventaModal').style.display = 'none';
     }
+
+    function toggleCamposIncompleto() {
+                if (estadoPagoSelect.value === 'Reservado') {
+                    // Mostrar los campos incompletos
+                    camposIncompleto.style.display = 'block';
+                } else {
+                    // Ocultar y limpiar los campos incompletos
+                    camposIncompleto.style.display = 'none';
+                    fechaLimitePagoInput.value = '';
+                    saldoPendienteInput.value = '0';
+                    montoPagadoInput.value = '0';
+                }
+            }
+    estadoPagoSelect.addEventListener('change', toggleCamposIncompleto);
+
 </script>
 
 @endsection

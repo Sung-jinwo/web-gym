@@ -29,7 +29,11 @@ class CreateVentaRequest extends FormRequest
             'fkalum' => 'nullable|exists:alumno,id_alumno',
             'fksede' => 'required|exists:sedes,id_sede',
             'fkmetodo' => 'required|exists:metodos_pago,id_metod',
-            'fkproducto' => 'required|exists:productos,id_productos',
+            'estado_venta'=> 'required',
+            'venta_fecha'=> 'nullable|date_format:Y-m-d',
+            'venta_pago' => 'nullable',
+            'venta_saldo' => 'nullable',
+            // 'fkproducto' => 'required|exists:productos,id_productos',
             'cantidad' => 'required|integer|min:1'
         ];
     }
@@ -44,6 +48,8 @@ class CreateVentaRequest extends FormRequest
             'fksede.exists' => 'La sede seleccionada no es válida.',
             'fkmetodo.required' => 'El Tipo de Pago es obligatoria.',
             'fkmetodo.exists' => 'El Metodo de pago seleccionado no es válido.',
+            'fkmetodo.required' => 'El Estado del pago no fue seleccionado no es válido.',
+            'estado_venta.required' => 'El estado de la venta es obligatorio.',
             'fkproducto.required' => 'El producto es obligatorio.',
             'fkproducto.exists' => 'El producto seleccionado no es válido.',
             'cantidad.required' => 'Debe ingresar una cantidad.',

@@ -1,4 +1,3 @@
-@php use App\Models\User; @endphp
 @extends('layout')
 
 @section('title', 'Productos')
@@ -12,7 +11,8 @@
         <div class="producto-unique-filtro">
 
             <form method="GET" action="{{ route('producto.index') }}" class="producto-unique-filtro-form">
-                @if(auth()->user()->is(User::ROL_ADMIN))
+                @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
+
 
                     <label for="estado" class="producto-unique-filtro-label">
                         <i class="fa-solid fa-filter"></i> Filtrar por Estado:
@@ -45,21 +45,20 @@
 
         <!-- Acciones -->
         <div class="producto-unique-acciones">
-            @if(auth()->user()->is(User::ROL_ADMIN))
-            <a href="{{ route('producto.create') }}" class="producto-unique-btn producto-unique-btn-primary">
-                <i class="fa-solid fa-plus"></i> Nuevo Producto
-            </a>
-
+            @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
+                <a href="{{ route('producto.create') }}" class="producto-unique-btn producto-unique-btn-primary">
+                    <i class="fa-solid fa-plus"></i> Nuevo Producto
+                </a>
                 <a href="{{ route('categoria.create') }}" class="producto-unique-btn producto-unique-btn-secondary">
                     <i class="fa-solid fa-tags"></i> Nueva Categoría
                 </a>
                 <a href="{{ route('categoria.index') }}" class="producto-unique-btn producto-unique-btn-secondary">
                     <i class="fa-solid fa-list"></i> Listado de Categorías
                 </a>
+            @endif
                 <a href="{{ route('detalle.index') }}" class="producto-unique-btn producto-unique-btn-secondary">
                     <i class="fa-solid fa-cash-register"></i> Ventas
                 </a>
-            @endif
         </div>
 
 
@@ -120,7 +119,7 @@
                                 <i class="fa-solid fa-eye"></i>
                             </a>
 
-                            @if ($item->estado === 'activo' && auth()->user()->is(User::ROL_ADMIN))
+                            @if ($item->estado === 'activo' && auth()->user()->is(\App\Models\User::ROL_ADMIN))
                                 <form action="{{ route('producto.destroy', $item) }}" method="POST"
                                       class="producto-unique-form">
                                     @csrf
@@ -131,7 +130,7 @@
                                         <i class="fa-solid fa-ban"></i>
                                     </button>
                                 </form>
-                            @elseif(auth()->user()->is(User::ROL_ADMIN))
+                            @elseif(auth()->user()->is(\App\Models\User::ROL_ADMIN))
                                 <form action="{{ route('producto.activar', $item) }}" method="POST"
                                       class="producto-unique-form">
                                     @csrf

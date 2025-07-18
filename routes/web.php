@@ -27,12 +27,8 @@ Route::group(['middleware' => ['auth','admin']], function (){
         Route::get('', [UsuarioController::class, 'index'])->name('admin.users.index');
         Route::get('{user}/edit', [UsuarioController::class, 'edit'])->name('admin.users.edit');
         Route::post('{user}/edit', [UsuarioController::class, 'update']);
-
-
-        Route::get('producto/crear',[ProductoController::class, 'create'])->name('producto.create');
-
-
     });
+
     Route::group(['prefix' => 'membresias'], function () {
         Route::get('crear',[MenbresiasContoller::class, 'create'])->name('membresias.create');
         Route::get('{membresias}/editar',[MenbresiasContoller::class, 'edit'])->name('membresias.edit');
@@ -45,6 +41,7 @@ Route::group(['middleware' => ['auth','admin']], function (){
 
     });
     // destoy
+    Route::get('producto/crear',[ProductoController::class, 'create'])->name('producto.create');
 
     Route::group(['prefix'=>'graficos'],function (){
         Route::get('',[GraficaController::class, 'index'])->name('graficos.index');
@@ -52,11 +49,9 @@ Route::group(['middleware' => ['auth','admin']], function (){
     // ===================================categorias-Membresias============
     Route::group(['prefix' => 'catego_m'], function () {
         Route::get('/crear',[Categori_MController::class, 'create'])->name('catego_m.create');
-
         Route::get('/{categoria_m}/editar',[Categori_MController::class, 'edit'])->name('catego_m.edit');
         Route::patch('/{categoria_m}',[Categori_MController::class, 'update'])->name('catego_m.update');
         Route::post('',[Categori_MController::class, 'store'])->name('catego_m.store');
-
         Route::delete('/{categoria_m}',[Categori_MController::class, 'destroy'])->name('catego_m.destroy');
     });
 
@@ -73,13 +68,7 @@ Route::group(['middleware' => ['auth','admin']], function (){
         Route::delete('/{categoria}',[CategoriasController::class, 'destroy'])->name('categoria.destroy');
     });
 
-    route::group(['prefix' => 'detalle'], function () {
-        Route::get('', [DetalleController::class, 'index'])-> name('detalle.index');
-        Route::get('/{detalle}',[DetalleController::class, 'show'])->name('detalle.show');
-        Route::get('detalle/{detalle}/editar',[DetalleController::class, 'edit'])->name('detalle.edit');
-        Route::get('{detalle}/boleta-pdf',[DetalleController::class, 'boletaPdf'])->name('detalle.boletapdf');
 
-    });
 
 });
 //final de admin
@@ -99,6 +88,14 @@ Route::group(['middleware' => 'auth'], function (){
     //final de Alumno asistencia
 
     Route::group(['middleware' => 'empleado'], function (){
+        
+        route::group(['prefix' => 'detalle'], function () {
+            Route::get('', [DetalleController::class, 'index'])-> name('detalle.index');
+            Route::get('/{detalle}',[DetalleController::class, 'show'])->name('detalle.show');
+            Route::get('detalle/{detalle}/editar',[DetalleController::class, 'edit'])->name('detalle.edit');
+            Route::get('{detalle}/boleta-pdf',[DetalleController::class, 'boletaPdf'])->name('detalle.boletapdf');
+        });
+        
         Route::group(['prefix' => 'alumno'], function (){
             //el buscar lo usa actualizar ventas
             Route::get('buscar', [AlumnoContoller::class, 'buscarPorCodigo'])->name('alumno.buscar');

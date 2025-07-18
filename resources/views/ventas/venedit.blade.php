@@ -14,6 +14,7 @@
     <!-- ID oculto -->
     <input type="hidden" name="fkalum" id="fkalum" value="{{ old('fkalum', $venta->fkalum) }}">
 
+
     <div class="filter-row">
         <div class="filter-item">    <!-- Sección: Información del Alumno -->
             <div class="form-section">
@@ -97,6 +98,7 @@
                     <h3 class="Sub_titulos"><i class="fa-solid fa-credit-card"></i> Información de Pago</h3>
                     <p class="section-description">Verifica el monto total y selecciona el método de pago.</p>
                 </div>
+                
                 <div class="section-content">
                     <div class="filter-row">
                         <div class="filter-item">
@@ -116,6 +118,69 @@
                             </select>
                         </div>
                     </div>
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <label class="filter-label">
+                                <i class="fa-solid fa-check-circle"></i> Estado del Pago
+                            </label>
+                            <select class="filter-dropdown" name="estado_venta" id="estado_venta" required>
+                                <option value="">Seleccione el Pago</option>
+                                <option value="Pagado"{{ old('estado_venta', $venta->estado_venta) == 'Pagado' ? 'selected' : '' }}>Pagado</option>
+                                <option value="Reservado"{{ old('estado_venta', $venta->estado_venta) == 'Reservado' ? 'selected' : '' }} >Reservado</option>
+                            </select>
+                            @if($errors->has('estado_pago'))
+                                <span class="error-message">{{ $errors->first('estado_pago') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    {{-- Ventas reservadas --}}
+                    <div id="campos-incompleto" class="payment-subsection"
+                        style="display: {{ old('estado_venta', $venta->estado_venta ?? '') === 'Reservado' ? 'block' : 'none' }};">
+                            <div class="subsection-header">
+                                <h4 class="subsection-title">
+                                    <i class="fa-solid fa-exclamation-triangle"></i>
+                                    Ventas de Reserva
+                                </h4>
+                            </div>
+                            <div class="filter-row">
+                            <div class="filter-item">
+                                <label for="venta_fecha" class="filter-label enhanced-label">
+                                    <i class="fa-solid fa-clock"></i>
+                                    Fecha Límite para Pagar
+                                </label>
+                                <input type="date" name="venta_fecha" id="venta_fecha"
+                                    value="{{ old('venta_fecha', $venta->venta_fecha ? \Carbon\Carbon::parse($venta->venta_fecha)->format('Y-m-d') : '') }}"
+                                    class="filter-dropdown enhanced-input">
+                                @if($errors->has('venta_fecha'))
+                                    <span class="error-message">{{ $errors->first('venta_fecha') }}</span>
+                                @endif
+                            </div>
+                            <div class="filter-item">
+                                <label for="venta_pago" class="filter-label enhanced-label">
+                                    <i class="fa-solid fa-money-check"></i>
+                                    Monto Pagado
+                                </label>
+                                <input type="number" name="venta_pago" id="venta_pago"
+                                   value="{{ old('venta_pago', $venta->venta_pago ?? '') }}"
+                                    step="0.01" class="filter-dropdown enhanced-input">
+                                @if($errors->has('venta_pago'))
+                                    <span class="error-message">{{ $errors->first('venta_pago') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                            <div class="filter-item">
+                                <label for="venta_saldo" class="filter-label enhanced-label">
+                                    <i class="fa-solid fa-balance-scale"></i>
+                                    Saldo Pendiente
+                                </label>
+                                <input type="number" name="venta_saldo" id="venta_saldo"
+                                    value="{{ old('venta_saldo', $venta->venta_saldo ?? '') }}"
+                                    step="0.01" class="filter-dropdown enhanced-input" readonly>
+                                @if($errors->has('venta_saldo'))
+                                    <span class="error-message">{{ $errors->first('venta_saldo') }}</span>
+                                @endif
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -157,6 +222,8 @@
 
                         <div class="filter-item">
                             <label class="filter-label"><i class="fa-solid fa-location-dot"></i> Sede</label>
+                            @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
+
                             <select class="filter-dropdown" name="fksede" required>
                                 <option value="">Seleccione Lugar de Registro</option>
                                 @foreach ($sedes as $sede)
@@ -165,6 +232,10 @@
                                     </option>
                                 @endforeach
                             </select>
+                            @else
+                                <input class="filter-dropdown" type="text" value="{{ $venta->sede?->sede_nombre }}" readonly>
+                                <input type="hidden" name="fksede" value="{{ $venta->fksede }}">
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -187,9 +258,16 @@
             Actualizar Venta
         </button>
     </div>
+    
 </form>
 
 <script>
+    const estadoPagoSelect = document.getElementById('estado_venta');
+    const camposIncompleto = document.getElementById('campos-incompleto');
+    const fechaLimitePagoInput = document.getElementById('venta_fecha');
+    const saldoPendienteInput = document.getElementById('venta_saldo');
+    const montoPagadoInput = document.getElementById('venta_pago');
+
     document.getElementById('buscarAlumno').addEventListener('click', function () {
         const codigo = document.getElementById('alum_codigo').value;
 
@@ -217,5 +295,21 @@
                 alert('Ocurrió un error al buscar el alumno.');
             });
     });
+
+
+    function toggleCamposIncompleto() {
+                if (estadoPagoSelect.value === 'Reservado') {
+                    // Mostrar los campos incompletos
+                    camposIncompleto.style.display = 'block';
+                } else {
+                    // Ocultar y limpiar los campos incompletos
+                    camposIncompleto.style.display = 'none';
+                    fechaLimitePagoInput.value = '';
+                    saldoPendienteInput.value = '0';
+                    montoPagadoInput.value = '0';
+                }
+            }
+    estadoPagoSelect.addEventListener('change', toggleCamposIncompleto);
+
 </script>
 @endsection

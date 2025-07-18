@@ -166,7 +166,7 @@
                                         <button type="submit" class="btn-icon btn-red" title="Eliminar alumno" onclick="return confirm('¿Estás seguro de eliminar al alumno?')">
                                             <i class="icono-eliminar"></i>
                                         </button>
-                                    @endif
+                                @endif
                                 </form>
                                 @endif
                             </div>

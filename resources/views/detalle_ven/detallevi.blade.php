@@ -57,9 +57,11 @@
                                 <a href="{{ route('detalle.show', $item) }}" class="padres-btn-icon padres-btn-edit" title="Ver Venta">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
+                                
                                 <a href="{{ route('venta.edit', $item->fkventa) }}" class="padres-btn-icon btn-green" title="Editar Producto">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
+                                
                                 <a href="{{ route('detalle.boletapdf', $item) }}" class="padres-btn-icon btn-red" title="Descargar boleta (PDF)">
                                     <i class="fa-solid fa fa-file" ></i>
                                 </a>
