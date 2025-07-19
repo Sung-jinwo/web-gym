@@ -17,7 +17,7 @@ class CategoriasController extends Controller
      */
     public function index()
     {
-        $categoria = Categoria::latest()->paginate(3);
+        $categoria = Categoria::latest()->paginate(6);
 
         return view('vencate.categovi',compact('categoria'));
     }
