@@ -62,12 +62,18 @@ class VentaController extends Controller
     public function ventaResarvado(Request $request)
     {
         $sedes = Sede::all();
-        $productos = Producto::all(); 
         $user = Auth::user();
 
         $idSede = $request->input('id_sede');
         $idProducto = $request->input('id_producto');
         $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
+        
+        if ($user->is(User::ROL_ADMIN)) {
+            $productos = Producto::orderBy('prod_nombre', 'asc')->get();
+        } else {
+            $productos = Producto::where('fksede', $user->fksede)->orderBy('prod_nombre', 'asc')->get();
+        }
+
         $query = Venta::with(['sede', 'metodo', 'productos']);
         
 
@@ -88,7 +94,7 @@ class VentaController extends Controller
         }
 
     $ventas = $query->where('estado_venta', 'Reservado')
-                    ->orderBy('updated_at', 'desc')
+                    ->orderBy('updated_at', 'desc') 
                     ->paginate(7);
 
     return view('ventas.ventavi', compact('ventas', 'sedes', 'productos', 'fechaFiltro'));
