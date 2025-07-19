@@ -3,8 +3,6 @@
 @section('title', 'Editar Venta')
 
 @section('content')
-@include('partials.estado')
-@include('partials.validation-errors')
 
     <h1>Editar Venta</h1>
 
@@ -72,16 +70,27 @@
 
                         <div class="filter-item">
                             <label class="filter-label"><i class="fa-solid fa-sort-numeric-up"></i> Cantidad</label>
-                            <input class="filter-dropdown" type="number" name="cantidad"
+                            <input class="filter-dropdown" type="number" name="cantidad" id="cantidad"
                                    value="{{ old('cantidad', optional($venta->detalles->first())->datelle_cantidad) }}"
                                    min="1" required placeholder="Cantidad de productos vendidos">
                         </div>
 
                         <div class="filter-item">
                             <label class="filter-label"><i class="fa-solid fa-dollar-sign"></i> Precio Unitario</label>
-                            <input class="filter-dropdown" type="text"
+                            <input class="filter-dropdown" type="text" id="precio_unitario"
                                    value="{{ optional($venta->detalles->first())->datelle_precio_unitario ?? '0' }}"
                                    disabled>
+                        </div>
+                        
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <label class="filter-label">
+                                <i class="fa-solid fa-sort-numeric-up"></i> Precion incrementado
+                            </label>
+                            <input class="filter-dropdown" type="number" name="venta_incrementado" id="venta_incrementado"
+                                value="{{ old('venta_incrementado', $venta->venta_incrementado ?? '') }}"
+                             placeholder="Ingrese precio incrementado">
                         </div>
                     </div>
                 </div>
@@ -250,7 +259,7 @@
 
 
     <div class="form-actions-enhanced">
-        <a href="{{route('detalle.index')}}" class="btn btn-secondary">
+        <a href="{{route('venta.index')}}" class="btn btn-secondary">
             <i class="icono-volver"></i> Lista de Productos
         </a>
         <button type="submit" class="btn btn-primary">
@@ -267,6 +276,26 @@
     const fechaLimitePagoInput = document.getElementById('venta_fecha');
     const saldoPendienteInput = document.getElementById('venta_saldo');
     const montoPagadoInput = document.getElementById('venta_pago');
+    const cantidadInput = document.querySelector('input[name="cantidad"]');
+    const campoIncrementado = document.getElementById('venta_incrementado');
+    const precioUnitario = {{ optional($venta->detalles->first())->datelle_precio_unitario ?? 0 }};
+    const totalInput = document.getElementById('total');
+
+    function calcularTotal() {
+        const cantidad = parseFloat(cantidadInput.value) || 0;
+        const incremento = parseFloat(campoIncrementado?.value) || 0;
+
+        const total = (cantidad * precioUnitario) + incremento;
+        totalInput.value = total.toFixed(2);
+    }
+
+    // Eventos
+    cantidadInput.addEventListener('input', calcularTotal);
+    campoIncrementado?.addEventListener('input', calcularTotal);
+
+
+    // Calcular al cargar la página (por si hay valor inicial)
+    window.addEventListener('DOMContentLoaded', calcularTotal);
 
     document.getElementById('buscarAlumno').addEventListener('click', function () {
         const codigo = document.getElementById('alum_codigo').value;

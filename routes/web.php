@@ -90,12 +90,11 @@ Route::group(['middleware' => 'auth'], function (){
     Route::group(['middleware' => 'empleado'], function (){
         
         route::group(['prefix' => 'detalle'], function () {
-            Route::get('', [DetalleController::class, 'index'])-> name('detalle.index');
-            Route::get('/{detalle}',[DetalleController::class, 'show'])->name('detalle.show');
-            Route::get('detalle/{detalle}/editar',[DetalleController::class, 'edit'])->name('detalle.edit');
             Route::get('{detalle}/boleta-pdf',[DetalleController::class, 'boletaPdf'])->name('detalle.boletapdf');
         });
         
+        
+
         Route::group(['prefix' => 'alumno'], function (){
             //el buscar lo usa actualizar ventas
             Route::get('buscar', [AlumnoContoller::class, 'buscarPorCodigo'])->name('alumno.buscar');
@@ -182,8 +181,11 @@ Route::group(['middleware' => 'auth'], function (){
 
 
     //==============================Venta======================
+        Route::get('venta', [VentaController::class, 'index'])-> name('venta.index');    
+        Route::get('venta/reservados', [VentaController::class, 'ventaResarvado'])->name('venta.reservados');
         Route::get('venta/crear/{producto}',[VentaController::class, 'create'])->name('venta.create');
         Route::post('venta',[VentaController::class, 'store'])->name('venta.store');
+        Route::get('venta/{venta}',[VentaController::class, 'show'])->name('venta.show');
         Route::get('venta/{venta}/edit', [VentaController::class, 'edit'])->name('venta.edit');
         Route::put('venta/{venta}', [VentaController::class, 'update'])->name('venta.update');
         Route::get('venta/buscar-alumno', [VentaController::class, 'buscarAlumno'])->name('venta.buscarAlumno');

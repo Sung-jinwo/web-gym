@@ -33,6 +33,7 @@ class CreateVentaRequest extends FormRequest
             'venta_fecha'=> 'nullable|date_format:Y-m-d',
             'venta_pago' => 'nullable',
             'venta_saldo' => 'nullable',
+            'venta_incrementado' => 'nullable',
             // 'fkproducto' => 'required|exists:productos,id_productos',
             'cantidad' => 'required|integer|min:1'
         ];

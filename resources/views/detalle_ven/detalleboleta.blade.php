@@ -151,14 +151,14 @@
         <tr>
             <th>MEMBRESIA</th>
             <th style="text-align: center">CANT.</th>
-            <th style="text-align: right;">IMPORTE</th>
+            {{-- <th style="text-align: right;">IMPORTE</th> --}}
         </tr>
         </thead>
         <tbody>
         <tr>
             <td>Producto Comprado <br>{{$deatlleproducto->categoria->nombre}} x {{$deatlleproducto->prod_nombre}}</td>
             <td style="text-align: center">{{$detalle->datelle_cantidad}}</td>
-            <td style="text-align: right;">S/{{ number_format($detalle->datelle_precio_unitario, 2) }}</td>
+            {{-- <td style="text-align: right;">S/{{ number_format($detalle->datelle_precio_unitario, 2) }}</td> --}}
         </tr>
         </tbody>
     </table>
@@ -171,7 +171,7 @@
         <div> <span>Lugar De Venta: </span>  {{$detalleventa->sede->sede_nombre}}
 
         </div>
-        <div> <span>Condición de Pago:</span>  {{$detalleventa->metodo->tipo_pago}}</div>
+        <div> <span>Condición de Pago:</span>  {{$detalle->metodo->tipo_pago}}</div>
     </div>
 
     <div class="footer">

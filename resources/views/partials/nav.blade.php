@@ -60,6 +60,28 @@
                 </a>
             </li>
 
+            <li class="item sidebar__item--has-submenu {{ setActivo('venta') }}">
+                <a href="javascript:void(0)" class="sidebar__link sidebar__link--toggle">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span class="sidebar__text">Ventas</span>
+                    <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
+                </a>
+                <ul class="sidebar__submenu">
+                    <li class="sidebar__submenu-item {{ request()->routeIs('venta.index') ? 'active' : '' }}">
+                        <a href="{{ route('venta.index') }}" class="sidebar__submenu-link">
+                            <i class="fa-solid fa-money-bill"></i>
+                            <span class="sidebar__text">Listado de Pagos</span>
+                        </a>
+                    </li>
+                    <li class="sidebar__submenu-item {{ request()->routeIs('venta.reservados') ? 'active' : '' }}">
+                        <a href="{{ route('venta.reservados') }}" class="sidebar__submenu-link">
+                            <i class="fa-solid fa-clock"></i>
+                            <span class="sidebar__text">Listado de Reservados</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="item sidebar__item--has-submenu {{ setActivo('pagos') }}">
                 <a href="javascript:void(0)" class="sidebar__link sidebar__link--toggle">
                     <i class="fa-solid fa-money-bill"></i>

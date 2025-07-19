@@ -38,6 +38,10 @@ class Venta extends Model
         return $this->hasMany(DetalleVenta::class, 'fkventa');
     }
 
+    public function productos()
+    {
+        return $this->belongsTo(Producto::class, 'fkproducto', 'id_productos');
+    }
 
 
 }

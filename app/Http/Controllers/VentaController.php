@@ -10,13 +10,83 @@ use App\Models\Metodo;
 use App\Models\User;
 use App\Models\Sede;
 use App\Models\Alumno;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateVentaRequest;
 
 class VentaController extends Controller
 {
 
 
+    public function index(Request $request)
+    {
+        $sedes = Sede::all();
+        $productos = Producto::all(); 
+        $user = Auth::user();
 
+        $idSede = $request->input('id_sede');
+        $idProducto = $request->input('id_producto');
+        $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
+        $query = Venta::with(['sede', 'metodo', 'productos']);
+        
+
+        if ($user->is(User::ROL_ADMIN) && $idSede) {
+            $query->where('fksede', $idSede);
+        } elseif ($user->is(User::ROL_EMPLEADO)) {
+            $query->where('fksede', $user->fksede);
+        }
+
+        if ($idProducto) {
+            $query->where('fkproducto', $idProducto);
+        }
+
+        if ($fechaFiltro) {
+            $fecha = Carbon::parse($fechaFiltro);
+            $query->whereYear('created_at', $fecha->year)
+                  ->whereMonth('created_at', $fecha->month);
+        }
+
+    $ventas = $query->where('estado_venta', 'Pagado')
+                    ->orderBy('updated_at', 'desc') 
+                    ->paginate(7);
+
+    return view('ventas.ventavi', compact('ventas', 'sedes', 'productos', 'fechaFiltro'));
+    }
+
+    public function ventaResarvado(Request $request)
+    {
+        $sedes = Sede::all();
+        $productos = Producto::all(); 
+        $user = Auth::user();
+
+        $idSede = $request->input('id_sede');
+        $idProducto = $request->input('id_producto');
+        $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
+        $query = Venta::with(['sede', 'metodo', 'productos']);
+        
+
+        if ($user->is(User::ROL_ADMIN) && $idSede) {
+            $query->where('fksede', $idSede);
+        } elseif ($user->is(User::ROL_EMPLEADO)) {
+            $query->where('fksede', $user->fksede);
+        }
+
+        if ($idProducto) {
+            $query->where('fkproducto', $idProducto);
+        }
+
+        if ($fechaFiltro) {
+            $fecha = Carbon::parse($fechaFiltro);
+            $query->whereYear('created_at', $fecha->year)
+                  ->whereMonth('created_at', $fecha->month);
+        }
+
+    $ventas = $query->where('estado_venta', 'Reservado')
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate(7);
+
+    return view('ventas.ventavi', compact('ventas', 'sedes', 'productos', 'fechaFiltro'));
+    }
 
 
     public function create(Producto $producto)
@@ -45,12 +115,22 @@ class VentaController extends Controller
         if ($producto->prod_cantidad < $request->cantidad) {
             return back()->with('error', 'No hay suficiente stock disponible.');
         }
+        
+        $incrementado= $validatedData['venta_incrementado'];
 
         $subtotalNuevo = $producto->prod_precio * $request->cantidad;
-        $venta_total = $subtotalNuevo;
+        $venta_total = $subtotalNuevo + $incrementado;
+        $pago_venta = $subtotalNuevo ;
+        
 
-        $total= $producto->prod_precio * $request->cantidad;
+        // $total= $producto->prod_precio * $request->cantidad;
         $monto = $validatedData['estado_venta'] === 'Pagado' ? $venta_total : $validatedData['venta_pago'];
+        $pago = $validatedData['estado_venta'] === 'Pagado' ? $pago_venta : $validatedData['venta_pago'];
+
+        $pendiente =  ($venta_total -  $monto) ;
+
+
+        $saldoPendiente = $validatedData['estado_venta'] === 'Reservado' ? $pendiente : 0;
 
         // Crear la venta
         $venta = Venta::create([
@@ -61,21 +141,56 @@ class VentaController extends Controller
             'estado_venta' => $request->estado_venta,
             'venta_entre' => $request->venta_entre,
             'venta_fecha' => $request->venta_fecha,
-            'venta_pago'=> $request->venta_pago,
-            'venta_saldo' => $total -$request->venta_pago,
-            'venta_total' => $total
-        ]);
-
-        // Crear detalle de venta
-        DetalleVenta::create([
-            'fkventa' => $venta->id_venta,
+            'cantidad' => $request->cantidad,
+            'venta_pago'=> $pago,
             'fkproducto' => $producto->id_productos,
-            'fkmetodo' => $venta->fkmetodo,
-            'estado_venta' => $request->estado_venta,
-            'datelle_cantidad' => $request->cantidad,
-            'datelle_precio_unitario' => $producto->prod_precio,
-            'datelle_sub_total' => $monto,
+            'venta_saldo' => $saldoPendiente,
+            'venta_incrementado' => $incrementado,
+            'venta_total' => $monto ,
         ]);
+        $metodo_2 = $request->input('fkmetodo_2');
+        $monto_2 = $request->input('monto_2');
+        
+        // Crear detalle de venta
+        if($metodo_2 && $monto_2 > 0) {
+            $monto_1 = $monto - $monto_2;
+
+                // Primer detalle
+            DetalleVenta::create([
+                'fkventa' => $venta->id_venta,
+                'fkproducto' => $producto->id_productos,
+                'fkmetodo' => $venta->fkmetodo,
+                'estado_venta' => $request->estado_venta,
+                'datelle_cantidad' => $request->cantidad,
+                'datelle_precio_unitario' => $producto->prod_precio,
+                'datelle_sub_total' => $monto_1,
+            ]);
+            
+
+            DetalleVenta::create([
+                'fkventa' => $venta->id_venta,
+                'fkproducto' => $producto->id_productos,
+                'fkmetodo' => $metodo_2,
+                'estado_venta' => $request->estado_venta,
+                'datelle_cantidad' => 0,
+                'datelle_precio_unitario' => 0,
+                'datelle_sub_total' => $monto_2,
+            ]);
+        }else {
+            DetalleVenta::create([
+                'fkventa' => $venta->id_venta,
+                'fkproducto' => $producto->id_productos,
+                'fkmetodo' => $venta->fkmetodo,
+                'estado_venta' => $request->estado_venta,
+                'datelle_cantidad' => $request->cantidad,
+                'datelle_precio_unitario' => $producto->prod_precio,
+                'datelle_sub_total' => $monto ,
+            ]);
+        }
+        
+        if (($monto_2 > 0) && ($monto_2 > $monto)) {
+            return back()->with('error', 'El segundo monto no puede ser mayor al total ingresado.');
+        }
 
         // Actualizar stock del producto
         $producto->decrement('prod_cantidad', $request->cantidad);
@@ -84,6 +199,11 @@ class VentaController extends Controller
             ->with('estado', 'Venta realizada con éxito');
     }
 
+    public function show($venta)
+    {
+        $venta = Venta::with(['productos'])->find($venta);
+        return view('ventas.ventashow', compact('venta'));
+    }
     public function edit(Venta $venta)
     {
         // Cargar relaciones necesarias para el formulario
@@ -119,48 +239,72 @@ class VentaController extends Controller
         $cantidadAnterior = $detalle->datelle_cantidad;
         $cantidadNueva = $request->cantidad;
         $diferenciaCantidad = $cantidadNueva - $cantidadAnterior;
-    
+        
+        $incrementado = $validatedData['venta_incrementado'];
+        $precioUnitario = $producto->prod_precio;
+
         $subtotalNuevo = $producto->prod_precio * $cantidadNueva;
-        $venta_total = $subtotalNuevo;
+        $venta_total = $subtotalNuevo + $incrementado;
+        $pago_venta = $subtotalNuevo ;
+
     
-        // 👉 Calcular total pagado ANTES de modificar el detalle
-        $totalPagadoAntes = $venta->detalles()->sum('datelle_sub_total');
     
         $estadoventa = $validatedData['estado_venta'];
         $monto = $estadoventa === 'Pagado' ? $venta_total : $validatedData['venta_pago'];
+        $pago = $validatedData['estado_venta'] === 'Pagado' ? $pago_venta : $validatedData['venta_pago'];
     
         $estadoReserva = $estadoventa === 'Reservado';
-        $saldoPendiente = $estadoReserva ? $validatedData['venta_saldo'] : 0;
+        $pendiente =  ($venta_total -  $monto) ;
+        $saldoPendiente = $estadoReserva ? $pendiente : 0;
+
+        $incrementadoAnterior = $venta->venta_incrementado;
+        $debeActualizarDetalle = false;
+
         if ($diferenciaCantidad !== 0) {
-    
             if ($diferenciaCantidad > 0 && $producto->prod_cantidad < $diferenciaCantidad) {
                 return back()->with('error', 'No hay suficiente stock disponible para actualizar la venta.');
             }
-    
-            // Actualizar stock
+
             $producto->decrement('prod_cantidad', $diferenciaCantidad);
-    
-            // Actualizar detalle
+            $debeActualizarDetalle = true;
+        }
+
+        if ($incrementado != $incrementadoAnterior) {
+            $debeActualizarDetalle = true;
+        }
+
+        if ($debeActualizarDetalle) {
             $detalle->update([
                 'datelle_cantidad' => $cantidadNueva,
-                'datelle_precio_unitario' => $producto->prod_precio,
-                'datelle_sub_total' => $subtotalNuevo,
+                'datelle_precio_unitario' => $precioUnitario,
+                'datelle_sub_total' => $monto,
+            ]);
+        }
+
+        if ($venta->fkmetodo != $request->fkmetodo) {
+            $venta->detalles()->update([
+                'fkmetodo' => $request->fkmetodo
             ]);
         }
     
-        // Actualizar la venta
+    
         $venta->update([
             'fkusers' => $request->fkusers,
             'fkalum' => $request->fkalum,
             'fksede' => $request->fksede,
+            'cantidad' => $cantidadNueva,
             'fkmetodo' => $request->fkmetodo,
             'estado_venta' => $estadoventa,
             'venta_fecha' => $request->venta_fecha,
-            'venta_pago' => $monto,
-            'venta_total' => $venta_total,
+            'venta_pago' => $pago,
+            'venta_incrementado' => $incrementado,
+            'venta_total' => $monto ,
             'venta_entre' => $request->venta_entre,
             'venta_saldo' => $saldoPendiente,
         ]);
+
+        $totalPagadoAntes = $venta->detalles()->sum('datelle_sub_total');
+
     
         // Saldo restante a registrar como nuevo detalle
         $saldo = $monto - $totalPagadoAntes;
@@ -177,7 +321,7 @@ class VentaController extends Controller
             ]);
         }
     
-        return redirect()->route('detalle.index')->with('estado', 'La venta fue actualizada correctamente.');
+        return redirect()->route('venta.index')->with('estado', 'La venta fue actualizada correctamente.');
     }
     
 

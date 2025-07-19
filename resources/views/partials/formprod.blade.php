@@ -76,7 +76,7 @@
 
                             @if($errors->has('prod_nombre'))
                             <span class="error-message">{{ $errors->first('prod_nombre') }}</span>
-                        @endif
+                            @endif
                         </div>
                         <div class="filter-item">
                             <label for="fkcategoria" class="filter-label">
@@ -156,13 +156,18 @@
                         <label for="prod_precio" class="filter-label">
                             <i class="fa-solid fa-dollar-sign"></i> Precio del Producto
                         </label>
-                        <div class="producto-form-unique-price-container">
+                    @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
                             <input type="text" id="prod_precio" name="prod_precio" placeholder="Ingrese Precio" value="{{ old('prod_precio', $producto->prod_precio)}}" class="filter-dropdown">
-                        </div>
-                        @if($errors->has('prod_precio'))
-                            <span class="error-message">{{ $errors->first('prod_precio') }}</span>
-                        @endif
-                    </div>
+                    @else
+                    <input type="hidden" name="prod_precio" value="{{ old('prod_precio', $producto->prod_precio) }}">
+                    <input type="text" id="prod_precio" value="{{ old('prod_precio', $producto->prod_precio) }}" class="filter-dropdown" disabled>
+                    @endif
+
+                    @if($errors->has('prod_precio'))
+                    <span class="error-message">{{ $errors->first('prod_precio') }}</span>
+                    @endif
+                </div>
+
                 </div>
             </div>
         </div>

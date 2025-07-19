@@ -26,6 +26,7 @@
                         <option value="ingresos_diarios">Ingresos Diarios (PDF)</option>
                     </select>
                 </div>
+                <br>
                 <div class="col-md-4">
                     <label for="sede_id" class="form-label">
                         <i class="fa-icon fa-solid fa-building"></i> Sede

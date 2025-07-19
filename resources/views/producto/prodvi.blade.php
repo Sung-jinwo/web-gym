@@ -9,7 +9,6 @@
 
         <!-- Filtro por Estado -->
         <div class="producto-unique-filtro">
-
             <form method="GET" action="{{ route('producto.index') }}" class="producto-unique-filtro-form">
                 @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
 
@@ -56,9 +55,6 @@
                     <i class="fa-solid fa-list"></i> Listado de Categorías
                 </a>
             @endif
-                <a href="{{ route('detalle.index') }}" class="producto-unique-btn producto-unique-btn-secondary">
-                    <i class="fa-solid fa-cash-register"></i> Ventas
-                </a>
         </div>
 
 

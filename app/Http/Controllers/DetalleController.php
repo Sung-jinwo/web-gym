@@ -17,12 +17,6 @@ class DetalleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $detalle = DetalleVenta::with(['venta','producto'])->latest()->paginate(7);
-
-        return view('detalle_ven.detallevi',compact('detalle'));
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -53,8 +47,7 @@ class DetalleController extends Controller
      */
     public function show($detalle)
     {
-        $detalle = DetalleVenta::with(['venta','producto'])->find($detalle);
-        return view('detalle_ven.detalleshow', compact('detalle'));
+        
     }
 
     /**

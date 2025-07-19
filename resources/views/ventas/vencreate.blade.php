@@ -89,6 +89,15 @@
                             <input class="filter-dropdown" type="text" value="{{ $producto->prod_precio }}" disabled>
                         </div>
                     </div>
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <label class="filter-label">
+                                <i class="fa-solid fa-sort-numeric-up"></i> Precion incrementado
+                            </label>
+                            <input class="filter-dropdown" type="number" name="venta_incrementado" id="venta_incrementado"
+                             placeholder="Ingrese precio incrementado">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -125,7 +134,25 @@
                                     @endforeach
                                 </select>
                             </div>
-                            
+                        </div>
+                        <div class="filter-row">
+                            <div class="filter-item">
+                                <label class="filter-label">
+                                    <i class="fa-solid fa-credit-card"></i> Método de Pago 2 (adicional)
+                                </label>
+                                <select class="filter-dropdown" name="fkmetodo_2">
+                                    <option value="">Seleccione método</option>
+                                    @foreach ($metodos as $metodo)
+                                        <option value="{{ $metodo->id_metod }}">{{ $metodo->tipo_pago }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        
+                            <div class="filter-item">
+                                <label class="filter-label">
+                                    <i class="fa-solid fa-dollar-sign"></i> Monto 2 (adicional) </label>
+                                <input type="number" name="monto_2" step="0.01" class="filter-dropdown">
+                            </div>
                         </div>
                         <div class="filter-row">
                             <div class="filter-item">
@@ -274,12 +301,20 @@
 <script>
     const estadoPagoSelect = document.getElementById('estado_venta');
     const camposIncompleto = document.getElementById('campos-incompleto');
-    document.querySelector('input[name="cantidad"]').addEventListener('input', function() {
-        let cantidad = this.value;
-        let precioUnitario = {{ $producto->prod_precio }};
-        document.getElementById('total').value = cantidad * precioUnitario;
-    });
+    const campoIncrementado = document.getElementById('venta_incrementado');
+    const totalInput = document.getElementById('total');
+    const cantidadInput = document.querySelector('input[name="cantidad"]');
+    const precioUnitario = {{ $producto->prod_precio }};
 
+    function calcularTotal() {
+        const cantidad = parseFloat(cantidadInput.value) || 0;
+        const incremento = parseFloat(campoIncrementado?.value) || 0;
+
+        const total = (cantidad * precioUnitario) + incremento;
+        totalInput.value = total.toFixed(2);
+    }
+    cantidadInput.addEventListener('input', calcularTotal);
+    campoIncrementado.addEventListener('input', calcularTotal);
     function closeModal() {
         document.getElementById('ventaModal').style.display = 'none';
     }
