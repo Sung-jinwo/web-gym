@@ -21,19 +21,16 @@ class VentaController extends Controller
     public function index(Request $request)
     {
         $sedes = Sede::all();
-        $productos = Producto::all(); 
         $user = Auth::user();
 
         $idSede = $request->input('id_sede');
         $idProducto = $request->input('id_producto');
         $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
         
-                // Si el usuario es un administrador, puede ver todos los productos
         if ($user->is(User::ROL_ADMIN)) {
-            $productos = Producto::all();
+            $productos = Producto::orderBy('prod_nombre', 'asc')->get();
         } else {
-            // Si no es administrador, solo se muestran los productos correspondientes a la sede del usuario
-            $productos = Producto::where('fksede', $user->fksede)->get();
+            $productos = Producto::where('fksede', $user->fksede)->orderBy('prod_nombre', 'asc')->get();
         }
 
         $query = Venta::with(['sede', 'metodo', 'productos']);
