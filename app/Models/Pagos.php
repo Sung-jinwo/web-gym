@@ -93,7 +93,7 @@ class Pagos extends Model
         if ($this->pago_vencido) {
             $diasVencidos = now()->diffInDays($this->fecha_limite_pago);
             if ($diasVencidos <= 5) {
-                return '¡ATENCIÓN! El pago del alumno' . $this->alumno->alum_nombre . ' está vencido hace ' . $diasVencidos . ' día(s).';
+                return '¡ATENCIÓN! El pago del alumno ' . $this->alumno->alum_nombre . ' está vencido hace ' . $diasVencidos . ' día(s).';
             }
 //            return '¡ATENCIÓN! El pago de ' . $this->alumno->alum_nombre . ' está vencido hace ' . $diasVencidos . ' día';
 

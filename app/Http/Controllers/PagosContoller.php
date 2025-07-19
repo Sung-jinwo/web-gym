@@ -139,8 +139,8 @@ class PagosContoller extends Controller
                 $mensajes = $pagosPorVencer->map(function($pago) {
                     return $pago->mensaje_pago_por_vencer;
                 });
-                // ->implode('<br>')
-                session()->flash('warning', $mensajes);
+
+                session()->flash('warning', $mensajes->implode('<br> <br>'));
             }
 
             $pagosVencidos = $pagosCollection->filter(function($pago) {
@@ -151,8 +151,8 @@ class PagosContoller extends Controller
                 $mensajes = $pagosVencidos->map(function($pago) {
                     return $pago->mensaje_pago_vencido;
                 });
-                // ->implode('<br>')
-                session()->flash('error', $mensajes);
+
+                session()->flash('error', $mensajes->implode('<br>'));
             }
 
 
