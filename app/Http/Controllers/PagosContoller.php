@@ -23,7 +23,7 @@ class PagosContoller extends Controller
         public function pagosCompletos(Request $request)
         {
             $sedes = Sede::all();
-            $membresias = Membresias::all();
+            $membresias = Membresias::orderBy('mem_nomb', 'asc')->get();
 
             $user = Auth::user();
             $alumnoTexto = $request->get('alumnoTexto');
@@ -77,7 +77,7 @@ class PagosContoller extends Controller
         {
 
             $sedes = Sede::all();
-            $membresias = Membresias::all();
+            $membresias = Membresias::orderBy('mem_nomb', 'asc')->get();
 
             $user = Auth::user();
             $alumnoTexto = $request->get('alumnoTexto');
@@ -139,8 +139,8 @@ class PagosContoller extends Controller
                 $mensajes = $pagosPorVencer->map(function($pago) {
                     return $pago->mensaje_pago_por_vencer;
                 });
-
-                session()->flash('warning', $mensajes->implode('<br>'));
+                // ->implode('<br>')
+                session()->flash('warning', $mensajes);
             }
 
             $pagosVencidos = $pagosCollection->filter(function($pago) {
@@ -151,8 +151,8 @@ class PagosContoller extends Controller
                 $mensajes = $pagosVencidos->map(function($pago) {
                     return $pago->mensaje_pago_vencido;
                 });
-
-                session()->flash('error', $mensajes->implode('<br>'));
+                // ->implode('<br>')
+                session()->flash('error', $mensajes);
             }
 
 
