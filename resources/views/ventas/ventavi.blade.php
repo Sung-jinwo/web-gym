@@ -19,29 +19,14 @@
                         <option value="">Seleccionar Producto</option>
                         @foreach($productos as $producto)
                             <option value="{{ $producto->id_productos }}"
-                                {{ request('id_producto') == $producto->id_productos ? 'selected' : '' }}
-                            >
-                                {{ $producto->prod_nombre }}
+                                {{ request('id_producto') == $producto->id_productos ? 'selected' : '' }}>
+                                {{ $producto->prod_nombre }} ({{$producto->sede->sede_nombre ?? ''}})
                             </option>
                         @endforeach
                     </select>
                 </div>
 
-                @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
-                    <div class="filter-item">
-                        <label for="id_sede" class="filter-label">Sedes:</label>
-                        <select name="id_sede" id="id_sede" class="filter-dropdown">
-                            <option value="">Seleccionar</option>
-                            @foreach($sedes as $sede)
-                                <option value="{{ $sede->id_sede }}"
-                                    {{ request('id_sede') == $sede->id_sede ? 'selected' : '' }}
-                                >
-                                    {{ $sede->sede_nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                @endif
+               
 
                 <div class="filter-item">
                     <label for="fecha_filtro" class="filter-label">Filtrar por Fecha:</label>
