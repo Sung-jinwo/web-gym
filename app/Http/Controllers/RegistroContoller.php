@@ -54,10 +54,12 @@ class RegistroContoller extends Controller
                   ->whereMonth('mensa_edit', $fecha->month);
         }
 
-        $alumnos = $query->paginate(7)->appends([
-                                'alum_estado' => $filtroEstado,
-                                'fecha_filtro' => $fechaFiltro,
-                            ]);
+        $alumnos = $query->orderByDesc('updated_at')
+                 ->paginate(7)
+                 ->appends([
+                     'alum_estado' => $filtroEstado,
+                     'fecha_filtro' => $fechaFiltro,
+                 ]);
 
         foreach ($alumnos as $alumno) {
             $alumno->color_class = $alumno->color_cierre;

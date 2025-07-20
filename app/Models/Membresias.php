@@ -31,5 +31,9 @@ class Membresias extends Model
     {
         return $this->hasOne(Pagos::class, 'fkmem', 'id_mem');
     }
-
+    
+    public function getFechaLimiteAttribute()
+    {
+        return $this->mem_limit ? \Carbon\Carbon::parse($this->mem_limit)->format('d/m/y') : null;
+    }
 }

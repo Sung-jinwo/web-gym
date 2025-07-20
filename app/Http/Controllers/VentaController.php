@@ -28,11 +28,13 @@ class VentaController extends Controller
         $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
         
         if ($user->is(User::ROL_ADMIN)) {
-            $productos = Producto::orderBy('prod_nombre', 'asc')->get();
+            $productos = Producto::where('estado', 'activo')->orderBy('prod_nombre', 'asc')->get();
         } else {
-            $productos = Producto::where('fksede', $user->fksede)->orderBy('prod_nombre', 'asc')->get();
+            $productos = Producto::where('fksede', $user->fksede)
+                                 ->where('estado', 'activo')
+                                 ->orderBy('prod_nombre', 'asc')
+                                 ->get();
         }
-
         $query = Venta::with(['sede', 'metodo', 'productos']);
         
 
@@ -69,9 +71,12 @@ class VentaController extends Controller
         $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
         
         if ($user->is(User::ROL_ADMIN)) {
-            $productos = Producto::orderBy('prod_nombre', 'asc')->get();
+            $productos = Producto::where('estado', 'activo')->orderBy('prod_nombre', 'asc')->get();
         } else {
-            $productos = Producto::where('fksede', $user->fksede)->orderBy('prod_nombre', 'asc')->get();
+            $productos = Producto::where('fksede', $user->fksede)
+                                 ->where('estado', 'activo')
+                                 ->orderBy('prod_nombre', 'asc')
+                                 ->get();
         }
 
         $query = Venta::with(['sede', 'metodo', 'productos']);
@@ -333,7 +338,15 @@ class VentaController extends Controller
             ]);
         }
     
-        return redirect()->route('venta.index')->with('estado', 'La venta fue actualizada correctamente.');
+        $redirect = redirect();
+
+        if ($estadoventa === 'Reservado') {
+            return $redirect->route('venta.reservados')
+            ->with('estado', 'La venta fue actualizado correctamente.');
+        }else{
+            return $redirect->route('venta.index')
+            ->with('estado', 'La venta pago fue actualizado correctamente.');
+        }
     }
     
 

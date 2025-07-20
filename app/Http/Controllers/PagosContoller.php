@@ -62,7 +62,7 @@ class PagosContoller extends Controller
             }
 
             $pagos = $query ->where('estado_pago', 'completo')
-                ->orderBy('created_at', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->paginate(12)->appends([
                 'alumnoTexto' => $alumnoTexto,
                 'fecha_filtro' => $fechaFiltro,
@@ -121,7 +121,7 @@ class PagosContoller extends Controller
 
 
             $pagos = $query ->where('estado_pago', 'incompleto')
-                ->orderBy('created_at', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->paginate(12)->appends([
                     'alumnoTexto' => $alumnoTexto,
                     'fecha_filtro' => $fechaFiltro,
@@ -172,6 +172,7 @@ class PagosContoller extends Controller
         $codigoAlumno = $alumno ? $alumno->alum_codigo : null;
         $membresiasActivas = Membresias::with(['categoria_m'])
             ->where('estado', 'A')
+            ->orderBy('mem_nomb', 'asc')
             ->get();
         return view('pagos.pagcreate', [
             'pago' => new Pagos(),
@@ -217,6 +218,15 @@ class PagosContoller extends Controller
         // $montoPagado = $validatedData['monto_pagado'] ?? 0;
         // $saldo = max(0, $pagoTotal - $montoPagado);
         // Crear el pago
+        $fechaInicio = Carbon::parse($validatedData['pag_inicio']);
+
+        if (!empty($membresia->mem_durac)) {
+            $fechaFin = $fechaInicio->copy()->addDays($membresia->mem_durac)->format('Y-m-d');
+        } elseif (!empty($membresia->mem_limit)) {
+            $fechaFin = Carbon::parse($membresia->mem_limit)->format('Y-m-d');
+        } else {
+            $fechaFin = $validatedData['pag_fin']; // último recurso
+        }
 
         $pago=Pagos::create([
             'fkalum' => $validatedData['fkalum'],
@@ -226,8 +236,8 @@ class PagosContoller extends Controller
             'fkmem' => $validatedData['fkmem'],
             'tipo_membresia' => $tipoMembresia, // $membresia->tipo;
             'pago' => $validatedData['pago'],
-            'pag_inicio' => $validatedData['pag_inicio'],
-            'pag_fin' => $validatedData['pag_fin'],
+            'pag_inicio' => $fechaInicio->format('Y-m-d'),
+            'pag_fin' => $fechaFin,
             'estado_pago' => $estadoPago,
             'fecha_limite_pago' => $fechaLimitePago,
             'saldo_pendiente' => $saldoPendiente,
@@ -235,18 +245,19 @@ class PagosContoller extends Controller
             'pag_entre'=>$validatedData['pag_entre']
         ]);
         // Generar el detallle Pago
-        PagoDetalle::create([
-            'monto'=>  $validatedData['monto_pagado'],
-            'estado'=> $estadoPago,
-            'fkmetodo'=>  $validatedData['fkmetodo'],
-            'fkpago'=> $pago->id_pag,
-            'fkmemb'=> $membresia->id_mem
-        ]);
-
-        $alumno = $pago->alumno;
+        if ($membresia->categoria_m->nombre_m !== 'Registro') {
+            PagoDetalle::create([
+                'monto' => $validatedData['monto_pagado'],
+                'estado' => $estadoPago,
+                'fkmetodo' => $validatedData['fkmetodo'],
+                'fkpago' => $pago->id_pag,
+                'fkmemb' => $membresia->id_mem
+            ]);
+        }
+                $alumno = $pago->alumno;
 
         // Renovación
-        if ($alumno && $alumno->membresiaVigente)  {
+        if ($alumno && $alumno->membresiaVigente  && $membresia->categoria_m->nombre_m !== 'Registro' )  {
             Histopag::create([
                 'fkpago' => $pago->id_pag,
                 'fkuser' => $pago->fkuser,
@@ -297,6 +308,7 @@ class PagosContoller extends Controller
         $codigoAlumno = $alumno ? $alumno->alum_codigo : null;
         $membresiasActivas = Membresias::with(['categoria_m'])
             ->where('estado', 'A')
+            ->orderBy('mem_nomb', 'asc')
             ->get();
 
         return view('pagos.pagedit', [

@@ -71,7 +71,7 @@
                 <tr>
                     <th>Categoría</th>
                     <th>Nombre</th>
-                    <th>Meses(dias)</th>
+                    <th>Meses(Dias) o Fecha </th>
                     <th>Costo</th>
                     <th>Acciones</th>
                 </tr>
@@ -91,7 +91,11 @@
                             <a href="{{ route('membresias.show', $item) }}" class="table-link">{{$item->mem_nomb}}</a>
                         </td>
                         <td>
-                            Dias: {{$item->mem_durac}}
+                            @if ($item->mem_limit)
+                                Fecha Limite: {{ $item->fechalimite }}
+                            @else
+                                Dias: {{$item->mem_durac}}
+                            @endif
                         </td>
                         <td>
                             S./{{$item->mem_cost}}

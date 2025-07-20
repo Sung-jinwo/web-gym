@@ -43,6 +43,16 @@
                 </div>
                 <div class="filter-row">
                     <div class="filter-item">
+                        <label for="mem_limit" class="filter-label enhanced-label">
+                            <i class="fa-solid fa-calendar-minus"></i>
+                            Fecha Limite
+                        </label>
+                        <input type="date" name="mem_limit" id="mem_limit" value="{{ old('mem_limit', $membresias->mem_limit) }}" class="filter-dropdown enhanced-input">
+                        @if($errors->has('mem_limit'))
+                            <span class="error-message">{{ $errors->first('mem_limit') }}</span>
+                        @endif
+                    </div>
+                    <div class="filter-item">
                         <label for="mem_cost" class="filter-label"><i class="icono-costo"></i> Costo</label>
                         <input type="text" id="mem_cost" name="mem_cost" placeholder="Ingrese Precio" value="{{ old('mem_cost', $membresias->mem_cost) }}" class="filter-dropdown">
                         @if($errors->has('mem_cost'))

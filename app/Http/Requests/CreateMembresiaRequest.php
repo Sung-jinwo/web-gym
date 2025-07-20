@@ -30,8 +30,18 @@ class CreateMembresiaRequest extends FormRequest
             'mem_nomb'=> 'required|string|max:255',
             'fkcategoria' => 'required',
 //            'fksede' => $user->is(User::ROL_ADMIN) ? 'required' : 'nullable',
-            'mem_durac' => 'required|integer|min:1',
+            'mem_durac' => [
+            'nullable',
+            'integer',
+            'min:1',
+            function ($attribute, $value, $fail) {
+                if (empty($this->input('mem_limit')) && empty($value)) {
+                    $fail('El campo duración es obligatorio si no se proporciona una fecha límite.');
+                }
+            }
+            ],
             'mem_cost' => 'required|numeric|min:0',
+            'mem_limit'=> 'nullable|date',
             'tipo' => 'required|in:principal,adicional'
         ];
     }
@@ -40,7 +50,7 @@ class CreateMembresiaRequest extends FormRequest
             'mem_nomb.required'=> 'Se necesita nombre de Menbresias',
             'fkcategoria.required' =>'Se necesita nombre de Categoria',
 //            'fksede.required' =>'Se necesita seleccionar la sede',
-            'mem_durac.required' =>'Se necesita La duracion',
+            'mem_durac.required' => 'Se necesita la duración si no se define una fecha límite.',
             'mem_cost.required' =>'Se necesita el Precio',
             'tipo'=>'Necesita el tipo de Membresia',
         ];

@@ -50,10 +50,12 @@ class GastosController extends Controller
             $query->whereDate('created_at', $fecha);
         }
 
-            $gastos = $query->paginate(7)->appends([
-                'fecha_filtro' => $fechaFiltro,
-                'categoria'=>$categoria
-        ]);
+        $gastos = $query->orderByDesc('updated_at')
+                        ->paginate(7)
+                        ->appends([
+                            'fecha_filtro' => $fechaFiltro,
+                            'categoria' => $categoria
+                        ]);
 
         return view('gasto.gastovi',
                compact( 'gastos','sedes', 'fechaFiltro','categoria'

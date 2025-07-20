@@ -63,8 +63,8 @@
                 </div>
                 <div class="info-card__grid-item">
                     <span class="info-card__label"><i class="fa-solid fa-envelope"></i> Correo:</span>
-                    <span class="info-card__value">
-                        @if($alumno->alum_correro )
+                    <span class="info-card__value" style="word-wrap: break-word; max-width: 200px;">
+                        @if($alumno->alum_correro)
                         {{ $alumno->alum_correro }}
                         @else
                             No tiene Correo

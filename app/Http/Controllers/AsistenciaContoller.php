@@ -52,7 +52,7 @@ class AsistenciaContoller extends Controller
                 ->whereMonth('created_at', $fecha->month);
         }
 
-        $asistencias = $query->orderBy('created_at', 'desc')->paginate(10)->appends([
+        $asistencias = $query->orderBy('updated_at', 'desc')->paginate(10)->appends([
                                 'fecha_filtro' => $fechaFiltro
             ]);
 

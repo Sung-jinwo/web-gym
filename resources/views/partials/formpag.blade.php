@@ -27,6 +27,7 @@
                                     data-costo="{{ $mem->mem_cost }}"
                                     data-tipo="{{ $mem->tipo }}"
                                     data-categoria="{{ $mem->categoria_m->nombre_m }}"
+                                    data-limit="{{ $mem->mem_limit }}"
                                 {{ old('fkmem', $pago->fkmem) == $mem->id_mem ? 'selected' : ''}}>
                                 🏷️ {{ $mem->categoria_m->nombre_m }} {{ $mem->mem_nomb }} ({{ $mem->tipo }})
                             </option>
@@ -144,7 +145,7 @@
                             </label>
                             <input type="date" name="pag_fin" id="pag_fin"
                                    value="{{ old('pag_fin', $pago->pag_fin ?? '') }}"
-                                   class="filter-dropdown enhanced-input" readonly>
+                                   class="filter-dropdown enhanced-input" disabled>
                         </div>
                     </div>
                     @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) && request()->is('*/editar'))
@@ -404,6 +405,7 @@
             const fechaLimitePagoInput = document.getElementById('fecha_limite_pago');
             const montoCanceladoSpan = document.getElementById('monto-cancelado');
             const montoRestanteSpan = document.getElementById('monto-restante');
+            const userRole = "{{ Auth::user()->rol }}";
 
             function updateMontoRestante() {
                 if (!montoCanceladoSpan || !montoRestanteSpan || !pagoTotalInput) {
@@ -432,32 +434,69 @@
 
             // Función para actualizar el formulario
             function updateForm() {
+                const path = window.location.pathname;
+                const isEditView = path.includes('/editar');
+
+                const isAdminOrEmpleado = userRole === 'empleado'
+                const isAdminOrAdmin = userRole === 'admin' 
+                
+                // Habilitar campos si estamos en vista de edición
+                if (isEditView && isAdminOrEmpleado) {
+                    fechaFinInput.disabled = true;
+                    fechaInicioInput.disabled = true;
+                }
+
+                if (isEditView && isAdminOrAdmin) {
+                    fechaFinInput.disabled = true;
+                    fechaInicioInput.disabled = false;
+                }
+
                 const selectedOption = membresiaSelect.options[membresiaSelect.selectedIndex];
                 if (!selectedOption || selectedOption.value === '') {
                     alumnoFields.style.display = 'none';
                     return;
                 }
-                // Obtener la categoría directamente del atributo data
+
                 const categoria = selectedOption.getAttribute('data-categoria');
                 const mostrarAlumno = categoria !== 'Rutina';
 
                 alumnoFields.style.display = mostrarAlumno ? 'block' : 'none';
                 pagoTotalInput.value = selectedOption.getAttribute('data-costo') || '0';
 
-                if (fechaInicioInput.value) {
-                    const duracion = parseInt(selectedOption.getAttribute('data-duracion')) || 0;
-                    const fechaInicio = new Date(fechaInicioInput.value);
-                    const fechaFin = new Date(fechaInicio);
-                    fechaFin.setDate(fechaFin.getDate() + duracion);
-                    fechaFinInput.value = fechaFin.toISOString().split('T')[0];
+                // Solo aplicar lógica de categoría si NO estamos en modo edición
+                if (!isEditView) {
+                    if (categoria === 'Registro') {
+                        fechaFinInput.disabled = false;
+                        fechaInicioInput.disabled = false;
+                    } else {
+                        const duracion = parseInt(selectedOption.getAttribute('data-duracion')) || 0;
+                        const limitDate = selectedOption.getAttribute('data-limit');
 
-                    // Si existe el campo de actualización, sincronizarlo
-                    if (fechaUpdateInput) {
-                        fechaUpdateInput.value = fechaFinInput.value;
+                        if (duracion > 0) {
+                            fechaFinInput.disabled = true;
+                            if (fechaInicioInput.value) {
+                                const fechaInicio = new Date(fechaInicioInput.value);
+                                const fechaFin = new Date(fechaInicio);
+                                fechaFin.setDate(fechaFin.getDate() + duracion);
+                                fechaFinInput.value = fechaFin.toISOString().split('T')[0];
+                            }
+                        } else if (limitDate) {
+                            fechaFinInput.disabled = true;
+                            fechaFinInput.value = limitDate;
+                        } else {
+                            fechaFinInput.disabled = false;
+                        }
                     }
                 }
+
+                if (fechaUpdateInput) {
+                    fechaUpdateInput.value = fechaFinInput.value;
+                }
+
                 updateMontoRestante();
             }
+
+
 
             // Función para calcular el saldo pendiente
             function updateSaldoPendiente() {

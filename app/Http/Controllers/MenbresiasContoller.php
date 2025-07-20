@@ -51,12 +51,11 @@ class MenbresiasContoller extends Controller
         }
 
 
-        $membresias = $query->latest()
-                            ->paginate(7)->appends([
-                                'estado' => $filtroEstado,
-                                'membresiaTexto'=>$membresiaTexto
-                            ]);
-
+        $membresias = $query->orderByDesc('updated_at')
+                    ->paginate(7)->appends([
+                        'estado' => $filtroEstado,
+                        'membresiaTexto' => $membresiaTexto
+                    ]);
 
         return view('categoria.categvi',
             compact('membresias', 'filtroEstado','categorias','fechaFiltro'
