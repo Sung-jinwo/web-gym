@@ -81,17 +81,16 @@ class Pagos extends Model
     public function getPagoVencidoAttribute()
     {
         if ($this->estado_pago === 'incompleto') {
-            $fechaLimite = Carbon::parse($this->fecha_limite_pago);
-            return now()->greaterThan($fechaLimite);
+            $fechaLimite = Carbon::parse($this->fecha_limite_pago)->startOfDay();
+            return now()->startOfDay()->gt($fechaLimite); // SOLO si es antes de hoy
         }
-
         return false;
     }
 
     public function getMensajePagoVencidoAttribute()
     {
         if ($this->pago_vencido) {
-            $diasVencidos = now()->diffInDays($this->fecha_limite_pago);
+            $diasVencidos = Carbon::parse($this->fecha_limite_pago)->diffInDays(now(), false);
             if ($diasVencidos <= 5) {
                 return '¡ATENCIÓN! El pago del alumno ' . $this->alumno->alum_nombre . ' está vencido hace ' . $diasVencidos . ' día(s).';
             }

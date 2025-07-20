@@ -102,7 +102,23 @@ class VentaController extends Controller
                     ->orderBy('updated_at', 'desc') 
                     ->paginate(7);
 
-    return view('ventas.ventavi', compact('ventas', 'sedes', 'productos', 'fechaFiltro'));
+
+    $ventasCollection = collect($ventas->items());
+
+    // Detectar reservas por vencer
+    $reservasPorVencer = $ventasCollection->filter(fn($venta) => $venta->reserva_por_vencer);
+    if ($reservasPorVencer->isNotEmpty()) {
+        $mensajesWarning = $reservasPorVencer->map(fn($venta) => $venta->mensaje_reserva_por_vencer);
+        session()->flash('warning', $mensajesWarning->implode('<br><br>'));
+    }
+    
+    // Detectar reservas vencidas
+    $reservasVencidas = $ventasCollection->filter(fn($venta) => $venta->reserva_vencida);
+    if ($reservasVencidas->isNotEmpty()) {
+        $mensajesError = $reservasVencidas->map(fn($venta) => $venta->mensaje_reserva_vencida);
+        session()->flash('error', $mensajesError->implode('<br><br>'));
+    }
+    return view('ventas.ventare', compact('ventas', 'sedes', 'productos', 'fechaFiltro'));
     }
 
 

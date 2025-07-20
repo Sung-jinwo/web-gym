@@ -11,7 +11,7 @@
     <div class="search-panel">
         <h3 class="search-heading">Búsqueda de los alumnos</h3>
         <div class="filter-wrapper">
-            <form method="GET" action="{{ route('ventaResarvado.index') }}" class="filter-row">
+            <form method="GET" action="{{ route('venta.reservados') }}" class="filter-row">
 
                 <div class="filter-item">
                     <label for="id_producto" class="filter-label">Producto:</label>
@@ -52,7 +52,7 @@
                 <tr>
                     <th class="padres-table-th">Producto</th>
                     <th class="padres-table-th">Sede</th>
-                    <th class="padres-table-th">F. Venta</th>
+                    <th class="padres-table-th">F. Reserva</th>
                     <th class="padres-table-th">Cantidad</th>
                     <th class="padres-table-th">Total</th>
                     <th class="padres-table-th padres-table-actions">Acciones</th>
@@ -72,7 +72,7 @@
                             @endif
                         </td>
                         <td class="padres-table-td">
-                            {{$item->created_at->format('d/m/Y H:i:s')}}
+                            {{$item->fechareserva}}
                         </td>
                         <td class="padres-table-td">
                             {{ number_format($item->cantidad, 2) }}

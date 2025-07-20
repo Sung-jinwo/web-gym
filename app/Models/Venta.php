@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Venta extends Model
@@ -43,5 +44,42 @@ class Venta extends Model
         return $this->belongsTo(Producto::class, 'fkproducto', 'id_productos');
     }
 
+    public function getFechaReservaAttribute($value)
+    {
+        return Carbon::parse($this->venta_fecha)->format('d/m/Y'); 
+    }
 
+    public function getReservaPorVencerAttribute()
+    {
+        $fecha = Carbon::parse($this->venta_fecha);
+        $diasRestantes = now()->diffInDays($fecha, false);
+
+        return $diasRestantes >= 0 && $diasRestantes <= 5;
+    }
+
+    // Esta función dice si ya está vencida (hoy o antes)
+    public function getReservaVencidaAttribute()
+    {
+        $fecha = Carbon::parse($this->venta_fecha);
+        return $fecha->lt(now()->startOfDay());
+    }
+
+    public function getMensajeReservaPorVencerAttribute()
+    {
+        if ($this->reserva_por_vencer) {
+            $dias = now()->diffInDays($this->venta_fecha);
+            return "La Venta Reservada de producto para {$this->alumno?->alum_nombre} vence en {$dias} día(s).";
+        }
+        return null;
+    }
+
+    // Mensaje para reservas vencidas
+    public function getMensajeReservaVencidaAttribute()
+    {
+        if ($this->reserva_vencida) {
+            $dias = now()->diffInDays($this->venta_fecha);
+            return "¡ATENCIÓN! Reserva para {$this->alumno?->alum_nombre} vencida hace {$dias} día(s).";
+        }
+        return null;
+    }
 }

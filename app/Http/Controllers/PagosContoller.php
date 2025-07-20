@@ -131,30 +131,18 @@ class PagosContoller extends Controller
             $pagosCollection = collect($pagos->items());
 
             // Filtrar pagos por vencer
-            $pagosPorVencer = $pagosCollection->filter(function($pago) {
-                return $pago->pago_por_vencer;
-            });
-
-            if ($pagosPorVencer->isNotEmpty() && !session()->has('warning')) {
-                $mensajes = $pagosPorVencer->map(function($pago) {
-                    return $pago->mensaje_pago_por_vencer;
-                });
-
-                session()->flash('warning', $mensajes->implode('<br> <br>'));
+            $pagosPorVencer = $pagosCollection->filter(fn($pago) => $pago->pago_por_vencer);
+            if ($pagosPorVencer->isNotEmpty()) {
+                $mensajesWarning = $pagosPorVencer->map(fn($pago) => $pago->mensaje_pago_por_vencer);
+                session()->flash('warning', $mensajesWarning->implode('<br><br>'));
             }
-
-            $pagosVencidos = $pagosCollection->filter(function($pago) {
-                return $pago->pago_vencido;
-            });
-
-            if ($pagosVencidos->isNotEmpty() && !session()->has('warning')) {
-                $mensajes = $pagosVencidos->map(function($pago) {
-                    return $pago->mensaje_pago_vencido;
-                });
-
-                session()->flash('error', $mensajes->implode('<br>'));
+            
+            // PAGOS VENCIDOS
+            $pagosVencidos = $pagosCollection->filter(fn($pago) => $pago->pago_vencido);
+            if ($pagosVencidos->isNotEmpty()) {
+                $mensajesError = $pagosVencidos->map(fn($pago) => $pago->mensaje_pago_vencido);
+                session()->flash('error', $mensajesError->implode('<br>'));
             }
-
 
             return view('pagos.pagos_incompletos',
                  compact('sedes', 'membresias', 'fechaFiltro','pagos'));
