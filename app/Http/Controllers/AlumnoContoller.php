@@ -85,7 +85,8 @@ class AlumnoContoller extends Controller
 
     $alumnos = $query->orderByDesc('updated_at')
                  ->orderByDesc('alum_codigo')
-                 ->paginate(7);
+                 ->paginate(7)
+                 ->appends(request()->query());
 
 
     

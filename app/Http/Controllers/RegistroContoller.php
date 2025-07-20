@@ -55,11 +55,8 @@ class RegistroContoller extends Controller
         }
 
         $alumnos = $query->orderByDesc('updated_at')
-                 ->paginate(7)
-                 ->appends([
-                     'alum_estado' => $filtroEstado,
-                     'fecha_filtro' => $fechaFiltro,
-                 ]);
+                        ->paginate(7)
+                        ->appends(request()->query()); 
 
         foreach ($alumnos as $alumno) {
             $alumno->color_class = $alumno->color_cierre;

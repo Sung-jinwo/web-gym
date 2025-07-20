@@ -63,10 +63,7 @@ class PagosContoller extends Controller
 
             $pagos = $query ->where('estado_pago', 'completo')
                 ->orderBy('updated_at', 'desc')
-                ->paginate(12)->appends([
-                'alumnoTexto' => $alumnoTexto,
-                'fecha_filtro' => $fechaFiltro,
-            ]);
+                ->paginate(12)->appends(request()->query());
 
             return view('pagos.pagos_completos',
                     compact('pagos','sedes', 'membresias','fechaFiltro'));
@@ -122,10 +119,7 @@ class PagosContoller extends Controller
 
             $pagos = $query ->where('estado_pago', 'incompleto')
                 ->orderBy('updated_at', 'desc')
-                ->paginate(12)->appends([
-                    'alumnoTexto' => $alumnoTexto,
-                    'fecha_filtro' => $fechaFiltro,
-                ]);
+                ->paginate(12)->appends(request()->query());
 
 
             $pagosCollection = collect($pagos->items());

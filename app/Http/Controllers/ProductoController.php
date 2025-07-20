@@ -43,10 +43,8 @@ class ProductoController extends Controller
         }
 
         // Paginar los resultados
-        $producto = $query->orderByDesc('updated_at')->paginate(8)->appends([
-            'estado' => $filtroEstado,
-            'id_sede' => $idSede,
-            ]);
+        $producto = $query->orderByDesc('updated_at')
+                          ->paginate(8)->appends(request()->query());
 
         return view('producto.prodvi', compact('producto', 'filtroEstado','sedes'));
     }

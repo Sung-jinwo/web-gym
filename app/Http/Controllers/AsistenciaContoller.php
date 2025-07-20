@@ -52,9 +52,9 @@ class AsistenciaContoller extends Controller
                 ->whereMonth('created_at', $fecha->month);
         }
 
-        $asistencias = $query->orderBy('updated_at', 'desc')->paginate(10)->appends([
-                                'fecha_filtro' => $fechaFiltro
-            ]);
+        $asistencias = $query->orderBy('updated_at', 'desc')
+                     ->paginate(10)
+                     ->appends(request()->query());
 
         return view('asistencia.asisvi',
             compact('sedes', 'alumnoTexto', 'fechaFiltro', 'asistencias'));

@@ -56,7 +56,8 @@ class VentaController extends Controller
 
     $ventas = $query->where('estado_venta', 'Pagado')
                     ->orderBy('updated_at', 'desc') 
-                    ->paginate(7);
+                    ->paginate(7)
+                    ->appends(request()->query());
 
     return view('ventas.ventavi', compact('ventas', 'sedes', 'productos', 'fechaFiltro'));
     }
@@ -100,7 +101,8 @@ class VentaController extends Controller
 
     $ventas = $query->where('estado_venta', 'Reservado')
                     ->orderBy('updated_at', 'desc') 
-                    ->paginate(7);
+                    ->paginate(7)
+                    ->appends(request()->query());
 
 
     $ventasCollection = collect($ventas->items());
