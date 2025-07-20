@@ -88,24 +88,7 @@ class AlumnoContoller extends Controller
                  ->paginate(7);
 
 
-    $pagosIncompletos = Pagos::with('alumno')
-    ->where('estado_pago', 'incompleto')
-    ->whereIn('fkalum', $alumnos->pluck('id_alumno'))
-    ->get();
-
-    // 2. Detectar pagos por vencer
-    $pagosPorVencer = $pagosIncompletos->filter(fn($pago) => $pago->pago_por_vencer);
-    if ($pagosPorVencer->isNotEmpty()) {
-        $mensajesWarning = $pagosPorVencer->map(fn($pago) => $pago->mensaje_pago_por_vencer);
-        session()->flash('warning', $mensajesWarning->implode('<br><br>'));
-    }
     
-    // 3. Detectar pagos vencidos
-    $pagosVencidos = $pagosIncompletos->filter(fn($pago) => $pago->pago_vencido);
-    if ($pagosVencidos->isNotEmpty()) {
-        $mensajesError = $pagosVencidos->map(fn($pago) => $pago->mensaje_pago_vencido);
-        session()->flash('error', $mensajesError->implode('<br>'));
-    }
     
     return view('alumno.alumvi', [
         'alumnos' => $alumnos,
