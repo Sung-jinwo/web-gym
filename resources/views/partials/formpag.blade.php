@@ -323,7 +323,6 @@
 
     </div>
     <div class="filter-item">
-        @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
             <div class="form-section">
                 <div class="section-header">
                     <h3 class="Sub_titulos">
@@ -334,6 +333,8 @@
                 </div>
                 <div class="section-content">
                     <div class="filter-row">
+         @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
+                    
                         <div class="filter-item">
                             <label for="fkuser" class="filter-label enhanced-label">
                                 <i class="fa-solid fa-user-shield"></i>
@@ -351,11 +352,16 @@
                                 <span class="error-message">{{ $errors->first('fkuser') }}</span>
                             @endif
                         </div>
+        @endif
+                        
+                        <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
+
                         <div class="filter-item">
                             <label for="fksede" class="filter-label enhanced-label">
                                 <i class="fa-solid fa-building"></i>
                                 Sede
                             </label>
+                            
                             <select name="fksede" id="fksede" class="filter-dropdown enhanced-select">
                                 <option value="">Seleccione una sede</option>
                                 @foreach($sede as $s)
@@ -371,10 +377,9 @@
                     </div>
                 </div>
             </div>
-        @else
-            <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
-            <input type="hidden" name="fksede" value="{{ auth()->user()->fksede }}">
-        @endif
+        
+            {{-- <input type="hidden" name="fksede" value="{{ auth()->user()->fksede }}"> --}}
+        
     </div>
 </div>
 
