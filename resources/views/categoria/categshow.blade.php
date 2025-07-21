@@ -34,8 +34,15 @@
             </div>
 
             <div class="membresia-detail-item">
-                <label class="filter-label"><i class="fa-solid fa-calendar"></i> Dias:</label>
-                <span class="membresia-detail-value">{{ $membresias->mem_durac }}</span>
+                <label class="filter-label"><i class="fa-solid fa-calendar"></i> Dias: o (fecha)</label>
+                <span class="membresia-detail-value">
+                    @if ($membresias->mem_durac)
+                    {{ $membresias->mem_durac }}
+                    @else
+                    {{ $membresias->fechalimite }}
+                    @endif
+
+                </span>
             </div>
 
             <div class="membresia-detail-item">
