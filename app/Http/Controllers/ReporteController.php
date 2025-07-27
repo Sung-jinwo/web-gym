@@ -78,23 +78,10 @@ class ReporteController extends Controller
                     new AlumnosExport($sedeId),
                     'alumnos.xlsx'
                 );
-
-            case 'pagos':
-                return Excel::download(
-                    new PagosExport($fechaInicio, $fechaFin, $sedeId),
-                    'pagos.xlsx'
-                );
-
             case 'asistencias':
                 return Excel::download(
                     new AsistenciasExport($fechaInicio, $fechaFin, $sedeId),
                     'asistencias.xlsx'
-                );
-
-            case 'ventas':
-                return Excel::download(
-                    new VentasExport($fechaInicio, $fechaFin, $sedeId),
-                    'ventas.xlsx'
                 );
 
             case 'inventario':

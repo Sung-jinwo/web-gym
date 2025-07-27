@@ -138,4 +138,14 @@ class Alumno extends Model
     {
         return $this->alum_nombre.' '.$this->alum_apellido ;
     }
+
+    public function setAlumNombreAttribute($value)
+    {
+        $this->attributes['alum_nombre'] = mb_convert_case(mb_strtolower($value), MB_CASE_TITLE, "UTF-8");
+    }
+
+    public function setAlumApellidoAttribute($value)
+    {
+        $this->attributes['alum_apellido'] = mb_convert_case(mb_strtolower($value), MB_CASE_TITLE, "UTF-8");
+    }
 }

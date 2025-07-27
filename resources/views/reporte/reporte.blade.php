@@ -18,9 +18,9 @@
                     <select class="form-select" id="tipo_reporte" name="tipo_reporte" required>
                         <option value="">Seleccione un Reporte</option>
                         <option value="alumnos">Alumnos</option>
-                        <option value="pagos">Pagos</option>
+                        {{-- <option value="pagos">Pagos</option> --}}
                         <option value="asistencias">Asistencias</option>
-                        <option value="ventas">Ventas</option>
+                        {{-- <option value="ventas">Ventas</option> --}}
                         <option value="inventario">Inventario</option>
                         <option value="pagos_ventas">Pagos y Ventas (Excel)</option>
                         <option value="ingresos_diarios">Ingresos Diarios (PDF)</option>

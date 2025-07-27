@@ -50,42 +50,53 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     {
         $query = DB::table('pago_detalles as pd')
             ->join('pagos as p', 'pd.fkpago', '=', 'p.id_pag')
+            ->join('alumno as a', 'p.fkalum', '=', 'a.id_alumno') 
             ->join('metodos_pago as mp', 'pd.fkmetodo', '=', 'mp.id_metod')
             ->join('membresias as m', 'pd.fkmemb', '=', 'm.id_mem')
             ->join('sedes as s', 'p.fksede', '=', 's.id_sede')
             ->select(
                 'pd.id_pagdeta',
-                'pd.created_at as fecha_pago',
+                DB::raw('DATE(pd.created_at) as fecha_pago'), 
+                's.sede_nombre',
                 'mp.tipo_pago as metodo_pago',
+                'p.pag_entre as entrenador',
                 'm.mem_nomb as membresia',
                 'm.mem_durac as duracion',
+                'm.mem_limit as fecha',
                 'pd.monto',
                 'pd.estado',
-                's.sede_nombre'
+                DB::raw("CONCAT(a.alum_nombre, ' ', a.alum_apellido) as alumno") 
             )
             ->where('p.fksede', $this->sedeId);
-
+    
         if ($this->fechaInicio && $this->fechaFin) {
             $query->whereBetween('pd.created_at', [
                 Carbon::parse($this->fechaInicio)->startOfDay(),
                 Carbon::parse($this->fechaFin)->endOfDay()
             ]);
         }
-
-        return $query->orderBy('pd.created_at', 'desc')->get();
+    
+        return $query->orderBy('pd.created_at', 'asc')->get();
     }
+    
 
     public function map($pago): array
     {
+        $duracionOFecha = $pago->duracion === null 
+            ? ($pago->fecha ?? 'Sin fecha') 
+            : $pago->duracion . ' días';
+
         return [
             $pago->id_pagdeta,
             $pago->fecha_pago,
             $pago->sede_nombre,
             $pago->metodo_pago,
+            $pago->entrenador,
             $pago->membresia,
-            $pago->duracion . ' días',
+            $pago->alumno,
+            $duracionOFecha,
             number_format($pago->monto, 2),
-            ucfirst($pago->estado)
+            ucfirst($pago->estado),
         ];
     }
 
@@ -96,10 +107,12 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             'Fecha Pago',
             'Sede',
             'Método Pago',
+            'Entrenador',
             'Membresía',
-            'Duración',
+            'Alumno o fecha' ,
+            'Duración o fecha',
             'Monto (S/.)',
-            'Estado'
+            'Estado',
         ];
     }
 
@@ -129,42 +142,51 @@ class DetalleVentasSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     {
         $query = DB::table('detalle_venta as dv')
             ->join('ventas as v', 'dv.fkventa', '=', 'v.id_venta')
+            ->leftJoin('alumno as a', 'v.fkalum', '=', 'a.id_alumno')
             ->join('productos as p', 'dv.fkproducto', '=', 'p.id_productos')
             ->join('metodos_pago as mp', 'v.fkmetodo', '=', 'mp.id_metod')
             ->join('sedes as s', 'v.fksede', '=', 's.id_sede')
             ->select(
                 'dv.id_detalle',
-                'v.venta_fecha',
+                DB::raw('DATE(dv.created_at) as venta_fecha'),
                 's.sede_nombre',
+                'mp.tipo_pago as metodo_pago',
+                'v.venta_entre as entrenador',
                 'p.prod_nombre as producto',
+                DB::raw("CONCAT(a.alum_nombre, ' ', a.alum_apellido) as alumno"),
                 'dv.datelle_cantidad as cantidad',
                 'dv.datelle_precio_unitario as precio_unitario',
                 'dv.datelle_sub_total as subtotal',
-                'mp.tipo_pago as metodo_pago'
+                'dv.estado_venta as Estado'
             )
             ->where('v.fksede', $this->sedeId);
 
         if ($this->fechaInicio && $this->fechaFin) {
-            $query->whereBetween('v.venta_fecha', [
+            $query->whereBetween('dv.created_at', [
                 Carbon::parse($this->fechaInicio)->startOfDay(),
                 Carbon::parse($this->fechaFin)->endOfDay()
             ]);
         }
 
-        return $query->orderBy('v.venta_fecha', 'desc')->get();
+        return $query->orderBy('dv.created_at', 'asc')->get();
     }
 
     public function map($venta): array
     {
+        $alumno = $venta->alumno ?? 'Alumno no especificado';
+
         return [
             $venta->id_detalle,
             $venta->venta_fecha,
             $venta->sede_nombre,
+            $venta->metodo_pago,
+            $venta->entrenador,
             $venta->producto,
+            $alumno,
             $venta->cantidad,
             number_format($venta->precio_unitario, 2),
             number_format($venta->subtotal, 2),
-            $venta->metodo_pago
+            ucfirst($venta->Estado)
         ];
     }
 
@@ -174,11 +196,14 @@ class DetalleVentasSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             'ID',
             'Fecha Venta',
             'Sede',
+            'Método Pago',
+            'Entrenador',
             'Producto',
+            'Alumno',
             'Cantidad',
             'Precio Unitario (S/.)',
             'Subtotal (S/.)',
-            'Método Pago'
+            'Estado'
         ];
     }
 
@@ -213,7 +238,7 @@ class GastosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
                 'gast_categoria as categoria',
                 'gast_descripcion as descripcion',
                 'gast_monto as monto',
-                'created_at as fecha'
+                DB::raw('DATE(created_at) as fecha'),
             );
 
         if ($this->fechaInicio && $this->fechaFin) {
@@ -223,7 +248,7 @@ class GastosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             ]);
         }
 
-        return $query->orderBy('created_at', 'desc')->get();
+        return $query->orderBy('created_at', 'asc')->get();
     }
 
     public function map($gasto): array
@@ -288,7 +313,7 @@ class ResumenFinancieroSheet implements \Maatwebsite\Excel\Concerns\FromCollecti
             ->join('ventas as v', 'dv.fkventa', '=', 'v.id_venta')
             ->where('v.fksede', $this->sedeId)
             ->when($this->fechaInicio && $this->fechaFin, function($query) {
-                $query->whereBetween('v.venta_fecha', [
+                $query->whereBetween('dv.created_at', [
                     Carbon::parse($this->fechaInicio)->startOfDay(),
                     Carbon::parse($this->fechaFin)->endOfDay()
                 ]);

@@ -151,6 +151,7 @@ class PagosContoller extends Controller
         $alumnoId = $request->input('alumno_id');
         $users = User::withRolesAdminAndEmpleado();
         $alumno = Alumno::find($alumnoId);
+        $fksedeAlumno = $alumno ? $alumno->fksede : null;
         $codigoAlumno = $alumno ? $alumno->alum_codigo : null;
         $membresiasActivas = Membresias::with(['categoria_m'])
             ->where('estado', 'A')
@@ -165,6 +166,7 @@ class PagosContoller extends Controller
             'metodo' => Metodo::all(),
             'montoActual' => 0,
             'codigoAlumno' => $codigoAlumno,
+            'sedeAlumno' => $fksedeAlumno,
         ]);
     }
 
@@ -287,6 +289,7 @@ class PagosContoller extends Controller
         $alumnoId = $request->input('alumno_id');
         $users = User::withRolesAdminAndEmpleado();
         $alumno = Alumno::find($alumnoId);
+        $fksedeAlumno = $alumno ? $alumno->fksede : null;
         $codigoAlumno = $alumno ? $alumno->alum_codigo : null;
         $membresiasActivas = Membresias::with(['categoria_m'])
             ->where('estado', 'A')
@@ -301,6 +304,7 @@ class PagosContoller extends Controller
             'metodo' => Metodo::all(),
             'montoActual' => $pago->pagodetalle()->sum('monto'),
             'codigoAlumno' => $codigoAlumno,
+            'sedeAlumno' => $fksedeAlumno,
         ]);
     }
 
