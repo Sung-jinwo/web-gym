@@ -50,7 +50,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     {
         $query = DB::table('pago_detalles as pd')
             ->join('pagos as p', 'pd.fkpago', '=', 'p.id_pag')
-            ->join('alumno as a', 'p.fkalum', '=', 'a.id_alumno') 
+            ->leftJoin('alumno as a', 'p.fkalum', '=', 'a.id_alumno') 
             ->join('metodos_pago as mp', 'pd.fkmetodo', '=', 'mp.id_metod')
             ->join('membresias as m', 'pd.fkmemb', '=', 'm.id_mem')
             ->join('sedes as s', 'p.fksede', '=', 's.id_sede')
@@ -110,7 +110,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             'Método Pago',
             'Entrenador',
             'Membresía',
-            'Alumno o fecha' ,
+            'Alumno',
             'Duración o fecha',
             'Monto (S/.)',
             'Estado',
