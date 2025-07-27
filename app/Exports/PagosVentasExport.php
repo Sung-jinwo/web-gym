@@ -82,6 +82,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
 
     public function map($pago): array
     {
+        $alumno = $pago->alumno ?? 'Alumno no especificado';
         $duracionOFecha = $pago->duracion === null 
             ? ($pago->fecha ?? 'Sin fecha') 
             : $pago->duracion . ' días';
@@ -93,7 +94,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             $pago->metodo_pago,
             $pago->entrenador,
             $pago->membresia,
-            $pago->alumno,
+            $alumno,
             $duracionOFecha,
             number_format($pago->monto, 2),
             ucfirst($pago->estado),
