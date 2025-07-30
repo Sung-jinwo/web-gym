@@ -40,7 +40,7 @@ class CreatePagosRequests extends FormRequest
         $rules = [
             'fkuser' => 'required|exists:users,id',
             'fkmem' => 'required|exists:membresias,id_mem',
-            'pag_inicio' => 'nullable|date',
+            'pag_inicio' => 'required|date',
             'pag_fin' => 'nullable|date|after:pag_inicio',
             'pag_entre' => 'nullable|string',
             'pago' => 'required|numeric|min:0',
@@ -69,6 +69,7 @@ class CreatePagosRequests extends FormRequest
         return [
             'fkalum.required' => 'El alumno es obligatorio para membresías (presionar botón Buscar).',
             'fkalum.exists' => 'El alumno seleccionado no existe en nuestros registros.',
+            'pag_inicio.required' => 'Seleccionar una fecha de inicio para el pago.',
             'fecha_limite_pago.required_if' => 'La fecha límite es obligatoria para pagos incompletos.',
             'saldo_pendiente.required_if' => 'El saldo pendiente es obligatorio para pagos incompletos.',
         ];

@@ -54,8 +54,9 @@ class PagosContoller extends Controller
 
             if ($alumnoTexto) {
                 $query->whereHas('alumno',function ($q) use ($alumnoTexto) {
-                    $q->where('alum_telefo', $alumnoTexto)
+                    $q->where('alum_codigo', $alumnoTexto)
                         ->orWhere('alum_nombre', 'LIKE', '%' . $alumnoTexto . '%')
+                        ->orWhere('alum_telefo', 'LIKE', '%' . $alumnoTexto . '%')
                         ->orWhere('alum_apellido', 'LIKE', '%' . $alumnoTexto . '%')
                         ->orWhere(Alumno::raw("CONCAT(alum_nombre, ' ', alum_apellido)"), 'LIKE', '%' . $alumnoTexto . '%');
                 });
@@ -328,8 +329,11 @@ class PagosContoller extends Controller
          $tipoMembresia = $membresia->tipo;
 
          // Fecha inicio y Fin
-         $pagInicio = $isAdmin ? $validatedData['pag_inicio'] : $pago->pag_inicio;
+        $pagInicio = $isAdmin ? $validatedData['pag_inicio'] : $pago->pag_inicio;
 
+        if ($isAdmin && !$pagInicio) {
+            $pagInicio = $pago->pag_inicio;  
+        }
         $fechaInicio = Carbon::parse($pagInicio);
 
         $fechafin = $request->filled('pag_update')
