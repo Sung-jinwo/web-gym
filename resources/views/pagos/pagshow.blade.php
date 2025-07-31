@@ -54,7 +54,7 @@
                         @if($pago->membresia->mem_durac)
                             {{ $pago->membresia->mem_durac }} días
                         @else
-                            {{$pago->membresia->mem_limit}} 
+                            {{ \Carbon\Carbon::parse($pago->membresia->mem_limit)->format('d/m/Y') }}
                         @endif
                         
                     </span>
