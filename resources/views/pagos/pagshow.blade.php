@@ -50,7 +50,14 @@
 
                 <div class="pago-item">
                     <span class="pago-etiqueta">Duración:</span>
-                    <span class="pago-valor">{{ $pago->membresia->mem_durac }} días</span>
+                    <span class="pago-valor">
+                        @if($pago->membresia->mem_durac)
+                            {{ $pago->membresia->mem_durac }} días
+                        @else
+                            {{$pago->membresia->mem_limit}} 
+                        @endif
+                        
+                    </span>
                 </div>
 
                 <div class="pago-item">
