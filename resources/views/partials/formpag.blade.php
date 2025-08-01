@@ -111,6 +111,7 @@
                                 <i class="fa-solid fa-calendar-plus"></i>
                                 Fecha de Inicio
                             </label>
+                            <input type="hidden" name="pag_inicio" value="{{ $pago->pag_inicio }}">
                             <input type="date" id="pag_inicio" value="{{ $pago->pag_inicio }}"
                                    class="filter-dropdown enhanced-input" disabled>
                         </div>

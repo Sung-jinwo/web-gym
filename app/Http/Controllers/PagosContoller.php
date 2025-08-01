@@ -336,10 +336,15 @@ class PagosContoller extends Controller
         }
         $fechaInicio = Carbon::parse($pagInicio);
 
-        $fechafin = $request->filled('pag_update')
-            ? Carbon::parse($request->input('pag_update'))->format('Y-m-d')
-            : $fechaInicio->copy()->addDays($membresia->mem_durac)->format('Y-m-d');
-
+        if ($request->filled('pag_update')) {
+            $fechafin = Carbon::parse($request->input('pag_update'))->format('Y-m-d');
+        } elseif (!empty($membresia->mem_durac)) {
+            $fechafin = $fechaInicio->copy()->addDays($membresia->mem_durac)->format('Y-m-d');
+        } elseif (!empty($membresia->mem_limit)) {
+            $fechafin = Carbon::parse($membresia->mem_limit)->format('Y-m-d');
+        } else {
+            $fechafin = $pago->pag_fin; // mantener valor anterior si no hay nada
+        }
 
          $estadoPago = $validatedData['estado_pago'];
          $estadoIncompleto = $estadoPago === 'incompleto';

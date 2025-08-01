@@ -47,6 +47,13 @@ class Alumno extends Model
             ->first();
     }
 
+    public function getPagoPrincipalActualAttribute()
+    {
+        return $this->pagos()
+            ->where('tipo_membresia', 'principal')
+            ->orderByDesc('pag_fin')
+            ->first(); 
+    }
 
     public function getAlumEdaAttribute(): int // alum_edad = alumEda
     {
@@ -76,7 +83,7 @@ class Alumno extends Model
 
     public function getEstadoMembresiaAttribute(): array
     {
-        $pago = $this->membresiaVigente;
+        $pago = $this->pagoPrincipalActual; 
 
         if (!$pago || !$pago->pag_fin) {
             return [
@@ -119,7 +126,7 @@ class Alumno extends Model
 
     public function getEstadoPagoAttribute()
     {
-        $pagoPrincipal = $this->membresiaVigente;
+        $pagoPrincipal = $this->pagoPrincipalActual;
 
         return $pagoPrincipal ? $pagoPrincipal->estado_pago : 'Sin pago';
 
