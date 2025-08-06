@@ -25,7 +25,6 @@ class MenbresiasContoller extends Controller
         $categorias = Ctegoria_m::all();
 
         $filtroEstado = $request->get('estado', 'A');
-        $fechaFiltro = $request->input('fecha_filtro');
         $id_categoria = $request->input('id_categoria');
         $membresiaTexto = $request->get('membresiaTexto');
 
@@ -36,11 +35,7 @@ class MenbresiasContoller extends Controller
             $query->where('estado', $filtroEstado);
         }
 
-        if ($fechaFiltro){
-            $fecha = Carbon::parse($fechaFiltro);
-            $query->whereYear('created_at', $fecha->year)
-                ->whereMonth('created_at', $fecha->month);
-        }
+       
 
         if ($id_categoria) {
             $query->where('fkcategoria', $id_categoria);
@@ -56,7 +51,7 @@ class MenbresiasContoller extends Controller
                             ->appends(request()->query());
 
         return view('categoria.categvi',
-            compact('membresias', 'filtroEstado','categorias','fechaFiltro'
+            compact('membresias', 'filtroEstado','categorias'
         ));
     }
 

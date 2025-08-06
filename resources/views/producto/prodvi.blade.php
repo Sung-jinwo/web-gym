@@ -10,21 +10,20 @@
         <!-- Filtro por Estado -->
         <div class="producto-unique-filtro">
             <form method="GET" action="{{ route('producto.index') }}" class="producto-unique-filtro-form">
+                <label for="estado" class="producto-unique-filtro-label">
+                    <i class="fa-solid fa-filter"></i> Filtrar por 
+                </label>
                 @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
-
-
-                    <label for="estado" class="producto-unique-filtro-label">
-                        <i class="fa-solid fa-filter"></i> Filtrar por Estado:
-                    </label>
-
+                    Estado:
                     <select name="estado" id="estado" class="producto-unique-filtro-select"
                             onchange="this.form.submit()">
                         <option value="activo" {{ $filtroEstado == 'activo' ? 'selected' : '' }}>Activos</option>
                         <option value="inactivo" {{ $filtroEstado == 'inactivo' ? 'selected' : '' }}>Inactivos</option>
 
                     </select>
-
-
+                @endif
+                @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_VENTAS))
+                
                     <label for="id_sede" class="producto-unique-filtro-label">
                         Sedes:
                     </label>

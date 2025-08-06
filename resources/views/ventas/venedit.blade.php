@@ -219,7 +219,8 @@
                                 <input class="filter-dropdown" type="text" value="{{ auth()->user()->name }}" disabled>
                             @endif
                         </div>
-
+                        @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_EMPLEADO) )
+        
                         <div class="filter-item">
                             <label class="filter-label"><i class="fa-solid fa-clock"></i> Turno del Trainer</label>
                             <select class="filter-dropdown" name="venta_entre">
@@ -228,7 +229,7 @@
                                 <option value="Trainer Tarde" {{ old('venta_entre', $venta->venta_entre) == 'Trainer Tarde' ? 'selected' : '' }}>Trainer Tarde</option>
                             </select>
                         </div>
-
+                        @endif
                         <div class="filter-item">
                             <label class="filter-label"><i class="fa-solid fa-location-dot"></i> Sede</label>
                             @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))

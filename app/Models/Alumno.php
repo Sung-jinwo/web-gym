@@ -43,16 +43,11 @@ class Alumno extends Model
 
         return $this->pagos()
             ->where('tipo_membresia', 'principal')
-            ->where('pag_fin', '>=', $fechaActual)
-            ->first();
-    }
+            // ->where('pag_fin', '>=', $fechaActual)
 
-    public function getPagoPrincipalActualAttribute()
-    {
-        return $this->pagos()
-            ->where('tipo_membresia', 'principal')
-            ->orderByDesc('pag_fin')
-            ->first(); 
+            // ->orWhere('pag_fin', '<', $fechaActual)  // Incluye vencidas
+            ->orderBy('pag_fin', 'desc')
+            ->first();
     }
 
     public function getAlumEdaAttribute(): int // alum_edad = alumEda
@@ -83,21 +78,24 @@ class Alumno extends Model
 
     public function getEstadoMembresiaAttribute(): array
     {
-        $pago = $this->pagoPrincipalActual; 
+        $pago = $this->membresiaVigente;
 
         if (!$pago || !$pago->pag_fin) {
             return [
                 'estado' => 'Sin membresía',
                 'clase'  => 'status-inactive',
+                'fecha_fin' => null
             ];
         }
 
+        $fechaFin = Carbon::parse($pago->pag_fin);
         $diferencia = now()->diffInDays(Carbon::parse($pago->pag_fin), false);
 
         if ($diferencia < 0) {
             return [
                 'estado' => 'Vencido',
                 'clase'  => 'status-expired',
+                'fecha_fin' => $fechaFin
             ];
         }
 
@@ -105,12 +103,14 @@ class Alumno extends Model
             return [
                 'estado' => 'Por caducar / Renovar',
                 'clase'  => 'status-expiring',
+                'fecha_fin' => $fechaFin
             ];
         }
 
         return [
             'estado' => 'Vigente',
             'clase'  => 'status-active',
+            'fecha_fin' => $fechaFin
         ];
     }
 
@@ -126,7 +126,7 @@ class Alumno extends Model
 
     public function getEstadoPagoAttribute()
     {
-        $pagoPrincipal = $this->pagoPrincipalActual;
+        $pagoPrincipal = $this->membresiaVigente;
 
         return $pagoPrincipal ? $pagoPrincipal->estado_pago : 'Sin pago';
 

@@ -45,6 +45,7 @@ class User extends Authenticatable
     const ROL_ADMIN = 0;
     const ROL_EMPLEADO = 1;
     const ROL_ASISTENCIA = 2;
+    const ROL_VENTAS = 3;
 
     public function is($rol)
     {
@@ -58,7 +59,7 @@ class User extends Authenticatable
 
     public static function withRolesAdminAndEmpleado()
     {
-        return self::whereIn('rol', [self::ROL_ADMIN, self::ROL_EMPLEADO])->get();
+        return self::whereIn('rol', [self::ROL_ADMIN, self::ROL_EMPLEADO, self::ROL_VENTAS])->get();
     }
 
      public function getNombreRolAttribute(): ?string
@@ -67,6 +68,7 @@ class User extends Authenticatable
              self::ROL_ADMIN => 'Administrador',
              self::ROL_EMPLEADO => 'Empleado',
              self::ROL_ASISTENCIA => 'Asistencia',
+             self::ROL_VENTAS => 'Asesor de ventas',
          ];
 
          return $arr[$this->rol] ?? null;

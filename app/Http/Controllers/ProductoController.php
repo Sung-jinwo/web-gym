@@ -31,7 +31,7 @@ class ProductoController extends Controller
         $idSede = $request->input('id_sede');
         $query = Producto::with(['categoria', 'user','sede']);
 
-        if ($user->is(User::ROL_ADMIN) && $idSede) {
+        if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $idSede) {
             $query->where('fksede', $idSede);
         } elseif ($user->is(User::ROL_EMPLEADO)) {
             $query->where('fksede', $user->fksede);

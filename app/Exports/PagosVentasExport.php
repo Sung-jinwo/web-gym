@@ -51,6 +51,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
         $query = DB::table('pago_detalles as pd')
             ->join('pagos as p', 'pd.fkpago', '=', 'p.id_pag')
             ->leftJoin('alumno as a', 'p.fkalum', '=', 'a.id_alumno') 
+            ->leftJoin('users as u', 'p.fkuser', '=', 'u.id') 
             ->join('metodos_pago as mp', 'pd.fkmetodo', '=', 'mp.id_metod')
             ->join('membresias as m', 'pd.fkmemb', '=', 'm.id_mem')
             ->join('sedes as s', 'p.fksede', '=', 's.id_sede')
@@ -61,6 +62,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
                 'mp.tipo_pago as metodo_pago',
                 'p.pag_entre as entrenador',
                 'm.mem_nomb as membresia',
+                'u.name as usuario',
                 'm.mem_durac as duracion',
                 'm.mem_limit as fecha',
                 'pd.monto',
@@ -91,6 +93,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             $pago->id_pagdeta,
             $pago->fecha_pago,
             $pago->sede_nombre,
+            $pago->usuario,
             $pago->metodo_pago,
             $pago->entrenador,
             $pago->membresia,
@@ -107,6 +110,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             'ID',
             'Fecha Pago',
             'Sede',
+            'Usuario',
             'Método Pago',
             'Entrenador',
             'Membresía',
@@ -144,6 +148,7 @@ class DetalleVentasSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
         $query = DB::table('detalle_venta as dv')
             ->join('ventas as v', 'dv.fkventa', '=', 'v.id_venta')
             ->leftJoin('alumno as a', 'v.fkalum', '=', 'a.id_alumno')
+            ->leftJoin('users as u', 'v.fkusers', '=', 'u.id')
             ->join('productos as p', 'dv.fkproducto', '=', 'p.id_productos')
             ->join('metodos_pago as mp', 'v.fkmetodo', '=', 'mp.id_metod')
             ->join('sedes as s', 'v.fksede', '=', 's.id_sede')
@@ -153,6 +158,7 @@ class DetalleVentasSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
                 's.sede_nombre',
                 'mp.tipo_pago as metodo_pago',
                 'v.venta_entre as entrenador',
+                'u.name as usuario',
                 'p.prod_nombre as producto',
                 DB::raw("CONCAT(a.alum_nombre, ' ', a.alum_apellido) as alumno"),
                 'dv.datelle_cantidad as cantidad',
@@ -180,6 +186,7 @@ class DetalleVentasSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             $venta->id_detalle,
             $venta->venta_fecha,
             $venta->sede_nombre,
+            $venta->usuario,
             $venta->metodo_pago,
             $venta->entrenador,
             $venta->producto,
@@ -197,6 +204,7 @@ class DetalleVentasSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             'ID',
             'Fecha Venta',
             'Sede',
+            'Usuario',   
             'Método Pago',
             'Entrenador',
             'Producto',
@@ -232,24 +240,26 @@ class GastosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
 
     public function collection()
     {
-        $query = DB::table('gastos')
-            ->where('fksede', $this->sedeId)
+        $query = DB::table('gastos as g')
+            ->where('g.fksede', $this->sedeId)
+            ->leftJoin('users as u', 'g.fkuser', '=', 'u.id')
             ->select(
-                'id_gasto',
-                'gast_categoria as categoria',
-                'gast_descripcion as descripcion',
-                'gast_monto as monto',
-                DB::raw('DATE(created_at) as fecha'),
+                'g.id_gasto',
+                'g.gast_categoria as categoria',
+                'u.name as usuario',
+                'g.gast_descripcion as descripcion',
+                'g.gast_monto as monto',
+                DB::raw('DATE(g.created_at) as fecha'),
             );
 
         if ($this->fechaInicio && $this->fechaFin) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('g.created_at', [
                 Carbon::parse($this->fechaInicio)->startOfDay(),
                 Carbon::parse($this->fechaFin)->endOfDay()
             ]);
         }
 
-        return $query->orderBy('created_at', 'asc')->get();
+        return $query->orderBy('g.created_at', 'asc')->get();
     }
 
     public function map($gasto): array
@@ -257,6 +267,7 @@ class GastosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
         return [
             $gasto->id_gasto,
             $gasto->fecha,
+            $gasto->usuario,
             $gasto->categoria,
             $gasto->descripcion,
             number_format($gasto->monto, 2)
@@ -268,6 +279,7 @@ class GastosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
         return [
             'ID',
             'Fecha',
+            'Usuario',
             'Categoría',
             'Descripción',
             'Monto (S/.)'

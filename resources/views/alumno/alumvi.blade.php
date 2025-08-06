@@ -22,7 +22,7 @@
         <h3 class="search-heading">Búsqueda de los alumnos</h3>
         <div class="filter-wrapper">
             <form method="GET" action="{{ route('alumno.index') }}" class="filter-row">
-                @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
+                @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_VENTAS) )
                     <div class="filter-item">
                         <label for="id_sede" class="filter-label">Sedes:</label>
                         <select name="id_sede" id="id_sede" class="filter-dropdown">
@@ -52,6 +52,8 @@
                         <option value="vigente" {{ request('fecha_filtro') == 'vigente' ? 'selected' : '' }}>Vigente</option>
                         <option value="por_caducar" {{ request('fecha_filtro') == 'por_caducar' ? 'selected' : '' }}>Por caducar / Renovar</option>
                         <option value="vencido" {{ request('fecha_filtro') == 'vencido' ? 'selected' : '' }}>Vencido</option>
+                        <option value="sin_membresia" {{ request('fecha_filtro') == 'sin_membresia' ? 'selected' : '' }}>Sin membresía</option>
+                    </select>
                     </select>
                 </div>
 

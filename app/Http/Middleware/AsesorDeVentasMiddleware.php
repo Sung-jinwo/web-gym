@@ -6,7 +6,7 @@ use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 
-class EmpleadoMiddleware
+class AsesorDeVentasMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,10 +18,15 @@ class EmpleadoMiddleware
     public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
+    
+        if (!$user) {
+            return redirect('/login')->with('error', 'Debes iniciar sesión');
+        }
 
+        $rolesRestringidos = [User::ROL_VENTAS, User::ROL_ASISTENCIA];
 
-        if (!$user->is(User::ROL_EMPLEADO) && !$user->is(User::ROL_ADMIN) && !$user->is(User::ROL_VENTAS)) {
-            return redirect('/')->with('error', 'Acceso restringido');
+        if (in_array($user->rol, $rolesRestringidos)) {
+            return redirect('/')->with('error', 'No tienes permiso para acceder a esta sección.');
         }
 
         return $next($request);

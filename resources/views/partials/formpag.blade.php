@@ -290,7 +290,9 @@
     </div>
 </div>
 
+
 <div class="filter-row">
+    @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_EMPLEADO) )
     <div class="filter-item">
         <div class="form-section">
             <div class="section-header">
@@ -323,6 +325,8 @@
         </div>
 
     </div>
+    @endif
+
     <div class="filter-item">
             <div class="form-section">
                 <div class="section-header">

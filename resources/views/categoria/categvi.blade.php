@@ -42,11 +42,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="filter-item">
-                    <label for="fecha_filtro" class="filter-label">Filtrar por Fecha:</label>
-                    <input type="month"  id="fecha_filtro" name="fecha_filtro" class="filter-dropdown"
-                           value="{{ old('fecha_filtro', $fechaFiltro) }}">
-                </div>
+                
                 <div class="filter-item">
                     <label for="membresiaTexto" class="filter-label">Nombre de Membresia</label>
                     <input type="text" id="membresiaTexto" name="membresiaTexto" value="{{ request('membresiaTexto') }}"

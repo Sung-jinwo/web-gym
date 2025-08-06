@@ -27,7 +27,7 @@ class VentaController extends Controller
         $idProducto = $request->input('id_producto');
         $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
         
-        if ($user->is(User::ROL_ADMIN)) {
+        if ($user->is(User::ROL_ADMIN)|| $user->is(User::ROL_VENTAS) ) {
             $productos = Producto::where('estado', 'activo')->orderBy('prod_nombre', 'asc')->get();
         } else {
             $productos = Producto::where('fksede', $user->fksede)
@@ -38,11 +38,11 @@ class VentaController extends Controller
         $query = Venta::with(['sede', 'metodo', 'productos']);
         
 
-        if ($user->is(User::ROL_ADMIN) && $idSede) {
-            $query->where('fksede', $idSede);
-        } elseif ($user->is(User::ROL_EMPLEADO)) {
-            $query->where('fksede', $user->fksede);
-        }
+        // if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $idSede) {
+        //     $query->where('fksede', $idSede);
+        // } elseif ($user->is(User::ROL_EMPLEADO)) {
+        //     $query->where('fksede', $user->fksede);
+        // }
 
         if ($idProducto) {
             $query->where('fkproducto', $idProducto);
@@ -71,7 +71,7 @@ class VentaController extends Controller
         $idProducto = $request->input('id_producto');
         $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
         
-        if ($user->is(User::ROL_ADMIN)) {
+        if ($user->is(User::ROL_ADMIN)|| $user->is(User::ROL_VENTAS) ) {
             $productos = Producto::where('estado', 'activo')->orderBy('prod_nombre', 'asc')->get();
         } else {
             $productos = Producto::where('fksede', $user->fksede)
@@ -83,11 +83,11 @@ class VentaController extends Controller
         $query = Venta::with(['sede', 'metodo', 'productos']);
         
 
-        if ($user->is(User::ROL_ADMIN) && $idSede) {
-            $query->where('fksede', $idSede);
-        } elseif ($user->is(User::ROL_EMPLEADO)) {
-            $query->where('fksede', $user->fksede);
-        }
+        // if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $idSede) {
+        //     $query->where('fksede', $idSede);
+        // } elseif ($user->is(User::ROL_EMPLEADO)) {
+        //     $query->where('fksede', $user->fksede);
+        // }
 
         if ($idProducto) {
             $query->where('fkproducto', $idProducto);

@@ -42,27 +42,41 @@ class AlumnoContoller extends Controller
         $query->where('alum_estado', $estado);
     }
 
-    if ($user->is(User::ROL_ADMIN) && $idSede) {
+    if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $idSede) {
         $query->where('fksede', $idSede);
     } elseif ($user->is(User::ROL_EMPLEADO)) {
         $query->where('fksede', $user->fksede);
     }
 
-    if ($fechaFiltro) {
+    if ($request->filled('fecha_filtro')) {
         $hoy = now();
-
-        $query->whereHas('pagos', function ($q) use ($fechaFiltro, $hoy) {
-            $q->where('tipo_membresia', 'principal');
-
-            if ($fechaFiltro == 'vigente') {
-                $q->where('pag_fin', '>', $hoy->copy()->addDays(5));
-            } elseif ($fechaFiltro == 'por_caducar') {
-                $q->where('pag_fin', '>=', $hoy)
-                  ->where('pag_fin', '<=', $hoy->copy()->addDays(5));
-            } elseif ($fechaFiltro == 'vencido') {
-                $q->where('pag_fin', '<', $hoy);
-            }
-        });
+    
+        switch($request->fecha_filtro) {
+            case 'vigente':
+                $query->whereHas('pagos', function($q) use ($hoy) {
+                    $q->where('tipo_membresia', 'principal')
+                      ->where('pag_fin', '>=', $hoy->copy()->addDays(6));
+                });
+                break;
+    
+            case 'por_caducar':
+                $query->whereHas('pagos', function($q) use ($hoy) {
+                    $q->where('tipo_membresia', 'principal')
+                      ->whereBetween('pag_fin', [$hoy, $hoy->copy()->addDays(5)]);
+                });
+                break;
+    
+            case 'vencido':
+                $query->whereHas('pagos', function($q) use ($hoy) {
+                    $q->where('tipo_membresia', 'principal')
+                      ->where('pag_fin', '<', $hoy);
+                });
+                break;
+    
+            case 'sin_membresia':
+                $query->whereDoesntHave('pagos'); 
+                break;
+        }
     }
 
     if ($alumnoTexto) {

@@ -44,24 +44,32 @@
                 <h1 class="sidebar__title">IVONNE GYM</h1>
                 <p class="sidebar__user-info">
                     @auth
-                        @if(auth()->user()->is(App\Models\User::ROL_ADMIN))
-                            <i class="fas fa-shield-alt"></i> Administrador
-                        @elseif(auth()->user()->is(App\Models\User::ROL_ASISTENCIA))
-                            <i class="fas fa-calendar-check"></i> Asistencia |
-                            @if(auth()->user()->sede)
-                                {{ auth()->user()->sede->sede_nombre }}
-                            @else
-                                Sin sede asignada
-                            @endif
-                        @elseif(auth()->user()->is(App\Models\User::ROL_EMPLEADO))
-                            <i class="fas fa-user-tie"></i> Empleado |
-                            @if(auth()->user()->sede)
-                                {{ auth()->user()->sede->sede_nombre }}
-                            @else
-                                Sin sede asignada
-                            @endif
+                    @if(auth()->user()->is(App\Models\User::ROL_ADMIN))
+                        <i class="fas fa-shield-alt"></i> Administrador
+                    @elseif(auth()->user()->is(App\Models\User::ROL_ASISTENCIA))
+                        <i class="fas fa-calendar-check"></i> Asistencia |
+                        @if(auth()->user()->sede)
+                            {{ auth()->user()->sede->sede_nombre }}
+                        @else
+                            Sin sede asignada
                         @endif
-                    @endauth
+                    @elseif(auth()->user()->is(App\Models\User::ROL_EMPLEADO))
+                        <i class="fas fa-user-tie"></i> Empleado |
+                        @if(auth()->user()->sede)
+                            {{ auth()->user()->sede->sede_nombre }}
+                        @else
+                            Sin sede asignada
+                        @endif
+                    @elseif(auth()->user()->is(App\Models\User::ROL_VENTAS))
+                        <i class="fas fa-user"></i> Ventas |
+                        @if(auth()->user()->name)
+                            {{ auth()->user()->name }}
+                        @else
+                            Sin sede asignada
+                        @endif
+                    @endif
+                @endauth
+                
                 </p>
               </div>
 

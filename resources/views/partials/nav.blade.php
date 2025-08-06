@@ -7,7 +7,7 @@
 
     @auth
         <!-- Mostrar para Admin y Empleado -->
-        @if(auth()->user()->is(App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_EMPLEADO))
+        @if(auth()->user()->is(App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_EMPLEADO)|| auth()->user()->is(App\Models\User::ROL_VENTAS))
             <li class="item sidebar__item--has-submenu {{ setActivo('alumno') }}">
                 <a href="javascript:void(0)" class="sidebar__link sidebar__link--toggle">
                     <i class="fa-solid fa-users"></i>
@@ -34,7 +34,8 @@
         <!-- Mostrar para Admin, Empleado y Asistencia -->
         @if(auth()->user()->is(App\Models\User::ROL_ADMIN) ||
             auth()->user()->is(App\Models\User::ROL_EMPLEADO) ||
-            auth()->user()->is(App\Models\User::ROL_ASISTENCIA))
+            auth()->user()->is(App\Models\User::ROL_ASISTENCIA)
+            )
             <li class="sidebar__item {{ setActivo('asistencia') }}">
                 <a href="{{
                     auth()->user()->is(App\Models\User::ROL_ASISTENCIA) ?
@@ -47,7 +48,8 @@
         @endif
 
         <!-- Mostrar solo para Admin y Empleado -->
-        @if(auth()->user()->is(App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_EMPLEADO))
+        @if(auth()->user()->is(App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_EMPLEADO)
+            || auth()->user()->is(App\Models\User::ROL_VENTAS))
             <li class="sidebar__item {{ setActivo('membresias') }}">
                 <a href="{{ route('membresias.index') }}" class="sidebar__link">
                     <i class="fa-solid fa-award"></i> <span class="sidebar__text">Membresías</span>

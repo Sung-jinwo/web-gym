@@ -103,7 +103,7 @@
                 <label for="fksede" class="filter-label">
                     <i class="fa-solid fa-location-dot"></i> Lugar de Registro
                 </label>
-                @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
+                @if (auth()->user()->is(\App\Models\User::ROL_ADMIN)|| auth()->user()->is(App\Models\User::ROL_VENTAS))
                     <select name="fksede" id="fksede" class="filter-dropdown">
                         <option value="">Seleccione Lugar de Registro</option>
                         @foreach($sedes as $sede)

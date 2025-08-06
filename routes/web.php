@@ -170,7 +170,6 @@ Route::group(['middleware' => 'auth'], function (){
 
     //======================Productos=========================
         Route::get('producto', [ProductoController::class, 'index'])->name('producto.index');
-        Route::get('producto/{producto}/editar',[ProductoController::class, 'edit'])->name('producto.edit');
         Route::patch('producto/{producto}', [ProductoController::class, 'update'])->name('producto.update');
 
         Route::post('producto',[ProductoController::class, 'store'])->name('producto.store');
@@ -178,6 +177,9 @@ Route::group(['middleware' => 'auth'], function (){
         Route::delete('producto/{producto}',[ProductoController::class, 'destroy'])->name('producto.destroy');
         Route::put('/producto/activar/{producto}', [ProductoController::class, 'activar'])->name('producto.activar');
     //buscar
+    Route::group(['middleware' => 'no-ventas'], function (){
+        Route::get('producto/{producto}/editar',[ProductoController::class, 'edit'])->name('producto.edit');
+    });
 
 
     //==============================Venta======================
@@ -191,8 +193,6 @@ Route::group(['middleware' => 'auth'], function (){
         Route::get('venta/buscar-alumno', [VentaController::class, 'buscarAlumno'])->name('venta.buscarAlumno');
 
     //======================================Detalle
-
-
 
 
 

@@ -89,9 +89,12 @@
         <a href="{{ route('producto.index') }}" class="producto-detalle-unique-btn producto-detalle-unique-btn-secondary">
             <i class="fa-solid fa-arrow-left"></i> Volver a los Productos
         </a>
+        @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_EMPLEADO) )
+        
         <a href="{{ route('producto.edit', $producto) }}" class="producto-detalle-unique-btn producto-detalle-unique-btn-primary">
             <i class="fa-solid fa-edit"></i> Editar Producto
         </a>
+        @endif
     </div>
 </div>
 @endsection

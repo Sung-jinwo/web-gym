@@ -13,7 +13,7 @@
     <h3 class="search-heading">Búsqueda</h3>
     <div class="filter-wrapper">
         <form method="GET" action="{{ route('pagos.incompletos') }}" class="filter-row">
-            @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
+            @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_VENTAS) )
                 <div class="filter-item">
                     <label for="id_sede" class="filter-label">Sedes:</label>
                     <select name="id_sede" id="id_sede" class="filter-dropdown">

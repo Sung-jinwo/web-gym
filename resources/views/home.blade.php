@@ -3,7 +3,8 @@
 @section('title','Home - Ivonne Gym')
 
 @section('content')
-
+@include('partials.estado')
+@include('partials.validation-errors')
 
 <div class="home-container">
     <!-- Banner Principal -->
