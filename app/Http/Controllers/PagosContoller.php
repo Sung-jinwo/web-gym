@@ -227,7 +227,7 @@ class PagosContoller extends Controller
             'fecha_limite_pago' => $fechaLimitePago,
             'saldo_pendiente' => $saldoPendiente,
             'monto_pagado' => $validatedData['monto_pagado'],
-            'pag_entre'=>$validatedData['pag_entre']
+            'pag_entre'=>$validatedData['pag_entre'] ?? null
         ]);
         // Generar el detallle Pago
         if ($membresia->categoria_m->nombre_m !== 'Registro') {
@@ -378,7 +378,7 @@ class PagosContoller extends Controller
              'fecha_limite_pago' => $fechaLimitePago,
              'saldo_pendiente' => $saldoPendiente,
              'monto_pagado' => $monto,
-             'pag_entre'=>$validatedData['pag_entre'],
+             'pag_entre'=>$validatedData['pag_entre'] ?? null,
              'pag_fin' => $fechafin,
          ]);
 
