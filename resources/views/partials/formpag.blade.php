@@ -104,7 +104,7 @@
                 <p class="section-description">Período de vigencia de la membresía</p>
             </div>
             <div class="section-content">
-                @if(Auth::user()->is(User::ROL_EMPLEADO) || Auth::user()->is(User::ROL_VENTAS)  && request()->is('*/editar'))
+                @if( !(Auth::user()->is(User::ROL_ADMIN))&& request()->is('*/editar'))
                     <div class="filter-row">
                         <div class="filter-item">
                             <label for="pag_inicio" class="filter-label enhanced-label">
