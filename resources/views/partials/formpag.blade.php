@@ -357,9 +357,9 @@
                                 <span class="error-message">{{ $errors->first('fkuser') }}</span>
                             @endif
                         </div>
-                    @endif
-                        
+                    @else
                         <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
+                    @endif
 
                         <div class="filter-item">
                             <label for="fksede" class="filter-label enhanced-label">
@@ -379,6 +379,7 @@
                                 <span class="error-message">{{ $errors->first('fksede') }}</span>
                             @endif
                         </div>
+
                     </div>
                 </div>
             </div>
