@@ -202,7 +202,7 @@
     </tr>
     <tr>
         <td colspan="4">
-            Nombres y Apellidos: <span class="form-field" style="min-width: 250px;" >{{ $lastMembresia->alumno->alum_nombre ?? '_______________________________' }}</span>
+            Nombres y Apellidos: <span class="form-field" style="min-width: 250px;" >{{ $lastMembresia->alumno->nombre_completo ?? '_______________________________' }}</span>
             <div class="checkbox-group">
                 <div class="checkbox-container">
                     <span class="checkbox {{ $lastMembresia->alumno->alum_documento == 'DNI' ? 'checked' : '' }}"></span> DNI
