@@ -55,7 +55,7 @@
                 </div>
                 <div class="info-card__grid-item">
                     <span class="info-card__label"><i class="fa-solid fa-user"></i> Sexo:</span>
-                    <span class="info-card__value">@if ($alumno->fksede == 1) Masculino @else Femenino @endif</span>
+                    <span class="info-card__value">@if ($alumno->fksexo == 1) Masculino @else Femenino @endif</span>
                 </div>
                 <div class="info-card__grid-item">
                     <span class="info-card__label"><i class="fa-solid fa-calendar"></i> Edad:</span>
