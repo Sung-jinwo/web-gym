@@ -32,7 +32,7 @@ class AsistenciaContoller extends Controller
 
         if ($user->is(User::ROL_ADMIN) && $idSede) {
             $query->where('fksede', $idSede);
-        } elseif ($user->is(User::ROL_EMPLEADO)) {
+        } elseif ($user->is(User::ROL_EMPLEADO) || $user->is(User::ROL_ASISTENCIA)) {
             $query->where('fksede', $user->fksede);
         }
 
