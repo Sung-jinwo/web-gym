@@ -36,7 +36,13 @@ class AlumnoContoller extends Controller
     $idSede = $request->input('id_sede');
     $fechaFiltro = $request->get('fecha_filtro');
 
-    $query = Alumno::with(['pagos.membresia', 'padres']);
+    // $query = Alumno::with(['pagos.membresia', 'padres']);
+
+    $query = Alumno::with(['pagos' => function($query) {
+        $query->where('tipo_membresia', 'principal')
+              ->orderBy('created_at', 'desc')
+              ->limit(1); // Solo cargar el último pago principal
+    }, 'pagos.membresia', 'padres']); 
 
     if ($estado) {
         $query->where('alum_estado', $estado);
@@ -48,35 +54,39 @@ class AlumnoContoller extends Controller
         $query->where('fksede', $user->fksede);
     }
 
+    // if ($request->filled('fecha_filtro')) {
+    //     $hoy = now();
+    
+    //     switch($request->fecha_filtro) {
+    //         case 'vigente':
+    //             $query->whereHas('pagos', function($q) use ($hoy) {
+    //                 $q->where('tipo_membresia', 'principal')
+    //                   ->where('pag_fin', '>=', $hoy->copy()->addDays(6));
+    //             });
+    //             break;
+    
+    //         case 'por_caducar':
+    //             $query->whereHas('pagos', function($q) use ($hoy) {
+    //                 $q->where('tipo_membresia', 'principal')
+    //                   ->whereBetween('pag_fin', [$hoy, $hoy->copy()->addDays(5)]);
+    //             });
+    //             break;
+    
+    //         case 'vencido':
+    //             $query->whereHas('pagos', function($q) use ($hoy) {
+    //                 $q->where('tipo_membresia', 'principal')
+    //                   ->where('pag_fin', '<', $hoy);
+    //             });
+    //             break;
+    
+    //         case 'sin_membresia':
+    //             $query->whereDoesntHave('pagos'); 
+    //             break;
+    //     }
+    // }
+
     if ($request->filled('fecha_filtro')) {
-        $hoy = now();
-    
-        switch($request->fecha_filtro) {
-            case 'vigente':
-                $query->whereHas('pagos', function($q) use ($hoy) {
-                    $q->where('tipo_membresia', 'principal')
-                      ->where('pag_fin', '>=', $hoy->copy()->addDays(6));
-                });
-                break;
-    
-            case 'por_caducar':
-                $query->whereHas('pagos', function($q) use ($hoy) {
-                    $q->where('tipo_membresia', 'principal')
-                      ->whereBetween('pag_fin', [$hoy, $hoy->copy()->addDays(5)]);
-                });
-                break;
-    
-            case 'vencido':
-                $query->whereHas('pagos', function($q) use ($hoy) {
-                    $q->where('tipo_membresia', 'principal')
-                      ->where('pag_fin', '<', $hoy);
-                });
-                break;
-    
-            case 'sin_membresia':
-                $query->whereDoesntHave('pagos'); 
-                break;
-        }
+        $query->conEstadoMembresia($request->fecha_filtro);
     }
 
     if ($alumnoTexto) {
@@ -89,9 +99,22 @@ class AlumnoContoller extends Controller
         });
     }
 
+    // $query->when($request->estado_pago, function ($query, $estado_pago) {
+    //     $query->whereHas('pagos', function ($q) use ($estado_pago) {
+    //         $q->where('estado_pago', $estado_pago)->where('tipo_membresia', 'principal');
+    //     });
+    // });
+
     $query->when($request->estado_pago, function ($query, $estado_pago) {
-        $query->whereHas('pagos', function ($q) use ($estado_pago) {
-            $q->where('estado_pago', $estado_pago)->where('tipo_membresia', 'principal');
+        // Obtenemos los IDs de los últimos pagos principales
+        $ultimosPagosIds = Pagos::select(DB::raw('MAX(id_pag) as id'))
+            ->where('tipo_membresia', 'principal')
+            ->groupBy('fkalum')
+            ->pluck('id');
+            
+        $query->whereHas('pagos', function ($q) use ($estado_pago, $ultimosPagosIds) {
+            $q->whereIn('id_pag', $ultimosPagosIds)
+              ->where('estado_pago', $estado_pago);
         });
     });
 

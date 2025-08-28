@@ -124,6 +124,27 @@ class Pagos extends Model
         return null;
     }
 
-
-
+    public function getAsistenciaCualquierSedeAttribute()
+    {
+        if ($this->pag_inicio && $this->pag_fin) {
+            $inicio = Carbon::parse($this->pag_inicio);
+            $fin = Carbon::parse($this->pag_fin);
+            $diferenciaDias = $inicio->diffInDays($fin);
+            
+            return $diferenciaDias > 90;
+        }
+        
+        return false;
+    }
+    
+    public function getDuracionDiasAttribute()
+    {
+        if ($this->pag_inicio && $this->pag_fin) {
+            $inicio = Carbon::parse($this->pag_inicio);
+            $fin = Carbon::parse($this->pag_fin);
+            return $inicio->diffInDays($fin);
+        }
+        
+        return 0;
+    }
 }

@@ -110,6 +110,8 @@ class AsistenciaContoller extends Controller
     {
         // dd($request->all());
         // fkalumno
+
+        
         $idAlum = $request->input('fkalum');
 
         $alumno = Alumno::findOrFail($idAlum);
@@ -128,7 +130,7 @@ class AsistenciaContoller extends Controller
 
         if ($ultimaMem->fecha_limite_pago && $ultimaMem->fecha_limite_pago > now()->toDateString()) {
             return back()
-                ->with('error', 'No se puede registrar asistencia, tu fecha de pago esta caducado');
+                ->with('error', 'No se puede registrar asistencia, tu fecha de pago estya vencido Comunicate con el Asesor');
         }
 
         //pago de fecha-fin es mayor a la fecha de ahora
@@ -138,15 +140,17 @@ class AsistenciaContoller extends Controller
                 ->with('error', 'No se puede registrar asistencia: el pago está vencido (fecha límite: ' . $ultimaMem->pag_fin . ')');
         }
 
-        $membresia = $ultimaMem->membresia;
-
-        if ($membresia->mem_durac <= 90 && $alumno->fksede != $request->input('fksede')) {
+        $inicio = Carbon::parse($ultimaMem->pag_inicio);
+        $fin = Carbon::parse($ultimaMem->pag_fin);
+        $diferenciaDias = $inicio->diffInDays($fin);
+        
+        // Solo restringir por sede si la duración es 90 días o menos
+        if ($diferenciaDias <= 90 && $alumno->fksede != $request->input('fksede')) {
             return back()
                 ->withInput()
-                ->with('error', 'No se puede registrar asistencia diferente a tu sede ('.$alumno->sede->sede_nombre.')');
+                ->with('error', 'No se puede registrar asistencia diferente a tu sede ('.$alumno->sede->sede_nombre.'). Comunicate con el Asesor si necesitas cambiar de sede');
         }
-
-
+       
 
         $asistencia = new Asistensias ($request->validated());
 

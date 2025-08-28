@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Alumno extends Model
 {
@@ -11,6 +12,7 @@ class Alumno extends Model
     protected $primaryKey = 'id_alumno';
     protected $guarded = [];
     public $timestamps = true;
+    
 
 
     public function pagos()
@@ -46,8 +48,48 @@ class Alumno extends Model
             // ->where('pag_fin', '>=', $fechaActual)
 
             // ->orWhere('pag_fin', '<', $fechaActual)  // Incluye vencidas
-            ->orderBy('pag_fin', 'desc')
+            ->orderBy('created_at', 'desc')
             ->first();
+    }
+
+    public function scopeConEstadoMembresia($query, $estado)
+    {
+        $hoy = now()->format('Y-m-d');
+        
+        // Obtenemos los IDs de los últimos pagos principales
+        $ultimosPagosIds = Pagos::select(DB::raw('MAX(id_pag) as id'))
+            ->where('tipo_membresia', 'principal')
+            ->groupBy('fkalum')
+            ->pluck('id');
+        
+        switch($estado) {
+            case 'vigente':
+                return $query->whereHas('pagos', function($q) use ($hoy, $ultimosPagosIds) {
+                    $q->whereIn('id_pag', $ultimosPagosIds)
+                      ->where('pag_fin', '>=', $hoy);
+                });
+                
+            case 'por_caducar':
+                $fechaLimite = now()->addDays(5)->format('Y-m-d');
+                return $query->whereHas('pagos', function($q) use ($hoy, $fechaLimite, $ultimosPagosIds) {
+                    $q->whereIn('id_pag', $ultimosPagosIds)
+                      ->where('pag_fin', '>=', $hoy)
+                      ->where('pag_fin', '<=', $fechaLimite);
+                });
+                
+            case 'vencido':
+                return $query->whereHas('pagos', function($q) use ($hoy, $ultimosPagosIds) {
+                    $q->whereIn('id_pag', $ultimosPagosIds)
+                      ->where('pag_fin', '<', $hoy);
+                });
+                
+            case 'sin_membresia':
+                return $query->whereDoesnthave('pagos', function($q) {
+                    $q->where('tipo_membresia', 'principal');
+                });
+        }
+        
+        return $query;
     }
 
     public function getAlumEdaAttribute(): int // alum_edad = alumEda
@@ -76,44 +118,80 @@ class Alumno extends Model
     }
 
 
-    public function getEstadoMembresiaAttribute(): array
-    {
-        $pago = $this->membresiaVigente;
+    // public function getEstadoMembresiaAttribute(): array
+    // {
+    //     $pago = $this->membresiaVigente;
 
-        if (!$pago || !$pago->pag_fin) {
-            return [
-                'estado' => 'Sin membresía',
-                'clase'  => 'status-inactive',
-                'fecha_fin' => null
-            ];
-        }
+    //     if (!$pago || !$pago->pag_fin) {
+    //         return [
+    //             'estado' => 'Sin membresía',
+    //             'clase'  => 'status-inactive',
+    //             'fecha_fin' => null
+    //         ];
+    //     }
 
-        $fechaFin = Carbon::parse($pago->pag_fin);
-        $diferencia = now()->diffInDays(Carbon::parse($pago->pag_fin), false);
+    //     $fechaFin = Carbon::parse($pago->pag_fin);
+    //     $diferencia = now()->diffInDays(Carbon::parse($pago->pag_fin), false);
 
-        if ($diferencia < 0) {
-            return [
-                'estado' => 'Vencido',
-                'clase'  => 'status-expired',
-                'fecha_fin' => $fechaFin
-            ];
-        }
+    //     if ($diferencia < 0) {
+    //         return [
+    //             'estado' => 'Vencido',
+    //             'clase'  => 'status-expired',
+    //             'fecha_fin' => $fechaFin
+    //         ];
+    //     }
 
-        if ($diferencia <= 5) {
-            return [
-                'estado' => 'Por caducar / Renovar',
-                'clase'  => 'status-expiring',
-                'fecha_fin' => $fechaFin
-            ];
-        }
+    //     if ($diferencia <= 5) {
+    //         return [
+    //             'estado' => 'Por caducar / Renovar',
+    //             'clase'  => 'status-expiring',
+    //             'fecha_fin' => $fechaFin
+    //         ];
+    //     }
 
+    //     return [
+    //         'estado' => 'Vigente',
+    //         'clase'  => 'status-active',
+    //         'fecha_fin' => $fechaFin
+    //     ];
+    // }
+public function getEstadoMembresiaAttribute(): array
+{
+    $pago = $this->membresiaVigente;
+
+    if (!$pago || !$pago->pag_fin) {
         return [
-            'estado' => 'Vigente',
-            'clase'  => 'status-active',
+            'estado' => 'Sin membresía',
+            'clase'  => 'status-inactive',
+            'fecha_fin' => null
+        ];
+    }
+
+    $fechaFin = Carbon::parse($pago->pag_fin);
+    $diferencia = now()->diffInDays($fechaFin, false);
+
+    if ($diferencia < 0) {
+        return [
+            'estado' => 'Vencido',
+            'clase'  => 'status-expired',
             'fecha_fin' => $fechaFin
         ];
     }
 
+    if ($diferencia <= 5) {
+        return [
+            'estado' => 'Por caducar / Renovar',
+            'clase'  => 'status-expiring',
+            'fecha_fin' => $fechaFin
+        ];
+    }
+
+    return [
+        'estado' => 'Vigente',
+        'clase'  => 'status-active',
+        'fecha_fin' => $fechaFin
+    ];
+}
     public function getClaseEstadoAttribute(): string
     {
         return $this->estado_membresia['clase'];
