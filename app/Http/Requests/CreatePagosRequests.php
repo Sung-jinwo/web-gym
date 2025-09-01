@@ -51,6 +51,7 @@ class CreatePagosRequests extends FormRequest
             'estado_pago' => 'required|in:completo,incompleto',
             'fecha_limite_pago' => 'nullable|required_if:estado_pago,incompleto|date',
             'saldo_pendiente' => 'nullable|required_if:estado_pago,incompleto|numeric|min:0',
+            'comision_ajustada' => 'nullable|numeric|min:0',
         ];
 
         if ($this->has('fkmem')) {

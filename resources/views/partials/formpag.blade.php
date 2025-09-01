@@ -251,9 +251,33 @@
                                 <i class="fa-solid fa-clock"></i>
                                 Fecha Límite para Pagar
                             </label>
+                        @if(Auth::user()->is(User::ROL_ADMIN))
+                            {{-- Campo editable para administradores --}}
                             <input type="date" name="fecha_limite_pago" id="fecha_limite_pago"
-                                   value="{{ old('fecha_limite_pago', $pago->fecha_limite_pago ? \Carbon\Carbon::parse($pago->fecha_limite_pago)->format('Y-m-d') : '') }}"
+                                   value="{{ old('fecha_limite_pago', isset($pago) && $pago->fecha_limite_pago ? \Carbon\Carbon::parse($pago->fecha_limite_pago)->format('Y-m-d') : now()->addDays(7)->format('Y-m-d')) }}"
                                    class="filter-dropdown enhanced-input">
+                        @else
+                            {{-- Para usuarios no administradores --}}
+                            @if(request()->is('*/editar') && isset($pago) && $pago->fecha_limite_pago)
+                            {{-- En modo edición, mostrar valor actual pero no editable --}}
+                            <input type="date" id="fecha_limite_pago_display"
+                                value="{{ \Carbon\Carbon::parse($pago->fecha_limite_pago)->format('Y-m-d') }}"
+                                class="filter-dropdown enhanced-input" disabled>
+                            <input type="hidden" name="fecha_limite_pago" value="{{ $pago->fecha_limite_pago }}">
+                            @else
+                            <input type="date" name="fecha_limite_pago" id="fecha_limite_pago"
+                                   value="{{ old('fecha_limite_pago', isset($pago) && $pago->fecha_limite_pago ? \Carbon\Carbon::parse($pago->fecha_limite_pago)->format('Y-m-d') : now()->addDays(7)->format('Y-m-d')) }}"
+                                   class="filter-dropdown enhanced-input">
+                            {{-- <input type="hidden" name="fecha_limite_pago" value="{{ now()->addDays(7)->format('Y-m-d') }}">
+                            <input type="date" id="fecha_limite_pago_display"
+                                   value="{{ now()->addDays(7)->format('Y-m-d') }}"
+                                   class="filter-dropdown enhanced-input" disabled> --}}
+                            @endif
+                        @endif  
+
+                            {{-- <input type="date" name="fecha_limite_pago" id="fecha_limite_pago"
+                                   value="{{ old('fecha_limite_pago', $pago->fecha_limite_pago ? \Carbon\Carbon::parse($pago->fecha_limite_pago)->format('Y-m-d') : '') }}"
+                                   class="filter-dropdown enhanced-input"> --}}
                             @if($errors->has('fecha_limite_pago'))
                                 <span class="error-message">{{ $errors->first('fecha_limite_pago') }}</span>
                             @endif

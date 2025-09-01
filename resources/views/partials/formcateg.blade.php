@@ -60,6 +60,13 @@
                         @endif
                     </div>
                     <div class="filter-item">
+                        <label for="mem_comi" class="filter-label"><i class="icono-costo"></i> Comision</label>
+                        <input type="text" id="mem_comi" name="mem_comi" placeholder="Ingrese La comision" value="{{ old('mem_comi', $membresias->mem_comi) }}" class="filter-dropdown">
+                        @if($errors->has('mem_comi'))
+                            <span class="error-message">{{ $errors->first('mem_comi') }}</span>
+                        @endif
+                    </div>
+                    <div class="filter-item">
                         <label for="tipo" class="filter-label"><i class="fa-solid fa-layer-group"></i> Tipo de Membresia</label>
                         <select name="tipo" id="tipo"  class="filter-dropdown">
                             <option value="">Seleccionar el tipo de membresia</option>

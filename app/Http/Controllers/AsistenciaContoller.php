@@ -145,10 +145,10 @@ class AsistenciaContoller extends Controller
         $diferenciaDias = $inicio->diffInDays($fin);
         
         // Solo restringir por sede si la duración es 90 días o menos
-        if ($diferenciaDias <= 90 && $alumno->fksede != $request->input('fksede')) {
+        if ($diferenciaDias <= 90 && $ultimaMem->fksede != $request->input('fksede')) {
             return back()
                 ->withInput()
-                ->with('error', 'No se puede registrar asistencia diferente a tu sede ('.$alumno->sede->sede_nombre.'). Comunicate con el Asesor si necesitas cambiar de sede');
+                ->with('error', 'No se puede registrar asistencia diferente a tu sede de Registro ('.$alumno->sede->sede_nombre.'). Comunicate con el Asesor de sede');
         }
        
 

@@ -49,6 +49,10 @@
                 <label class="filter-label"><i class="icono-costo"></i> Costo:</label>
                 <span class="membresia-detail-value membresia-detail-cost">{{ $membresias->mem_cost }}</span>
             </div>
+            <div class="membresia-detail-item">
+                <label class="filter-label"><i class="icono-costo"></i> Comision:</label>
+                <span class="membresia-detail-value membresia-detail-cost">{{ $membresias->mem_comi }}</span>
+            </div>
         </div>
 
         <div class="membresia-detail-actions">

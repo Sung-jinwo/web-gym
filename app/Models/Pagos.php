@@ -147,4 +147,38 @@ class Pagos extends Model
         
         return 0;
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($pago) {
+            // Si ya tiene comisión ajustada y no hay fecha límite, no se hace más ajuste
+            if ($pago->comision_ajustada !== null && !$pago->fecha_limite_pago) {
+                return;
+            }
+
+            // Obtener la comisión base de la membresía
+            $comisionBase = $pago->membresia->mem_comi;
+
+            // Si no hay fecha límite de pago, no se realiza ajuste
+            if (!$pago->fecha_limite_pago) {
+                $pago->comision_ajustada = $comisionBase;
+                return;
+            }
+
+            // Calcular la diferencia de semanas
+            $fechaLimite = Carbon::parse($pago->fecha_limite_pago);
+            $diasDeDiferencia = Carbon::now()->diffInDays($fechaLimite);
+            $semanasDeRetraso = floor($diasDeDiferencia / 7); // Convertir a semanas
+
+            // Calcular la comisión ajustada
+            $comisionAjustada = $comisionBase - (5 * $semanasDeRetraso);
+
+            // Evitar que la comisión ajustada sea negativa
+            $pago->comision_ajustada = max(0, $comisionAjustada);
+        });
+    }
+
+
 }

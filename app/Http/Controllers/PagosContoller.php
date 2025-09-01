@@ -226,6 +226,7 @@ class PagosContoller extends Controller
             'estado_pago' => $estadoPago,
             'fecha_limite_pago' => $fechaLimitePago,
             'saldo_pendiente' => $saldoPendiente,
+            'comision_ajustada' => $membresia->mem_comi ?? 0,
             'monto_pagado' => $validatedData['monto_pagado'],
             'pag_entre'=>$validatedData['pag_entre'] ?? null
         ]);
@@ -334,6 +335,14 @@ class PagosContoller extends Controller
         if ($isAdmin && !$pagInicio) {
             $pagInicio = $pago->pag_inicio;  
         }
+        if (!$isAdmin && !$request->has('fecha_limite_pago')) {
+            // Si no es admin y no se envió la fecha, mantener el valor actual
+            $fechaLimitePago = $pago->fecha_limite_pago;
+        } else {
+            // Para administradores o cuando se envía explícitamente la fecha
+            $fechaLimitePago = $request->input('fecha_limite_pago');
+        }
+        
         $fechaInicio = Carbon::parse($pagInicio);
 
         if ($request->filled('pag_update')) {
@@ -358,6 +367,18 @@ class PagosContoller extends Controller
              $fechaLimitePago = $request->input('fecha_limite_pago');
          }
 
+                // Calcular comisión ajustada
+        if ($fechaLimitePago && $fechaLimitePago !== $pago->fecha_limite_pago) {
+            $fechaLimite = Carbon::parse($fechaLimitePago);
+            $diasPasados = Carbon::now()->diffInWeeks($fechaLimite, false);
+
+            // Restar 5 por cada semana que ha pasado
+            $comisionAjustada = max(0, $membresia->mem_comi - ($diasPasados * 5));
+        } else {
+            // Si no hay cambio en la fecha límite, mantener la comisión original
+            $comisionAjustada = $pago->comision_ajustada ?: $membresia->mem_comi;
+        }
+
         $totalPagado = $pago->pagodetalle()->sum('monto');
         $monto = $validatedData['estado_pago'] === 'completo' ? $validatedData['pago'] : $validatedData['monto_pagado'];
 
@@ -378,6 +399,7 @@ class PagosContoller extends Controller
              'fecha_limite_pago' => $fechaLimitePago,
              'saldo_pendiente' => $saldoPendiente,
              'monto_pagado' => $monto,
+             'comision_ajustada' => $comisionAjustada,
              'pag_entre'=>$validatedData['pag_entre'] ?? null,
              'pag_fin' => $fechafin,
          ]);

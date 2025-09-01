@@ -3,6 +3,12 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -33,7 +39,9 @@ class PagosVentasExport implements WithMultipleSheets
 class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     \Maatwebsite\Excel\Concerns\WithHeadings,
     \Maatwebsite\Excel\Concerns\WithMapping,
-    \Maatwebsite\Excel\Concerns\WithTitle
+    \Maatwebsite\Excel\Concerns\WithTitle,
+    \Maatwebsite\Excel\Concerns\WithEvents,
+    \Maatwebsite\Excel\Concerns\ShouldAutoSize
 {
     protected $sedeId;
     protected $fechaInicio;
@@ -67,6 +75,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
                 'm.mem_limit as fecha',
                 'pd.monto',
                 'pd.estado',
+                'p.comision_ajustada',
                 DB::raw("CONCAT(a.alum_nombre, ' ', a.alum_apellido) as alumno") 
             )
             ->where('p.fksede', $this->sedeId);
@@ -101,6 +110,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             $duracionOFecha,
             number_format($pago->monto, 2),
             ucfirst($pago->estado),
+            number_format($pago->comision_ajustada, 2)
         ];
     }
 
@@ -118,6 +128,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             'Duración o fecha',
             'Monto (S/.)',
             'Estado',
+            'Comisiones generadas (S/.)'
         ];
     }
 
@@ -125,12 +136,50 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     {
         return 'Detalle Pagos';
     }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+                
+                // Estilo para encabezados
+                $headerStyle = [
+                    'font' => [
+                        'bold' => true,
+                        'color' => ['rgb' => 'FFFFFF']
+                    ],
+                    'fill' => [
+                        'fillType' => Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => '4F46E5']
+                    ]
+                ];
+                
+                $sheet->getStyle('A1:' . $highestColumn . '1')->applyFromArray($headerStyle);
+                
+                // Estilo para montos (columnas J y L)
+                $sheet->getStyle('J2:J' . $highestRow)->getNumberFormat()->setFormatCode('#,##0.00');
+                $sheet->getStyle('L2:L' . $highestRow)->getNumberFormat()->setFormatCode('#,##0.00');
+                
+                
+                // Bordes para toda la tabla
+                $sheet->getStyle('A1:' . $highestColumn . $highestRow)
+                    ->getBorders()
+                    ->getAllBorders()
+                    ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            }
+        ];
+    }
 }
 
 class DetalleVentasSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     \Maatwebsite\Excel\Concerns\WithHeadings,
     \Maatwebsite\Excel\Concerns\WithMapping,
-    \Maatwebsite\Excel\Concerns\WithTitle
+    \Maatwebsite\Excel\Concerns\WithTitle,
+    \Maatwebsite\Excel\Concerns\WithEvents,
+    \Maatwebsite\Excel\Concerns\ShouldAutoSize
 {
     protected $sedeId;
     protected $fechaInicio;
@@ -220,12 +269,51 @@ class DetalleVentasSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     {
         return 'Detalle Ventas';
     }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+                
+                // Estilo para encabezados
+                $headerStyle = [
+                    'font' => [
+                        'bold' => true,
+                        'color' => ['rgb' => 'FFFFFF']
+                    ],
+                    'fill' => [
+                        'fillType' => Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => '4F46E5']
+                    ]
+                ];
+                
+                $sheet->getStyle('A1:' . $highestColumn . '1')->applyFromArray($headerStyle);
+                
+                // Estilo para montos (columnas J, K)
+                $sheet->getStyle('J2:J' . $highestRow)->getNumberFormat()->setFormatCode('#,##0.00');
+                $sheet->getStyle('K2:K' . $highestRow)->getNumberFormat()->setFormatCode('#,##0.00');
+                
+                
+                
+                // Bordes para toda la tabla
+                $sheet->getStyle('A1:' . $highestColumn . $highestRow)
+                    ->getBorders()
+                    ->getAllBorders()
+                    ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            }
+        ];
+    }
 }
 
 class GastosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     \Maatwebsite\Excel\Concerns\WithHeadings,
     \Maatwebsite\Excel\Concerns\WithMapping,
-    \Maatwebsite\Excel\Concerns\WithTitle
+    \Maatwebsite\Excel\Concerns\WithTitle,
+    \Maatwebsite\Excel\Concerns\WithEvents,
+    \Maatwebsite\Excel\Concerns\ShouldAutoSize
 {
     protected $sedeId;
     protected $fechaInicio;
@@ -290,15 +378,53 @@ class GastosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     {
         return 'Gastos';
     }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+                
+                // Estilo para encabezados
+                $headerStyle = [
+                    'font' => [
+                        'bold' => true,
+                        'color' => ['rgb' => 'FFFFFF']
+                    ],
+                    'fill' => [
+                        'fillType' => Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => '4F46E5']
+                    ]
+                ];
+                
+                $sheet->getStyle('A1:' . $highestColumn . '1')->applyFromArray($headerStyle);
+                
+                // Estilo para montos (columna F)
+                $sheet->getStyle('F2:F' . $highestRow)->getNumberFormat()->setFormatCode('#,##0.00');
+                
+                
+                // Bordes para toda la tabla
+                $sheet->getStyle('A1:' . $highestColumn . $highestRow)
+                    ->getBorders()
+                    ->getAllBorders()
+                    ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            }
+        ];
+    }
 }
 
 class ResumenFinancieroSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
     \Maatwebsite\Excel\Concerns\WithHeadings,
-    \Maatwebsite\Excel\Concerns\WithTitle
+    \Maatwebsite\Excel\Concerns\WithTitle,
+    \Maatwebsite\Excel\Concerns\WithEvents,
+    \Maatwebsite\Excel\Concerns\ShouldAutoSize
 {
     protected $sedeId;
     protected $fechaInicio;
     protected $fechaFin;
+    protected $balanceNeto;
 
     public function __construct($sedeId, $fechaInicio, $fechaFin)
     {
@@ -345,14 +471,14 @@ class ResumenFinancieroSheet implements \Maatwebsite\Excel\Concerns\FromCollecti
             ->sum('gast_monto');
 
         // Balance Neto
-        $balanceNeto = ($totalPagos + $totalVentas) - $totalGastos;
+        $this->balanceNeto = ($totalPagos + $totalVentas) - $totalGastos;
 
         return collect([
             ['Concepto' => 'Total Ingresos por Pagos', 'Monto' => number_format($totalPagos, 2)],
             ['Concepto' => 'Total Ingresos por Ventas', 'Monto' => number_format($totalVentas, 2)],
             ['Concepto' => 'Total Ingresos', 'Monto' => number_format($totalPagos + $totalVentas, 2)],
             ['Concepto' => 'Total Gastos', 'Monto' => number_format($totalGastos, 2)],
-            ['Concepto' => 'Balance Neto', 'Monto' => number_format($balanceNeto, 2)]
+            ['Concepto' => 'Balance Neto', 'Monto' => number_format($this->balanceNeto, 2)]
         ]);
     }
 
@@ -364,5 +490,50 @@ class ResumenFinancieroSheet implements \Maatwebsite\Excel\Concerns\FromCollecti
     public function title(): string
     {
         return 'Resumen Financiero';
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+                
+                // Estilo para encabezados
+                $headerStyle = [
+                    'font' => [
+                        'bold' => true,
+                        'color' => ['rgb' => 'FFFFFF']
+                    ],
+                    'fill' => [
+                        'fillType' => Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => '4F46E5']
+                    ]
+                ];
+                
+                $sheet->getStyle('A1:' . $highestColumn . '1')->applyFromArray($headerStyle);
+                
+                // Estilo para montos (columna B)
+                $sheet->getStyle('B2:B' . $highestRow)->getNumberFormat()->setFormatCode('#,##0.00');
+                
+                // Estilo para fila de balance neto
+                $sheet->getStyle('A' . $highestRow . ':' . $highestColumn . $highestRow)
+                    ->getFont()
+                    ->setBold(true)
+                    ->setColor(new Color('FFFFFF'));
+                
+                $sheet->getStyle('A' . $highestRow . ':' . $highestColumn . $highestRow)
+                    ->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                     ->setStartColor(new \PhpOffice\PhpSpreadsheet\Style\Color($this->balanceNeto >= 0 ? '198754' : 'DC3545'));
+                
+                // Bordes para toda la tabla
+                $sheet->getStyle('A1:' . $highestColumn . $highestRow)
+                    ->getBorders()
+                    ->getAllBorders()
+                    ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            }
+        ];
     }
 }

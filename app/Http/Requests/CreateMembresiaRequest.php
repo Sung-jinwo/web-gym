@@ -41,6 +41,7 @@ class CreateMembresiaRequest extends FormRequest
             }
             ],
             'mem_cost' => 'required|numeric|min:0',
+            'mem_comi' => 'required|numeric|min:0',
             'mem_limit'=> 'nullable|date',
             'tipo' => 'required|in:principal,adicional'
         ];

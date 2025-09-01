@@ -61,6 +61,7 @@
 </div>
 
 <div class="filter-row">
+    @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
     <div class="filter-item">
         <div class="form-section">
             <div class="section-header">
@@ -70,7 +71,7 @@
                 </h3>
             </div>
             <div class="section-content">
-                @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
+
                     <label for="fkuser" class="filter-label">
                         <i class="icono-usuario"></i> Usuario de Registro
                     </label>
@@ -85,19 +86,15 @@
                     @if($errors->has('fkuser'))
                         <span class="error-message">{{ $errors->first('fkuser') }}</span>
                     @endif
-                @else
-                    <label class="filter-label">
-                        <i class="icono-usuario"></i> Usuario:
-                    </label>
-                    <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
-                    <input type="text" value="{{ auth()->user()->name }}"
-                           class="filter-dropdown"
-                           disabled>
-                @endif
             </div>
         </div>
+    
     </div>
+    @else
+    <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
+    @endif
 
+    @if (auth()->user()->is(\App\Models\User::ROL_ADMIN))
     <div class="filter-item">
         <div class="form-section">
             <div class="section-header">
@@ -110,7 +107,6 @@
                 <label for="fksede" class="filter-label">
                     <i class="fa-solid fa-location-dot"></i> Lugar de Registro
                 </label>
-                @if (auth()->user()->is(\App\Models\User::ROL_ADMIN || auth()->user()->is(App\Models\User::ROL_VENTAS)))
                     <select name="fksede" id="fksede" class="filter-dropdown">
                         <option value="">Seleccione una sede</option>
                         @foreach($sedes as $sede)
@@ -122,17 +118,12 @@
                     @if($errors->has('fksede'))
                         <span class="error-message">{{ $errors->first('fksede') }}</span>
                     @endif
-                @else
-                    <input type="hidden" name="fksede" value="{{ auth()->user()->fksede }}">
-                    <select class="filter-dropdown" disabled>
-                        <option>
-                            {{ auth()->user()->sede->sede_nombre}}
-                        </option>
-                    </select>
-                @endif
             </div>
         </div>
     </div>
+    @else
+    <input type="hidden" name="fksede" value="{{ auth()->user()->fksede }}">
+    @endif
 </div>
 
 <div class="filter-row">
