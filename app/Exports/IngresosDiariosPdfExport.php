@@ -184,7 +184,7 @@ class IngresosDiariosPdfExport
         $totalVentas = DB::table('detalle_venta as dv')
             ->join('ventas as v', 'dv.fkventa', '=', 'v.id_venta')
             ->where('v.fksede', $this->sedeId)
-            ->whereBetween('v.created_at', [$fechaInicioDia, $fechaFinDia])
+            ->whereBetween('dv.created_at', [$fechaInicioDia, $fechaFinDia])
             ->sum('dv.datelle_sub_total');
 
         $totalGastos = DB::table('gastos')
