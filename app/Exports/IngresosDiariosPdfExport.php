@@ -106,12 +106,12 @@ class IngresosDiariosPdfExport
                 ->join('metodos_pago as mp', 'v.fkmetodo', '=', 'mp.id_metod')
                 ->select(
                     'mp.tipo_pago as metodo_pago',
-                    DB::raw('COUNT(DISTINCT dv.fkventa) as total_ventas'),
+                    DB::raw('COUNT(DISTINCT v.id_venta) as total_ventas'),
                     DB::raw('SUM(dv.datelle_sub_total) as monto_total')
                 )
                 ->where('v.fksede', $this->sedeId)
                 ->where('v.fkusers', $usuario->id)
-                ->whereBetween('v.created_at', [$fechaInicioDia, $fechaFinDia])
+                ->whereBetween('dv.created_at', [$fechaInicioDia, $fechaFinDia])
                 ->groupBy('mp.tipo_pago')
                 ->get();
 
@@ -120,7 +120,7 @@ class IngresosDiariosPdfExport
                 ->join('ventas as v', 'dv.fkventa', '=', 'v.id_venta')
                 ->where('v.fksede', $this->sedeId)
                 ->where('v.fkusers', $usuario->id)
-                ->whereBetween('v.created_at', [$fechaInicioDia, $fechaFinDia])
+                ->whereBetween('dv.created_at', [$fechaInicioDia, $fechaFinDia])
                 ->sum('dv.datelle_sub_total');
 
             // Productos vendidos por el usuario (directamente desde detalle_venta)
@@ -134,7 +134,7 @@ class IngresosDiariosPdfExport
                 )
                 ->where('v.fksede', $this->sedeId)
                 ->where('v.fkusers', $usuario->id)
-                ->whereBetween('v.created_at', [$fechaInicioDia, $fechaFinDia])
+                ->whereBetween('dv.created_at', [$fechaInicioDia, $fechaFinDia])
                 ->groupBy('p.prod_nombre')
                 ->get();
 
