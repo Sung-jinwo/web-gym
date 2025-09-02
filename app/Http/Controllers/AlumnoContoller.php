@@ -20,6 +20,7 @@ use Intervention\Image\Encoders\JpegEncoder;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 
 class AlumnoContoller extends Controller
