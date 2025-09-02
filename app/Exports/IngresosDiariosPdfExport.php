@@ -106,7 +106,7 @@ class IngresosDiariosPdfExport
                 ->join('metodos_pago as mp', 'v.fkmetodo', '=', 'mp.id_metod')
                 ->select(
                     'mp.tipo_pago as metodo_pago',
-                    DB::raw('COUNT(DISTINCT dv.id_detalle) as total_ventas'),
+                    DB::raw('COUNT(DISTINCT dv.fkventa) as total_ventas'),
                     DB::raw('SUM(dv.datelle_sub_total) as monto_total')
                 )
                 ->where('v.fksede', $this->sedeId)
