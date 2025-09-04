@@ -98,6 +98,10 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             ? ($pago->fecha ?? 'Sin fecha') 
             : $pago->duracion . ' días';
 
+        $comision = ($pago->estado === 'completo') 
+        ? $pago->comision_ajustada 
+        : 0;
+
         return [
             $pago->id_pagdeta,
             $pago->fecha_pago,
@@ -110,7 +114,7 @@ class DetallePagosSheet implements \Maatwebsite\Excel\Concerns\FromCollection,
             $duracionOFecha,
             number_format($pago->monto, 2),
             ucfirst($pago->estado),
-            number_format($pago->comision_ajustada, 2)
+            number_format($comision, 2)
         ];
     }
 

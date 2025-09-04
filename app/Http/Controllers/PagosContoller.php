@@ -226,7 +226,7 @@ class PagosContoller extends Controller
             'estado_pago' => $estadoPago,
             'fecha_limite_pago' => $fechaLimitePago,
             'saldo_pendiente' => $saldoPendiente,
-            'comision_ajustada' => $membresia->mem_comi ?? 0,
+            'comision_ajustada' => $estadoPago === 'completo' ? ($membresia->mem_comi ?? 0) : 0,
             'monto_pagado' => $validatedData['monto_pagado'],
             'pag_entre'=>$validatedData['pag_entre'] ?? null
         ]);
@@ -367,18 +367,35 @@ class PagosContoller extends Controller
              $fechaLimitePago = $request->input('fecha_limite_pago');
          }
 
-                // Calcular comisión ajustada
-        if ($fechaLimitePago && $fechaLimitePago !== $pago->fecha_limite_pago) {
-            $fechaLimite = Carbon::parse($fechaLimitePago);
-            $diasPasados = Carbon::now()->diffInWeeks($fechaLimite, false);
-
-            // Restar 5 por cada semana que ha pasado
-            $comisionAjustada = max(0, $membresia->mem_comi - ($diasPasados * 5));
-        } else {
-            // Si no hay cambio en la fecha límite, mantener la comisión original
-            $comisionAjustada = $pago->comision_ajustada ?: $membresia->mem_comi;
-        }
-
+         $comisionAjustada = $membresia->mem_comi ?? 0;
+    
+         if ($estadoIncompleto) {
+             // Si el pago sigue siendo incompleto, comisión es 0
+             $comisionAjustada = 0;
+         } else {
+             // Si cambia de incompleto a completo, calcular penalización
+             if ($pago->estado_pago === 'incompleto' && $estadoPago === 'completo') {
+                 // Calcular semanas de retraso desde la fecha límite original hasta ahora
+                 if ($pago->fecha_limite_pago) {
+                     $fechaLimiteOriginal = Carbon::parse($pago->fecha_limite_pago);
+                     $fechaActual = Carbon::now();
+                     
+                     // Calcular semanas completas de retraso (solo si hay retraso)
+                     if ($fechaActual->gt($fechaLimiteOriginal)) {
+                         $semanasRetraso = $fechaLimiteOriginal->diffInWeeks($fechaActual);
+                         
+                         // Restar 5 por cada semana de retraso
+                         $penalizacion = $semanasRetraso * 5;
+                         $comisionAjustada = max(0, $comisionAjustada - $penalizacion);
+                         
+                         
+                     }
+                 }
+             } else if ($pago->estado_pago === 'completo' && $estadoPago === 'completo') {
+                 // Si ya era completo y sigue completo, mantener la comisión ajustada existente
+                 $comisionAjustada = $pago->comision_ajustada;
+             }
+         }
         $totalPagado = $pago->pagodetalle()->sum('monto');
         $monto = $validatedData['estado_pago'] === 'completo' ? $validatedData['pago'] : $validatedData['monto_pagado'];
 
