@@ -72,7 +72,7 @@
                     <li class="sidebar__submenu-item {{ request()->routeIs('venta.index') ? 'active' : '' }}">
                         <a href="{{ route('venta.index') }}" class="sidebar__submenu-link">
                             <i class="fa-solid fa-money-bill"></i>
-                            <span class="sidebar__text">Listado de Pagos</span>
+                            <span class="sidebar__text">Ventas Generadas</span>
                         </a>
                     </li>
                     <li class="sidebar__submenu-item {{ request()->routeIs('venta.reservados') ? 'active' : '' }}">
@@ -115,11 +115,35 @@
 
         <!-- Mostrar solo para Admin -->
         @if(auth()->user()->is(App\Models\User::ROL_ADMIN))
-            <li class="sidebar__item {{ setActivo('reporte') }}">
-                <a href="{{ route('reportes.formulario') }}" class="sidebar__link" >
-                    <i class="fa-solid fa-file-lines"></i> <span class="sidebar__text">Reporte</span>
+
+            <li class="item sidebar__item--has-submenu {{ setActivo('reportes') }}">
+                <a href="javascript:void(0)" class="sidebar__link sidebar__link--toggle">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span class="sidebar__text">Reporte</span>
+                    <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
                 </a>
+                <ul class="sidebar__submenu">
+                    <li class="sidebar__submenu-item {{ request()->routeIs('reportes.index') ? 'active' : '' }}">
+                        <a href="{{ route('reportes.index') }}" class="sidebar__submenu-link">
+                            <i class="fa-solid fa-money-bill"></i>
+                            <span class="sidebar__text">Listado de pagos</span>
+                        </a>
+                    </li>
+                    <li class="sidebar__submenu-item {{ request()->routeIs('reportes.ventas') ? 'active' : '' }}">
+                        <a href="{{ route('reportes.ventas') }}" class="sidebar__submenu-link">
+                            <i class="fa-solid fa-money-bill"></i>
+                            <span class="sidebar__text">Listado de Ventas</span>
+                        </a>
+                    </li>
+                    <li class="sidebar__submenu-item {{ request()->routeIs('reportes.formulario') ? 'active' : '' }}">
+                        <a href="{{ route('reportes.formulario') }}" class="sidebar__submenu-link">
+                            <i class="fa-solid fa-file-lines"></i>
+                            <span class="sidebar__text">Generar Reportes</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
+
 
             <li class="sidebar__item  {{ setActivo('admin') }}">
                 <a href="{{ route('admin.users.index') }}" class="sidebar__link" >

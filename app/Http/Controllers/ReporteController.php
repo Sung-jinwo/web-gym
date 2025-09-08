@@ -12,10 +12,72 @@ use App\Exports\PagosExport;
 use App\Exports\AsistenciasExport;
 use App\Exports\VentasExport;
 use App\Exports\PagosVentasExport;
+use App\Models\PagoDetalle;
+use App\Models\DetalleVenta;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
+
+
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReporteController extends Controller
 {
+    public function index(Request $request){
+        $sedes = Sede::all();
+        $user = Auth::user();
+
+
+        $fechaFiltro = $request->get('fecha_filtro',Carbon::now()->format('Y-m-d'));
+        $id_sede = $request->input('id_sede');
+        $query = PagoDetalle::with(['pago', 'metodo','membresia']);
+
+        if ($user->is(User::ROL_ADMIN) && $id_sede) {
+            $query->whereHas('venta', function ($q) use ($id_sede) {
+                $q->where('fksede', $id_sede);
+            });
+        }
+
+        if ($fechaFiltro){
+            $fecha = Carbon::parse($fechaFiltro);
+            $query->whereDate('created_at', $fecha);
+        }
+
+        $reportes = $query->orderBy('created_at','desc')
+                 ->paginate(7)
+                 ->appends(request()->query());
+
+        return view('reporte.reportevi',compact('reportes','sedes','fechaFiltro','id_sede'));
+    }
+
+    public function ventas(Request $request){
+        $sedes = Sede::all();
+        $user = Auth::user();
+
+
+        $fechaFiltro = $request->get('fecha_filtro',Carbon::now()->format('Y-m-d'));
+        $id_sede = $request->input('id_sede');
+        $query = DetalleVenta::with([ 'venta','metodo','producto']);
+
+        if ($user->is(User::ROL_ADMIN) && $id_sede) {
+            $query->whereHas('venta', function ($q) use ($id_sede) {
+                $q->where('fksede', $id_sede);
+            });
+        }
+
+        if ($fechaFiltro){
+            $fecha = Carbon::parse($fechaFiltro);
+            $query->whereDate('created_at', $fecha);
+        }
+
+        $ventasvi = $query->orderBy('created_at','desc')
+                 ->paginate(7)
+                 ->appends(request()->query());
+
+        return view('reporte.ventavi',compact('ventasvi','sedes','fechaFiltro','id_sede'));
+    }
+
+
     public function mostrarFormulario()
     {
         $sedes = Sede::all();

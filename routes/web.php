@@ -69,6 +69,24 @@ Route::group(['middleware' => ['auth','admin']], function (){
     });
 
 
+    //======================Reporte=========================
+
+    Route::prefix('reportes')->group(function () {
+        Route::get('', [ReporteController::class, 'index'])->name('reportes.index');
+        Route::get('/ventas', [ReporteController::class, 'ventas'])->name('reportes.ventas');
+        Route::get('/for', [ReporteController::class, 'mostrarFormulario'])->name('reportes.formulario');
+        Route::get('/generar-reporte', [ReporteController::class, 'generarReporte'])->name('reporte.generar');
+        // Route::get('/exportar-ventas', [ReporteController::class, 'exportarVentas'])->name('exportar.ventas');
+//         Route::get('/inventario', [ReporteController::class, 'exportarInventario'])->name('reporte.inventario');
+
+// // Reportes rápidos por sede (sin fechas)
+// Route::get('/alumnos-rapido/{sedeId}', [ReporteController::class, 'exportarAlumnosRapido'])->name('reporte.alumnos.rapido');
+// Route::get('/pagos-rapido/{sedeId}', [ReporteController::class, 'exportarPagosRapido'])->name('reporte.pagos.rapido');
+// Route::get('/asistencias-rapido/{sedeId}', [ReporteController::class, 'exportarAsistenciasRapido'])->name('reporte.asistencias.rapido');
+// Route::get('/ventas-rapido/{sedeId}', [ReporteController::class, 'exportarVentasRapido'])->name('reporte.ventas.rapido');
+
+    });
+
 
 });
 //final de admin
@@ -237,21 +255,7 @@ Route::group(['middleware' => 'auth'], function (){
 
 
 
-    //======================Reporte=========================
 
-        Route::prefix('reportes')->group(function () {
-            Route::get('/', [ReporteController::class, 'mostrarFormulario'])->name('reportes.formulario');
-            Route::get('/generar-reporte', [ReporteController::class, 'generarReporte'])->name('reporte.generar');
-            // Route::get('/exportar-ventas', [ReporteController::class, 'exportarVentas'])->name('exportar.ventas');
-    //         Route::get('/inventario', [ReporteController::class, 'exportarInventario'])->name('reporte.inventario');
-
-    // // Reportes rápidos por sede (sin fechas)
-    // Route::get('/alumnos-rapido/{sedeId}', [ReporteController::class, 'exportarAlumnosRapido'])->name('reporte.alumnos.rapido');
-    // Route::get('/pagos-rapido/{sedeId}', [ReporteController::class, 'exportarPagosRapido'])->name('reporte.pagos.rapido');
-    // Route::get('/asistencias-rapido/{sedeId}', [ReporteController::class, 'exportarAsistenciasRapido'])->name('reporte.asistencias.rapido');
-    // Route::get('/ventas-rapido/{sedeId}', [ReporteController::class, 'exportarVentasRapido'])->name('reporte.ventas.rapido');
-
-        });
 
 
  });
