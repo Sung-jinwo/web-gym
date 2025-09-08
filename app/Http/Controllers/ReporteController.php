@@ -33,7 +33,7 @@ class ReporteController extends Controller
         $query = PagoDetalle::with(['pago', 'metodo','membresia']);
 
         if ($user->is(User::ROL_ADMIN) && $id_sede) {
-            $query->whereHas('venta', function ($q) use ($id_sede) {
+            $query->whereHas('pago', function ($q) use ($id_sede) {
                 $q->where('fksede', $id_sede);
             });
         }
