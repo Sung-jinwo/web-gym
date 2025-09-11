@@ -85,6 +85,16 @@ class IngresosDiariosPdfExport
                 ->whereBetween('pd.created_at', [$fechaInicioDia, $fechaFinDia])
                 ->sum('pd.monto');
 
+                $comisionesUsuario = DB::table('pago_detalles as pd')
+                    ->join('pagos as p', 'pd.fkpago', '=', 'p.id_pag')
+                    ->select(DB::raw("SUM(p.comision_ajustada) as total_comisiones"))
+                    ->where('p.fksede', $this->sedeId)
+                    ->where('p.fkuser', $usuario->id)
+                    ->where('pd.estado', 'completo') // Filtro por estado completo en pago_detalles
+                    ->whereBetween('pd.created_at', [$fechaInicioDia, $fechaFinDia])
+                    ->first();
+
+
             // Detalle de métodos de pago por usuario
             $metodosPagoUsuario = DB::table('pago_detalles as pd')
                 ->join('pagos as p', 'pd.fkpago', '=', 'p.id_pag')
@@ -168,6 +178,7 @@ class IngresosDiariosPdfExport
                 'gastos' => $gastosUsuario,
                 'totalPagos' => $totalPagosUsuario,
                 'totalVentas' => $totalVentasUsuario,
+                'totalComisiones' => $comisionesUsuario->total_comisiones ?? 0,
                 'totalGastos' => $totalGastosUsuario,
                 'totalIngresos' => $totalPagosUsuario + $totalVentasUsuario,
                 'balanceNeto' => ($totalPagosUsuario + $totalVentasUsuario) - $totalGastosUsuario
@@ -195,18 +206,74 @@ class IngresosDiariosPdfExport
         $totalIngresos = $totalPagos + $totalVentas;
         $balanceNeto = $totalIngresos - $totalGastos;
 
+        
+
         $fechaReporte = \Carbon\Carbon::parse($this->fechaInicio)->format('d/m/Y');
         $sede = DB::table('sedes')->where('id_sede', $this->sedeId)->value('sede_nombre');
 
-        $data = [
+
+        $metodosPagoCombinados = DB::table('metodos_pago as mp')
+        ->leftJoin(DB::raw("(SELECT 
+                            pd.fkmetodo,
+                            SUM(pd.monto) as total_monto
+                        FROM pago_detalles pd
+                        INNER JOIN pagos p ON pd.fkpago = p.id_pag
+                        WHERE p.fksede = ? AND pd.created_at BETWEEN ? AND ?
+                        GROUP BY pd.fkmetodo) as pagos"), function($join) {
+            $join->on('mp.id_metod', '=', 'pagos.fkmetodo');
+        })
+        ->leftJoin(DB::raw("(SELECT 
+                            dv.fkmetodo,
+                            SUM(dv.datelle_sub_total) as total_monto
+                        FROM detalle_venta dv
+                        INNER JOIN ventas v ON dv.fkventa = v.id_venta
+                        WHERE v.fksede = ? AND dv.created_at BETWEEN ? AND ?
+                        GROUP BY dv.fkmetodo) as ventas"), function($join) {
+            $join->on('mp.id_metod', '=', 'ventas.fkmetodo');
+        })
+        ->select(
+            'mp.tipo_pago',
+            DB::raw("COALESCE(pagos.total_monto, 0) + COALESCE(ventas.total_monto, 0) as total_combinado")
+        )
+        ->setBindings([$this->sedeId, $fechaInicioDia, $fechaFinDia, 
+                    $this->sedeId, $fechaInicioDia, $fechaFinDia])
+        ->get()
+        ->pluck('total_combinado', 'tipo_pago');
+
+        // 2. Obtener comisiones por usuario (solo estado completo)
+        $comisionesPorUsuario = DB::table('pago_detalles as pd')
+                ->join('pagos as p', 'pd.fkpago', '=', 'p.id_pag')
+                ->join('users as u', 'p.fkuser', '=', 'u.id')
+                ->select(
+                    'u.name as asesor',
+                    DB::raw("SUM(p.comision_ajustada) as total_comisiones")
+                )
+                ->where('p.fksede', $this->sedeId)
+                ->where('pd.estado', 'completo') // Filtro por estado completo en pago_detalles
+                ->whereBetween('pd.created_at', [$fechaInicioDia, $fechaFinDia])
+                ->groupBy('u.name')
+                ->get();
+            
+        
+            $totalComisiones = DB::table('pago_detalles as pd')
+                ->join('pagos as p', 'pd.fkpago', '=', 'p.id_pag')
+                ->where('p.fksede', $this->sedeId)
+                ->where('pd.estado', 'completo') // Filtro por estado completo en pago_detalles
+                ->whereBetween('pd.created_at', [$fechaInicioDia, $fechaFinDia])
+                ->sum('p.comision_ajustada');
+
+            $data = [
             'sede' => $sede,
             'fechaReporte' => $fechaReporte,
             'datosPorUsuario' => $datosPorUsuario,
             'totalPagos' => $totalPagos,
             'totalVentas' => $totalVentas,
             'totalGastos' => $totalGastos,
+            'totalComisiones' => $totalComisiones,
             'totalIngresos' => $totalIngresos,
-            'balanceNeto' => $balanceNeto
+            'balanceNeto' => $balanceNeto,
+            'metodosPagoCombinados' => $metodosPagoCombinados,
+            'comisionesPorUsuario' => $comisionesPorUsuario
         ];
 
         $pdf = Pdf::loadView('reporte.ingresos_diarios_pdf', $data)

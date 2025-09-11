@@ -15,6 +15,7 @@ use App\Exports\PagosVentasExport;
 use App\Models\PagoDetalle;
 use App\Models\DetalleVenta;
 use App\Models\User;
+use App\Models\Metodo;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -26,15 +27,23 @@ class ReporteController extends Controller
     public function index(Request $request){
         $sedes = Sede::all();
         $user = Auth::user();
+        $metodos_pagos = Metodo::all();
 
 
         $fechaFiltro = $request->get('fecha_filtro',Carbon::now()->format('Y-m-d'));
         $id_sede = $request->input('id_sede');
+        $metodo_pago_seleccionado = $request->input('metodos_pagos');
         $query = PagoDetalle::with(['pago', 'metodo','membresia']);
 
         if ($user->is(User::ROL_ADMIN) && $id_sede) {
             $query->whereHas('pago', function ($q) use ($id_sede) {
                 $q->where('fksede', $id_sede);
+            });
+        }
+
+        if($metodo_pago_seleccionado){
+            $query->whereHas('pago', function ($q) use ($metodo_pago_seleccionado) {
+                $q->where('fkmetodo', $metodo_pago_seleccionado);
             });
         }
 
@@ -47,21 +56,28 @@ class ReporteController extends Controller
                  ->paginate(7)
                  ->appends(request()->query());
 
-        return view('reporte.reportevi',compact('reportes','sedes','fechaFiltro','id_sede'));
+        return view('reporte.reportevi',compact('reportes','sedes','fechaFiltro','id_sede','metodos_pagos', 'metodo_pago_seleccionado'));
     }
 
     public function ventas(Request $request){
         $sedes = Sede::all();
         $user = Auth::user();
-
+        $metodos_pagos = Metodo::all();
 
         $fechaFiltro = $request->get('fecha_filtro',Carbon::now()->format('Y-m-d'));
         $id_sede = $request->input('id_sede');
+        $metodo_pago_seleccionado = $request->input('metodos_pagos');
         $query = DetalleVenta::with([ 'venta','metodo','producto']);
 
         if ($user->is(User::ROL_ADMIN) && $id_sede) {
             $query->whereHas('venta', function ($q) use ($id_sede) {
                 $q->where('fksede', $id_sede);
+            });
+        }
+
+        if($metodo_pago_seleccionado){
+            $query->whereHas('venta', function ($q) use ($metodo_pago_seleccionado) {
+                $q->where('fkmetodo', $metodo_pago_seleccionado);
             });
         }
 
@@ -74,7 +90,7 @@ class ReporteController extends Controller
                  ->paginate(7)
                  ->appends(request()->query());
 
-        return view('reporte.ventavi',compact('ventasvi','sedes','fechaFiltro','id_sede'));
+        return view('reporte.ventavi',compact('ventasvi','sedes','fechaFiltro','id_sede', 'metodos_pagos', 'metodo_pago_seleccionado'));
     }
 
 

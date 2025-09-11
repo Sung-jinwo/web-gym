@@ -26,6 +26,20 @@
                 @endif
                
                 <div class="filter-item">
+                    <label for="metodos_pagos" class="filter-label">Metodos de Pago:</label>
+                    <select name="metodos_pagos" id="metodos_pagos" class="filter-dropdown">
+                        <option value="">Seleccionar</option>
+                        @foreach($metodos_pagos as $metodos_pago)
+                            <option value="{{ $metodos_pago->id_metod }}"
+                                {{ request('metodos_pago') == $metodos_pago->id_metod ? 'selected' : '' }}
+                            >
+                                {{ $metodos_pago->tipo_pago }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="filter-item">
                     <label for="fecha_filtro" class="filter-label">Filtrar por Fecha:</label>
                     <input type="date"  id="fecha_filtro" name="fecha_filtro" class="filter-dropdown"
                            value="{{ old('fecha_filtro', $fechaFiltro) }}">

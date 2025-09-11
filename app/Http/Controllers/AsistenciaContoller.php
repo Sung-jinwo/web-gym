@@ -128,9 +128,9 @@ class AsistenciaContoller extends Controller
         }
         // fecha limite de pago > a la fecha de hoy back
 
-        if ($ultimaMem->fecha_limite_pago && $ultimaMem->fecha_limite_pago > now()->toDateString()) {
+        if ($ultimaMem->fecha_limite_pago && $ultimaMem->fecha_limite_pago < now()->toDateString()) {
             return back()
-                ->with('error', 'No se puede registrar asistencia, tu fecha de pago estya vencido Comunicate con el Asesor');
+                ->with('error', 'No se puede registrar asistencia, tu fecha de pago esta vencido Comunicate con el Asesor');
         }
 
         //pago de fecha-fin es mayor a la fecha de ahora

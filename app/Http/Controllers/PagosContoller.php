@@ -38,7 +38,7 @@ class PagosContoller extends Controller
             if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $idSede) {
                 $query->where('fksede', $idSede);
             } elseif ($user->is(User::ROL_EMPLEADO)) {
-                $query->where('fksede', $user->fksede);
+                $query->where('fkuser', $user->id);
             }
 
             if ($id_membresias) {
@@ -94,7 +94,7 @@ class PagosContoller extends Controller
             if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $sedeFiltro) {
                 $query->where('fksede', $sedeFiltro);
             } elseif ($user->is(User::ROL_EMPLEADO)) {
-                $query->where('fksede', $user->fksede);
+                $query->where('fkuser', $user->id);
             }
 
             if ($id_membresias) {
