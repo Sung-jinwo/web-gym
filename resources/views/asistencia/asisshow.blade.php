@@ -23,7 +23,7 @@
             </div>
         </div>
 
-
+        @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(App\Models\User::ROL_EMPLEADO) )
         <div class="asist-detail-info-row">
             <div class="asist-detail-label"><i class="fa-solid fa-id-card"></i> Membresía Principal:</div>
             <div class="asist-detail-value">
@@ -34,7 +34,7 @@
                 @endif
             </div>
         </div>
-
+        @endif
 
         <div class="asist-detail-info-row">
             <div class="asist-detail-label"><i class="fa-solid fa-calendar"></i> Fecha de Vencimiento:</div>
@@ -106,6 +106,10 @@
                 <i class="fa-solid fa-pen-to-square"></i> Editar Asistencia
             </a>
         @endif
+        {{-- ||auth()->user()->is(\App\Models\User::ROL_EMPLEADO) --}}
+            <a href="{{ route('asistencia.create') }}" class="asist-detail-button asist-detail-button-primary">
+                <i class="fa-solid fa-plus"></i> Crear Asistencia
+            </a>
 
     </div>
 </div>
