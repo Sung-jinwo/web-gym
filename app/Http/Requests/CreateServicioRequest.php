@@ -38,7 +38,7 @@ class CreateServicioRequest extends FormRequest
             'fksede' => 'required|exists:sedes,id_sede',
             'fkuser' => 'required',
             'fecha_nac' => 'required|date|before_or_equal:today ',
-            'alum_img' => 'nullable|image|mimes:jpg,png|dimensions:width=708,height=708',
+            'alum_img' => 'nullable|image|mimes:jpg,png|dimensions:max_width=708,max_height=708',
 
         ];
     }
