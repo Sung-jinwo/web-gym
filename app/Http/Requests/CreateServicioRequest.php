@@ -36,7 +36,8 @@ class CreateServicioRequest extends FormRequest
             'alum_documento' => 'nullable',
             'fksexo' => 'required|exists:sexo,id_sexo',
             'fksede' => 'required|exists:sedes,id_sede',
-            'fecha_nac' => 'required|date',
+            'fkuser' => 'required',
+            'fecha_nac' => 'required|date|before_or_equal:today ',
             'alum_img' => 'nullable|image|mimes:jpg,png|dimensions:width=708,height=708',
 
         ];
@@ -50,8 +51,10 @@ class CreateServicioRequest extends FormRequest
             'alum_apellido.required' => 'Se necesita un Apellido para el Alumno',
             'alum_correro.required' => 'Se necesita un correo para el Alumno',
             'fksexo.required' => 'Se necesita Seleccionar el sexo del Alumno',
+            'fkuser.required' => 'Se necesita Seleccionar un Usuario',
             'alum_telefo.required' => 'Se necesita el teléfono del Alumno',
             'fecha_nac.required' => 'Se necesita la edad del Alumno',
+            'fecha_nac.before_or_equal' => 'La fecha de nacimiento no puede ser una fecha futura.',
             'fksede.required' => 'Seleccione la sede de Registro',
             'alum_img.image' => 'El archivo debe ser una imagen válida.',
             'alum_img.mimes' => 'Solo se permiten imágenes en formato JPG o PNG.',

@@ -27,7 +27,7 @@ class AlumnoContoller extends Controller
 {
 
     public function index(Request $request)
-{
+    {
     $sedes = Sede::all();
 
     $user = Auth::user();
@@ -49,11 +49,14 @@ class AlumnoContoller extends Controller
         $query->where('alum_estado', $estado);
     }
 
-    if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $idSede) {
+    if (($user->is(User::ROL_ADMIN) ) && $idSede) {
         $query->where('fksede', $idSede);
     } elseif ($user->is(User::ROL_EMPLEADO)) {
         $query->where('fksede', $user->fksede);
+    }elseif ($user->is(User::ROL_VENTAS)){
+        $query->where('fkuser', $user->id);
     }
+
 
     // if ($request->filled('fecha_filtro')) {
     //     $hoy = now();
@@ -187,9 +190,11 @@ class AlumnoContoller extends Controller
      */
     public function create()
     {
+
         return view('alumno.alumcreate',[
             'alumno'=> new Alumno(),
-            'sedes' => sede ::all()
+            'sedes' => sede ::all(),
+            'users' => user::withRolesAdminAndEmpleado()
         ]);
     }
 
@@ -269,11 +274,12 @@ class AlumnoContoller extends Controller
     public function edit(Alumno $alumno)
     {
         // dd($alumno->fecha_inicio, $alumno->fecha_finalizacion);
-
+        $users = User::withRolesAdminAndEmpleado();
         $necesitaAgregarPadre = $alumno->alum_eda > 18 && $alumno->padres->isEmpty();
         return view('alumno.alumedit',[
             'alumno' => $alumno,
             'sedes' => Sede::all(),
+            'users' => $users,
             'necesitaAgregarPadre' => $necesitaAgregarPadre,
         ]);
     }
@@ -283,8 +289,9 @@ class AlumnoContoller extends Controller
      */
     public function update(Alumno $alumno, CreateServicioRequest $request)
     {
+        // dd($request->all());
+        
         $validatedData = $request->validated();
-
         if (!isset($validatedData['alum_codigo'])) {
             return redirect()->back()->withErrors(['alum_codigo' => 'El código de alumno es requerido.']);
         }

@@ -27,10 +27,10 @@ class VentaController extends Controller
         $idProducto = $request->input('id_producto');
         $fechaFiltro = $request->input('fecha_filtro', Carbon::now()->format('Y-m'));
         
-        if ($user->is(User::ROL_ADMIN)|| $user->is(User::ROL_VENTAS) ) {
+        if ($user->is(User::ROL_ADMIN) ) {
             $productos = Producto::where('estado', 'activo')->orderBy('prod_nombre', 'asc')->get();
         } else {
-            $productos = Producto::where('fksede', $user->fksede)
+            $productos = Producto::where('fksede', $user->id)
                                  ->where('estado', 'activo')
                                  ->orderBy('prod_nombre', 'asc')
                                  ->get();
@@ -248,7 +248,7 @@ class VentaController extends Controller
         $productos = Producto::all();
         $metodos = Metodo::all();
         $sedes = Sede::all();
-        $usuarios = User::withRolesAdminAndEmpleado();;
+        $usuarios = User::withRolesAdminAndEmpleado();
 
         $alumno = Alumno::where('alum_codigo', $venta->fkalum)->first();
 

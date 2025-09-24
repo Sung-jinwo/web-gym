@@ -6,7 +6,7 @@
     <h1 >Pagos Registrados</h1>
 
     <div class="search-panel">
-        <h3 class="search-heading">Búsqueda de los alumnos</h3>
+        <h3 class="search-heading">Filtrar pagos</h3>
         <div class="filter-wrapper">
             <form method="GET" action="{{ route('reportes.index') }}" class="filter-row">
                 @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) )
@@ -116,7 +116,13 @@
                             <a class="student-link">{{ $reporte->estado }}</a>
                         </td>
                         <td class="table-cell">
-                            <a class="student-link">{{ $reporte->pago->comision_ajustada }}</a>
+                            <a class="student-link">
+                                @if($reporte->estado =='completo')
+                                {{ $reporte->pago->comision_ajustada }}
+                                @else   
+                                    0
+                                @endif
+                            </a>
                         </td>
                     </tr>
                     @endforeach

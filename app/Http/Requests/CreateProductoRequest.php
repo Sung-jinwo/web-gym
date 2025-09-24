@@ -26,7 +26,7 @@ class CreateProductoRequest extends FormRequest
         return [
             'prod_nombre'=>'required',
             'fkcategoria'=>'required',
-            'prod_descripcion' => 'nullable',
+            'prod_descripcion' => 'nullable|max:500',
             'prod_cantidad'=>'required|integer',
             'prod_precio'=>'required|numeric',
             'fksede'=>'required',
@@ -39,6 +39,7 @@ class CreateProductoRequest extends FormRequest
         return[
             'prod_nombre.required'=>'Se nesecita Registrar el Nombre',
             'fkcategoria.required'=>'Se nesecita Registrar la Categoria',
+            'prod_descripcion.max' => 'La descripción no puede exceder los 500 caracteres.',
             'prod_cantidad.required'=>'Se nesecita Registrar la Cantidad',
             'prod_precio.required'=>'Se nesecita Registrar el Precio',
             'sede.required'=>'Se nesecita Registrar la Sede',

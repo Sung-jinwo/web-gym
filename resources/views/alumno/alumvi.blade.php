@@ -11,8 +11,7 @@
 
     <div class="actions-row">
         <a href="{{ route('alumno.create')}}" class="btn btn-primary">
-            <i class="fa-solid fa-plus"></i> Nuevo Alumno
-        </a>
+            <i class="fa-solid fa-plus"></i> Nuevo Alumno    </a>
         <a href="{{ route('padres.index') }}" class="btn btn-primary">
             <i class="fa-solid fa-user"></i> Lista de Padres
         </a>

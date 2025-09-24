@@ -6,7 +6,7 @@
     <h1 >Ventas Registradas</h1>
 
     <div class="search-panel">
-        <h3 class="search-heading">Búsqueda de los alumnos</h3>
+        <h3 class="search-heading">FIltrar Ventas</h3>
         <div class="filter-wrapper">
             <form method="GET" action="{{ route('reportes.ventas') }}" class="filter-row">
                 @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) )

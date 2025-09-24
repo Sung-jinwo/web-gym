@@ -229,30 +229,55 @@
                 </h3>
                 <p class="section-description">Lugar donde se realizará el registro</p>
             </div>
-            <div class="section-content">
-                <div class="filter-row">
-                    <div class="filter-item">
-                        <label for="fksede" class="filter-label"><i class="fa-solid fa-location-dot"></i> Lugar de Registro</label>
-                        <select name="fksede" id="fksede" class="filter-dropdown">
-                            <option value="">Seleccione Lugar de Registro</option>
-                            @foreach($sedes as $sede)
-                                <option value="{{ $sede->id_sede }}" {{ old('fksede', $alumno->fksede) == $sede->id_sede ? 'selected' : '' }}>
-                                    {{ $sede->sede_nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @if($errors->has('fksede'))
-                            <span class="error-message">{{ $errors->first('fksede') }}</span>
-                        @endif
+                <div class="section-content">
+                    <div class="filter-row">
+                        
+                            @if(auth()->user()->is(\App\Models\User::ROL_ADMIN))
+                            <div class="filter-item">
+                                <label for="fkuser" class="filter-label"><i class="fa-solid fa-location-dot"></i> Usuario de registro</label>
+                                <select name="fkuser" id="fkuser" class="filter-dropdown">
+                                    <option value="">Seleccione el usuario</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}" {{ old('fkuser', $alumno->fkuser) == $user->id ? 'selected' : '' }}>
+                                            {{ $user->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                    @if($errors->has('fkuser'))
+                                    <span class="error-message">{{ $errors->first('fkuser') }}</span>
+                                    @endif
+                            </div>
+                            @else
+                                <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
+                            @endif
+                            
+                            
+                        
+                            <div class="filter-item">
+                                <label for="fksede" class="filter-label"><i class="fa-solid fa-location-dot"></i> Lugar de Registro</label>
+                                <select name="fksede" id="fksede" class="filter-dropdown">
+                                    <option value="">Seleccione Lugar de Registro</option>
+                                    @foreach($sedes as $sede)
+                                        <option value="{{ $sede->id_sede }}" {{ old('fksede', $alumno->fksede) == $sede->id_sede ? 'selected' : '' }}>
+                                            {{ $sede->sede_nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('fksede'))
+                                    <span class="error-message">{{ $errors->first('fksede') }}</span>
+                                @endif
+                            </div>
                     </div>
                 </div>
-            </div>
+            
+            
         </div>
 
     </div>
 
 
 </div>
+
 
 <div class="form-actions-enhanced">
     <a href="{{route('alumno.index')}}" class="btn btn-cancelar">

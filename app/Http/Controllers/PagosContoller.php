@@ -35,9 +35,9 @@ class PagosContoller extends Controller
             $query = Pagos::with(['alumno', 'sede', 'membresia']);
 
             // Aplicar filtros según el rol del usuario
-            if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $idSede) {
+            if (($user->is(User::ROL_ADMIN) ) && $idSede) {
                 $query->where('fksede', $idSede);
-            } elseif ($user->is(User::ROL_EMPLEADO)) {
+            } elseif ($user->is(User::ROL_EMPLEADO)|| $user->is(User::ROL_VENTAS)) {
                 $query->where('fkuser', $user->id);
             }
 
@@ -91,9 +91,9 @@ class PagosContoller extends Controller
 
 
 
-            if (($user->is(User::ROL_ADMIN) || $user->is(User::ROL_VENTAS)) && $sedeFiltro) {
+            if (($user->is(User::ROL_ADMIN)) && $sedeFiltro) {
                 $query->where('fksede', $sedeFiltro);
-            } elseif ($user->is(User::ROL_EMPLEADO)) {
+            } elseif ($user->is(User::ROL_EMPLEADO)|| $user->is(User::ROL_VENTAS)) {
                 $query->where('fkuser', $user->id);
             }
 
