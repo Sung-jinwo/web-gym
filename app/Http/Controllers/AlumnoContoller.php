@@ -98,7 +98,7 @@ class AlumnoContoller extends Controller
             $q->where('alum_codigo', $alumnoTexto)
               ->orWhere('alum_nombre', 'LIKE', '%' . $alumnoTexto . '%')
               ->orWhere('alum_apellido', 'LIKE', '%' . $alumnoTexto . '%')
-              ->orWhere(Alumno::raw("CONCAT(alum_nombre, ' ', alum_apellido)"), 'LIKE', '%' . $alumnoTexto . '%')
+              ->orWhere(Alumno::raw("CONCAT(alum_nombre, ' ', alum_apellido)"), 'LIKE', '%' . $alumnoTexto . '%'); 
             //   ->orWhere('alum_telefo', 'LIKE', '%' . $alumnoTexto . '%');
         });
     }
