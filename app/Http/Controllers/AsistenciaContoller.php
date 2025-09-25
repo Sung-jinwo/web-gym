@@ -43,7 +43,6 @@ class AsistenciaContoller extends Controller
                     ->orWhere('alum_nombre', 'LIKE', "%$texto%")
                     ->orWhere('alum_apellido', 'LIKE', "%$texto%")
                     ->orWhereRaw("CONCAT(alum_nombre, ' ', alum_apellido) LIKE ?", ["%$texto%"])
-                    ->orWhere('alum_telefo', 'LIKE', "%$texto%");
             });
         }
         if ($fechaFiltro){
