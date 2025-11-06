@@ -118,7 +118,7 @@ class Pagos extends Model
         if ($this->pago_por_vencer) {
             $diasRestantes = now()->diffInDays($this->fecha_limite_pago);
             // Accedemos al nombre del alumno a través de la relación
-            return 'Pago incompleto de ' . $this->alumno->alum_nombre . ' por vencer en ' . $diasRestantes . ' días';
+            return 'Pago incompleto de ' . ($this->alumno->alum_nombre ?? 'Alumno desconocido') ' por vencer en ' . $diasRestantes . ' días';
         }
 
         return null;
