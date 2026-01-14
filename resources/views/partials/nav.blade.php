@@ -111,18 +111,15 @@
                     <i class="fa-solid fa-calculator"></i> <span class="sidebar__text">Gastos</span>
                 </a>
             </li>
-        @endif
 
-        <!-- Mostrar solo para Admin -->
-        @if(auth()->user()->is(App\Models\User::ROL_ADMIN))
-
-            <li class="item sidebar__item--has-submenu {{ setActivo('reportes') }}">
+                        <li class="item sidebar__item--has-submenu {{ setActivo('reportes') }}">
                 <a href="javascript:void(0)" class="sidebar__link sidebar__link--toggle">
                     <i class="fa-solid fa-cart-plus"></i>
                     <span class="sidebar__text">Reporte</span>
                     <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
                 </a>
                 <ul class="sidebar__submenu">
+                     @if(auth()->user()->is(App\Models\User::ROL_ADMIN))
                     <li class="sidebar__submenu-item {{ request()->routeIs('reportes.index') ? 'active' : '' }}">
                         <a href="{{ route('reportes.index') }}" class="sidebar__submenu-link">
                             <i class="fa-solid fa-money-bill"></i>
@@ -135,6 +132,7 @@
                             <span class="sidebar__text">Listado de Ventas</span>
                         </a>
                     </li>
+                    @endif
                     <li class="sidebar__submenu-item {{ request()->routeIs('reportes.formulario') ? 'active' : '' }}">
                         <a href="{{ route('reportes.formulario') }}" class="sidebar__submenu-link">
                             <i class="fa-solid fa-file-lines"></i>
@@ -143,6 +141,12 @@
                     </li>
                 </ul>
             </li>
+        @endif
+
+        <!-- Mostrar solo para Admin -->
+        @if(auth()->user()->is(App\Models\User::ROL_ADMIN))
+
+
 
 
             <li class="sidebar__item  {{ setActivo('admin') }}">

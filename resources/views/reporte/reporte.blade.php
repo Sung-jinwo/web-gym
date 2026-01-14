@@ -18,12 +18,14 @@
                     <select class="form-select" id="tipo_reporte" name="tipo_reporte" required>
                         <option value="">Seleccione un Reporte</option>
                         <option value="alumnos">Alumnos</option>
+                         @if(auth()->user()->is(App\Models\User::ROL_ADMIN))
                         {{-- <option value="pagos">Pagos</option> --}}
                         <option value="asistencias">Asistencias</option>
                         {{-- <option value="ventas">Ventas</option> --}}
                         <option value="inventario">Inventario</option>
                         <option value="pagos_ventas">Pagos y Ventas (Excel)</option>
                         <option value="ingresos_diarios">Ingresos Diarios (PDF)</option>
+                        @endif
                     </select>
                 </div>
                 <br>
@@ -31,12 +33,21 @@
                     <label for="sede_id" class="form-label">
                         <i class="fa-icon fa-solid fa-building"></i> Sede
                     </label>
+                    @if(auth()->user()->is(App\Models\User::ROL_ADMIN)|| auth()->user()->is(App\Models\User::ROL_VENTAS))
                     <select class="form-select" id="sede_id" name="sede_id" required>
                         <option value="">Seleccione una sede</option>
                         @foreach($sedes as $sede)
                             <option value="{{ $sede->id_sede }}">{{ $sede->sede_nombre }}</option>
                         @endforeach
                     </select>
+                    @else
+
+                     <input type="hidden" name="sede_id" id="sede_id"  value="{{ auth()->user()->fksede }}">
+                     <select class="form-select" disabled>
+                            <option >{{ auth()->user()->sede->sede_nombre }}</option>
+
+                    </select>
+                    @endif
                 </div>
             </div>
 
