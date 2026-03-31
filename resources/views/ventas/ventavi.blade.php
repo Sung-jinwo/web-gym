@@ -89,7 +89,7 @@
                                 <a href="{{ route('venta.edit', $item) }}" class="padres-btn-icon btn-green" title="Editar Producto">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                
+                                {{--
                                 @php
                                     $detalle = $item->detalles->first();
                                 @endphp
@@ -100,7 +100,7 @@
                                         <i class="fa-solid fa fa-file"></i>
                                     </a>
                                 @endif
-
+                                 --}}         
 
                             </div>
                         </td>
