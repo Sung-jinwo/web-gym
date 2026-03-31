@@ -90,9 +90,18 @@
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                                 
-                                <a href="{{ route('detalle.boletapdf', $item->detalles->first()) }}" class="padres-btn-icon btn-red" title="Descargar boleta (PDF)">
-                                    <i class="fa-solid fa fa-file" ></i>
-                                </a>
+                                @php
+                                    $detalle = $item->detalles->first();
+                                @endphp
+                                @if($detalle)
+                                    <a href="{{ route('detalle.boletapdf', $detalle->id) }}" 
+                                    class="padres-btn-icon btn-red" 
+                                    title="Descargar boleta (PDF)">
+                                        <i class="fa-solid fa fa-file"></i>
+                                    </a>
+                                @endif
+
+
                             </div>
                         </td>
                     </tr>
