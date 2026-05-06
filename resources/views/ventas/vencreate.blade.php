@@ -89,7 +89,7 @@
                             <input class="filter-dropdown" type="text" value="{{ $producto->prod_precio }}" disabled>
                         </div>
                     </div>
-                    <div class="filter-row">
+                    <!-- <div class="filter-row">
                         <div class="filter-item">
                             <label class="filter-label">
                                 <i class="fa-solid fa-sort-numeric-up"></i> Precion incrementado
@@ -97,7 +97,7 @@
                             <input class="filter-dropdown" type="number" name="venta_incrementado" id="venta_incrementado"
                              placeholder="Ingrese precio incrementado">
                         </div>
-                    </div>
+                    </div>  -->
                 </div>
             </div>
 
@@ -135,7 +135,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="filter-row">
+                      <!--  <div class="filter-row">
                             <div class="filter-item">
                                 <label class="filter-label">
                                     <i class="fa-solid fa-credit-card"></i> Método de Pago 2 (adicional)
@@ -153,7 +153,7 @@
                                     <i class="fa-solid fa-dollar-sign"></i> Monto 2 (adicional) </label>
                                 <input type="number" name="monto_2" step="0.01" class="filter-dropdown">
                             </div>
-                        </div>
+                        </div>  -->
                         <div class="filter-row">
                             <div class="filter-item">
                                 <label class="filter-label">

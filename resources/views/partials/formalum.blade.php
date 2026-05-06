@@ -220,6 +220,7 @@
         </div>
 
     </div>
+    @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(\App\Models\User::ROL_VENTAS))
     <div class="filter-item">
         <div class="form-section">
             <div class="section-header">
@@ -248,25 +249,26 @@
                                     @endif
                             </div>
                             @else
-                                <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
+                                    <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
                             @endif
                             
                             
                         
-                            <div class="filter-item">
-                                <label for="fksede" class="filter-label"><i class="fa-solid fa-location-dot"></i> Lugar de Registro</label>
-                                <select name="fksede" id="fksede" class="filter-dropdown">
-                                    <option value="">Seleccione Lugar de Registro</option>
-                                    @foreach($sedes as $sede)
-                                        <option value="{{ $sede->id_sede }}" {{ old('fksede', $alumno->fksede) == $sede->id_sede ? 'selected' : '' }}>
-                                            {{ $sede->sede_nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('fksede'))
-                                    <span class="error-message">{{ $errors->first('fksede') }}</span>
-                                @endif
-                            </div>
+                            @if(auth()->user()->is(\App\Models\User::ROL_ADMIN) || auth()->user()->is(\App\Models\User::ROL_VENTAS))
+                                <div class="filter-item">
+                                    <label for="fksede" class="filter-label">
+                                        <i class="fa-solid fa-location-dot"></i> Lugar de Registro
+                                    </label>
+                                    <select name="fksede" id="fksede" class="filter-dropdown">
+                                        <option value="">Seleccione Lugar de Registro</option>
+                                        @foreach($sedes as $sede)
+                                            <option value="{{ $sede->id_sede }}" {{ old('fksede', $alumno->fksede) == $sede->id_sede ? 'selected' : '' }}>
+                                                {{ $sede->sede_nombre }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                     </div>
                 </div>
             
@@ -274,7 +276,11 @@
         </div>
 
     </div>
+     @else
+        <input type="hidden" name="fksede" value="{{ auth()->user()->fksede }}">
+        <input type="hidden" name="fkuser" value="{{ auth()->user()->id }}">
 
+    @endif
 
 </div>
 

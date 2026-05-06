@@ -36,7 +36,7 @@ class AlumnoContoller extends Controller
     $estado = $request->get('estado', 'A');
     $idSede = $request->input('id_sede');
     $fechaFiltro = $request->get('fecha_filtro');
-
+    $hayBusqueda = !empty($alumnoTexto);
     // $query = Alumno::with(['pagos.membresia', 'padres']);
 
     $query = Alumno::with(['pagos' => function($query) {
@@ -49,14 +49,17 @@ class AlumnoContoller extends Controller
         $query->where('alum_estado', $estado);
     }
 
-    if (($user->is(User::ROL_ADMIN) ) && $idSede) {
-        $query->where('fksede', $idSede);
-    } elseif ($user->is(User::ROL_EMPLEADO)) {
-        $query->where('fksede', $user->fksede);
-    }elseif ($user->is(User::ROL_VENTAS)){
-        $query->where('fkuser', $user->id);
-    }
 
+    // SOLO aplicar restricciones si NO es búsqueda por código
+    if (!$hayBusqueda) {
+        if (($user->is(User::ROL_ADMIN)) && $idSede) {
+            $query->where('fksede', $idSede);
+        } elseif ($user->is(User::ROL_EMPLEADO)) {
+            $query->where('fksede', $user->fksede);
+        } elseif ($user->is(User::ROL_VENTAS)){
+            $query->where('fkuser', $user->id);
+        }
+    }
 
     // if ($request->filled('fecha_filtro')) {
     //     $hoy = now();
@@ -95,11 +98,13 @@ class AlumnoContoller extends Controller
 
     if ($alumnoTexto) {
         $query->where(function ($q) use ($alumnoTexto) {
-            $q->where('alum_codigo', $alumnoTexto)
-              ->orWhere('alum_nombre', 'LIKE', '%' . $alumnoTexto . '%')
-              ->orWhere('alum_apellido', 'LIKE', '%' . $alumnoTexto . '%')
-              ->orWhere(Alumno::raw("CONCAT(alum_nombre, ' ', alum_apellido)"), 'LIKE', '%' . $alumnoTexto . '%'); 
-            //   ->orWhere('alum_telefo', 'LIKE', '%' . $alumnoTexto . '%');
+            if (is_numeric($alumnoTexto)) {
+                $q->where('alum_codigo', $alumnoTexto);
+            } else {
+                $q->where('alum_nombre', 'LIKE', "%$alumnoTexto%")
+                ->orWhere('alum_apellido', 'LIKE', "%$alumnoTexto%")
+                ->orWhereRaw("CONCAT(alum_nombre, ' ', alum_apellido) LIKE ?", ["%$alumnoTexto%"]);
+            }
         });
     }
 
@@ -205,10 +210,15 @@ class AlumnoContoller extends Controller
     {
         // dd($request->all());
         $validatedData = $request->validated();
+        $user = Auth::user();
+
+        if (!$user->is(User::ROL_ADMIN)) {
+            $validatedData['fksede'] = $user->fksede;
+        }
 
         $alum_codigo = $validatedData['alum_codigo'];
 
-
+        
         if (Alumno::where('alum_codigo', $alum_codigo)->exists()) {
             return redirect()->back()->withErrors(['alum_codigo' => 'El código de alumno ya existe.'])->withInput();
         }
@@ -292,6 +302,13 @@ class AlumnoContoller extends Controller
         // dd($request->all());
         
         $validatedData = $request->validated();
+
+        $user = Auth::user();
+
+        if (!$user->is(User::ROL_ADMIN)) {
+            $validatedData['fksede'] = $user->fksede;
+        }
+        
         if (!isset($validatedData['alum_codigo'])) {
             return redirect()->back()->withErrors(['alum_codigo' => 'El código de alumno es requerido.']);
         }
