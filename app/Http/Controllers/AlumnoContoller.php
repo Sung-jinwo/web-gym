@@ -212,10 +212,12 @@ class AlumnoContoller extends Controller
         $validatedData = $request->validated();
         $user = Auth::user();
 
-        if (!$user->is(User::ROL_ADMIN)) {
-            $validatedData['fksede'] = $user->fksede;
-        }
-
+        if (
+                !$user->is(User::ROL_ADMIN) &&
+                !$user->is(User::ROL_VENTAS)
+            ) {
+                $validatedData['fksede'] = $user->fksede;
+            }
         $alum_codigo = $validatedData['alum_codigo'];
 
         
@@ -305,9 +307,12 @@ class AlumnoContoller extends Controller
 
         $user = Auth::user();
 
-        if (!$user->is(User::ROL_ADMIN)) {
-            $validatedData['fksede'] = $user->fksede;
-        }
+        if (
+                !$user->is(User::ROL_ADMIN) &&
+                !$user->is(User::ROL_VENTAS)
+            ) {
+                $validatedData['fksede'] = $user->fksede;
+            }
         
         if (!isset($validatedData['alum_codigo'])) {
             return redirect()->back()->withErrors(['alum_codigo' => 'El código de alumno es requerido.']);
