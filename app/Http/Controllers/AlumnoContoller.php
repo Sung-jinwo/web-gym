@@ -45,8 +45,10 @@ class AlumnoContoller extends Controller
               ->limit(1); // Solo cargar el último pago principal
     }, 'pagos.membresia', 'padres']); 
 
-    if ($estado) {
-        $query->where('alum_estado', $estado);
+    if (!($alumnoTexto && is_numeric($alumnoTexto))) {
+        if ($estado) {
+            $query->where('alum_estado', $estado);
+        }
     }
 
 
@@ -97,15 +99,35 @@ class AlumnoContoller extends Controller
     }
 
     if ($alumnoTexto) {
-        $query->where(function ($q) use ($alumnoTexto) {
-            if (is_numeric($alumnoTexto)) {
-                $q->where('alum_codigo', $alumnoTexto);
-            } else {
+
+        // BÚSQUEDA POR CÓDIGO
+        if (is_numeric($alumnoTexto)) {
+
+            // limpiar filtros que ocultan resultados
+            $query = Alumno::with([
+                'pagos' => function($query) {
+                    $query->where('tipo_membresia', 'principal')
+                        ->orderBy('created_at', 'desc')
+                        ->limit(1);
+                },
+                'pagos.membresia',
+                'padres'
+            ]);
+
+            $query->where('alum_codigo', $alumnoTexto);
+
+        } else {
+
+            // búsqueda por nombre
+            $query->where(function ($q) use ($alumnoTexto) {
                 $q->where('alum_nombre', 'LIKE', "%$alumnoTexto%")
                 ->orWhere('alum_apellido', 'LIKE', "%$alumnoTexto%")
-                ->orWhereRaw("CONCAT(alum_nombre, ' ', alum_apellido) LIKE ?", ["%$alumnoTexto%"]);
-            }
-        });
+                ->orWhereRaw(
+                    "CONCAT(alum_nombre, ' ', alum_apellido) LIKE ?",
+                    ["%$alumnoTexto%"]
+                );
+            });
+        }
     }
 
     // $query->when($request->estado_pago, function ($query, $estado_pago) {
@@ -114,18 +136,22 @@ class AlumnoContoller extends Controller
     //     });
     // });
 
-    $query->when($request->estado_pago, function ($query, $estado_pago) {
-        // Obtenemos los IDs de los últimos pagos principales
-        $ultimosPagosIds = Pagos::select(DB::raw('MAX(id_pag) as id'))
-            ->where('tipo_membresia', 'principal')
-            ->groupBy('fkalum')
-            ->pluck('id');
-            
-        $query->whereHas('pagos', function ($q) use ($estado_pago, $ultimosPagosIds) {
-            $q->whereIn('id_pag', $ultimosPagosIds)
-              ->where('estado_pago', $estado_pago);
+    if (!($alumnoTexto && is_numeric($alumnoTexto))) {
+
+        $query->when($request->estado_pago, function ($query, $estado_pago) {
+
+            $ultimosPagosIds = Pagos::select(DB::raw('MAX(id_pag) as id'))
+                ->where('tipo_membresia', 'principal')
+                ->groupBy('fkalum')
+                ->pluck('id');
+
+            $query->whereHas('pagos', function ($q) use ($estado_pago, $ultimosPagosIds) {
+                $q->whereIn('id_pag', $ultimosPagosIds)
+                ->where('estado_pago', $estado_pago);
+            });
         });
-    });
+
+    }
 
 
 
