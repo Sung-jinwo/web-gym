@@ -182,11 +182,11 @@ class VentaController extends Controller
             'venta_incrementado' => $incrementado,
             'venta_total' => $monto ,
         ]);
-        //$metodo_2 = $request->input('fkmetodo_2');
-        //$monto_2 = $request->input('monto_2');
+        $metodo_2 = $request->input('fkmetodo_2');
+        $monto_2 = $request->input('monto_2');
         
         // Crear detalle de venta
-        /*
+    
         if($metodo_2 && $monto_2 > 0) {
             $monto_1 = $monto - $monto_2;
 
@@ -226,7 +226,7 @@ class VentaController extends Controller
         //if (($monto_2 > 0) && ($monto_2 > $monto)) {
        //     return back()->with('error', 'El segundo monto no puede ser mayor al total ingresado.');
        // }
-*/
+
         // Actualizar stock del producto
         $producto->decrement('prod_cantidad', $request->cantidad);
 
